@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DebugOverlay = ({ step, achieveGoals, dailyGoal }) => {
+const DebugOverlay = ({ step, achieveGoals, dailyGoal, email, password }) => {
     return (
         <div style={{
             position: 'fixed',
@@ -18,6 +18,8 @@ const DebugOverlay = ({ step, achieveGoals, dailyGoal }) => {
             <div>Current Step: {step}</div>
             <div>Achieve Goals: {JSON.stringify(achieveGoals)}</div>
             <div>Daily Goal: {JSON.stringify(dailyGoal)}</div>
+            <div>Email: {email}</div>
+            <div>Password: {password ? '********' : ''}</div>
             <div>Time: {new Date().toLocaleTimeString()}</div>
         </div>
     );

@@ -1,156 +1,218 @@
-import React, { useState } from 'react';
-import SplashScreen from './components/SplashScreen';
-import WelcomePage from './components/WelcomePage';
-import LanguageSelectionPage from './components/LanguageSelectionPage';
+import { useState } from 'react';
+import SplashScreen             from './components/SplashScreen';
+import WelcomePage              from './components/WelcomePage';
+import LanguageSelectionPage    from './components/LanguageSelectionPage';
+import ProficiencyPage          from './components/ProficiencyPage';
+import ReasonPage               from './components/ReasonPage';
+import AchievePage              from './components/AchievePage';
+import DailyGoalPage            from './components/DailyGoalPage';
+import ProfileWelcomePage       from './components/ProfileWelcomePage';
+import NamePage                 from './components/NamePage';
+import AgePage                  from './components/AgePage';
+import EmailPage                from './components/EmailPage';
+import PasswordPage             from './components/PasswordPage';
+import SuccessPage              from './components/SuccessPage';
+import LoginPage                from './components/LoginPage';
+import ForgotPasswordPage       from './components/ForgotPasswordPage';
+import OTPVerificationPage      from './components/OTPVerificationPage';
+import NewPasswordPage          from './components/NewPasswordPage';
+import PasswordResetSuccessPage from './components/PasswordResetSuccessPage';
+import DashboardPage            from './components/DashboardPage';
+import ErrorBoundary            from './components/ErrorBoundary';
 
-import ProficiencyPage from './components/ProficiencyPage';
-import ReasonPage from './components/ReasonPage';
-import AchievePage from './components/AchievePage';
-import DailyGoalPage from './components/DailyGoalPage';
-import ProfileWelcomePage from './components/ProfileWelcomePage';
-import NamePage from './components/NamePage';
-import AgePage from './components/AgePage';
-import ErrorBoundary from './components/ErrorBoundary';
-import DebugOverlay from './components/DebugOverlay';
+// ─── Step map ───────────────────────────────────────────────────────────────
+//  0  Splash
+//  1  Welcome
+//  2  Language Selection          ┐
+//  3  Proficiency                 │ Onboarding
+//  4  Reason                      │
+//  5  Achieve                     │
+//  6  Daily Goal                  ┘
+//  7  Profile Welcome  (Skip → 15)┐
+//  8  Name                        │ Profile creation
+//  9  Age                         │
+// 10  Email                       │
+// 11  Password                    │
+// 12  Success          (→ 15)     ┘
+// 13  Login            (→ 15 | Forgot → 20)
+// 20  Forgot Password  (→ 21)     ┐
+// 21  OTP Verification (→ 22)     │ Password reset
+// 22  New Password     (→ 23)     │
+// 23  Reset Success    (→ 15)     ┘
+// 15  Dashboard
 
 function App() {
-  // 0: Splash, 1: Welcome, 2: Language Selection, 3: Proficiency, 4: Reason, 5: Achieve, 6: Daily Goal
-  const [currentStep, setCurrentStep] = useState(0);
-  const [nativeLang, setNativeLang] = useState(null);
+  const [step, setStep]                 = useState(0);
+
+  // ── Language selection ──────────────────────────────────────────
+  const [nativeLang,   setNativeLang]   = useState(null);
   const [learningLang, setLearningLang] = useState(null);
-  const [achieveGoals, setAchieveGoals] = useState([]);
-  const [dailyGoal, setDailyGoal] = useState(null);
-  const [fullName, setFullName] = useState('');
-  const [age, setAge] = useState('');
 
-  const handleSplashFinish = () => {
-    setCurrentStep(1);
-  };
+  // ── Onboarding profile ──────────────────────────────────────────
+  const [proficiency, setProficiency]   = useState(null);  // 1 | 2 | 3 | 4
+  const [reason,      setReason]        = useState(null);  // 'fun'|'career'|'education'|'vacation'|'other'
+  const [goals,       setGoals]         = useState([]);    // ['speak','vocab','habit']
+  const [dailyGoal,   setDailyGoal]     = useState(null);  // 'relaxed'|'normal'|'serious'|'great'|'awesome'
 
-  const handleWelcomeNext = () => {
-    setCurrentStep(2);
-  };
+  // ── Account creation ─────────────────────────────────────────────
+  const [userName,  setUserName]        = useState('');
+  const [userAge,   setUserAge]         = useState('');
+  const [userEmail, setUserEmail]       = useState('');
 
-  const handleLanguageNext = () => {
-    setCurrentStep(3);
-  };
+  // ── Password reset flow ──────────────────────────────────────────
+  const [resetEmail, setResetEmail]     = useState('');
 
-  const handleProficiencyNext = () => {
-    setCurrentStep(4);
-  };
+  // ── Static game stats (would be dynamic in a real backend) ───────
+  const [userStats]                     = useState({ streak: 7, xp: 340, gems: 50, hearts: 4 });
 
-  const handleReasonNext = () => {
-    setCurrentStep(5);
-  };
+  const go   = (n) => setStep(n);
+  const back = () => setStep((s) => Math.max(0, s - 1));
 
-  const handleAchieveNext = (goals) => {
-    console.log('App: handleAchieveNext called with:', goals);
-    setAchieveGoals(goals);
-    setCurrentStep(6);
-  };
-
-  const handleDailyGoalNext = (goal) => {
-    setDailyGoal(goal);
-    setCurrentStep(7); // Go to Profile Welcome
-  };
-
-  const handleProfileCreate = () => {
-    // Navigate to NamePage
-    setCurrentStep(8);
-  };
-
-  const handleNameNext = (name) => {
-    setFullName(name);
-    console.log("Full Name set:", name);
-    setCurrentStep(9); // Go to Age Page
-  };
-
-  const handleAgeNext = (age) => {
-    setAge(age);
-    console.log("Age set:", age);
-    // Placeholder for next step 
-    // setCurrentStep(10);
-  };
-
-  const handleProfileSkip = () => {
-    // Navigate to dashboard/home
-    console.log('Skip clicked');
-  };
-
-  const handleBack = () => {
-    setCurrentStep((prev) => Math.max(0, prev - 1));
+  // ── Assembled profile object passed to the dashboard ────────────
+  const profile = {
+    name:        userName,
+    age:         userAge,
+    email:       userEmail,
+    proficiency: proficiency,   // 1–4
+    reason:      reason,        // why learning
+    goals:       goals,         // what they want to achieve
+    dailyGoal:   dailyGoal ?? 'normal',
   };
 
   return (
-    <>
-      {console.log('App: Rendering currentStep:', currentStep)}
-      <ErrorBoundary>
-        {currentStep === 0 && <SplashScreen onFinish={handleSplashFinish} />}
-        {currentStep === 1 && <WelcomePage onNext={handleWelcomeNext} />}
-        {currentStep === 2 && (
-          <LanguageSelectionPage
-            onNext={handleLanguageNext}
-            onBack={handleBack}
-            nativeLang={nativeLang}
-            setNativeLang={setNativeLang}
-            learningLang={learningLang}
-            setLearningLang={setLearningLang}
-          />
-        )}
-        {currentStep === 3 && (
-          <ProficiencyPage
-            onNext={handleProficiencyNext}
-            onBack={handleBack}
-            nativeLang={nativeLang}
-            learningLang={learningLang}
-          />
-        )}
-        {currentStep === 4 && (
-          <ReasonPage
-            onNext={handleReasonNext}
-            onBack={handleBack}
-            nativeLang={nativeLang}
-            learningLang={learningLang}
-          />
-        )}
-        {currentStep === 5 && (
-          <AchievePage
-            onNext={handleAchieveNext}
-            onBack={handleBack}
-            nativeLang={nativeLang}
-          />
-        )}
-        {currentStep === 6 && (
-          <DailyGoalPage
-            onNext={handleDailyGoalNext}
-            onBack={handleBack}
-            nativeLang={nativeLang}
-          />
-        )}
-        {currentStep === 7 && (
-          <ProfileWelcomePage
-            onNext={handleProfileCreate}
-            onSkip={handleProfileSkip}
-            nativeLang={nativeLang}
-          />
-        )}
-        {currentStep === 8 && (
-          <NamePage
-            onNext={handleNameNext}
-            onBack={handleBack}
-            nativeLang={nativeLang}
-          />
-        )}
-        {currentStep === 9 && (
-          <AgePage
-            onNext={handleAgeNext}
-            onBack={handleBack}
-            nativeLang={nativeLang}
-          />
-        )}
-      </ErrorBoundary>
-      <DebugOverlay step={currentStep} achieveGoals={achieveGoals} dailyGoal={dailyGoal} />
-    </>
+    <ErrorBoundary>
+
+      {/* ── Splash ──────────────────────────────────────────────────── */}
+      {step === 0 && <SplashScreen onFinish={() => go(1)} />}
+
+      {/* ── Welcome ─────────────────────────────────────────────────── */}
+      {step === 1 && (
+        <WelcomePage
+          onNext={() => go(2)}
+          onLogin={() => go(13)}
+        />
+      )}
+
+      {/* ── Onboarding ──────────────────────────────────────────────── */}
+      {step === 2 && (
+        <LanguageSelectionPage
+          onNext={() => go(3)} onBack={back}
+          nativeLang={nativeLang}     setNativeLang={setNativeLang}
+          learningLang={learningLang} setLearningLang={setLearningLang}
+        />
+      )}
+      {step === 3 && (
+        <ProficiencyPage
+          onNext={(level) => { setProficiency(level); go(4); }}
+          onBack={back}
+          nativeLang={nativeLang} learningLang={learningLang}
+        />
+      )}
+      {step === 4 && (
+        <ReasonPage
+          onNext={(r) => { setReason(r); go(5); }}
+          onBack={back}
+          nativeLang={nativeLang} learningLang={learningLang}
+        />
+      )}
+      {step === 5 && (
+        <AchievePage
+          onNext={(g) => { setGoals(g); go(6); }}
+          onBack={back}
+          nativeLang={nativeLang}
+        />
+      )}
+      {step === 6 && (
+        <DailyGoalPage
+          onNext={(dg) => { setDailyGoal(dg); go(7); }}
+          onBack={back}
+          nativeLang={nativeLang}
+        />
+      )}
+
+      {/* ── Profile creation ────────────────────────────────────────── */}
+      {step === 7 && (
+        <ProfileWelcomePage
+          onNext={() => go(8)}
+          onSkip={() => go(15)}
+          nativeLang={nativeLang}
+        />
+      )}
+      {step === 8  && (
+        <NamePage
+          onNext={(n) => { setUserName(n); go(9); }}
+          onBack={back}
+          nativeLang={nativeLang}
+        />
+      )}
+      {step === 9  && (
+        <AgePage
+          onNext={(a) => { setUserAge(a); go(10); }}
+          onBack={back}
+          nativeLang={nativeLang}
+        />
+      )}
+      {step === 10 && (
+        <EmailPage
+          onNext={(e) => { setUserEmail(e); go(11); }}
+          onBack={back}
+          nativeLang={nativeLang}
+        />
+      )}
+      {step === 11 && <PasswordPage onNext={() => go(12)} onBack={back} nativeLang={nativeLang} />}
+      {step === 12 && <SuccessPage  onNext={() => go(15)}               nativeLang={nativeLang} />}
+
+      {/* ── Login ───────────────────────────────────────────────────── */}
+      {step === 13 && (
+        <LoginPage
+          onLogin={() => go(15)}
+          onBack={back}
+          onForgotPassword={() => go(20)}
+          nativeLang={nativeLang}
+        />
+      )}
+
+      {/* ── Password reset ──────────────────────────────────────────── */}
+      {step === 20 && (
+        <ForgotPasswordPage
+          onNext={(email) => { setResetEmail(email); go(21); }}
+          onBack={() => go(13)}
+          nativeLang={nativeLang}
+        />
+      )}
+      {step === 21 && (
+        <OTPVerificationPage
+          onNext={() => go(22)}
+          onBack={() => go(20)}
+          email={resetEmail}
+          nativeLang={nativeLang}
+        />
+      )}
+      {step === 22 && (
+        <NewPasswordPage
+          onNext={() => go(23)}
+          onBack={() => go(21)}
+          nativeLang={nativeLang}
+        />
+      )}
+      {step === 23 && (
+        <PasswordResetSuccessPage
+          onNext={() => go(15)}
+          nativeLang={nativeLang}
+        />
+      )}
+
+      {/* ── Dashboard ───────────────────────────────────────────────── */}
+      {step === 15 && (
+        <DashboardPage
+          userStats={userStats}
+          nativeLang={nativeLang}
+          learningLang={learningLang}
+          profile={profile}
+        />
+      )}
+
+    </ErrorBoundary>
   );
 }
 

@@ -1,0 +1,1509 @@
+import { useState } from 'react';
+import logo from '../assets/logo.png';
+import profileWelcomeVector from '../assets/profile_welcome_vector.png';
+import LessonLoadingPage from './LessonLoadingPage';
+import LessonPage        from './LessonPage';
+
+/* ════════════════════════════════════════════════════════════════════
+   DashboardPage
+   – Language switcher in sidebar
+   – 5-tab nav: Home | Leaderboard | Challenge | Premium | Account
+   – Home: learning path + right panel
+   – Premium: gem packages → PaymentMethod → OrderSummary → PaymentSuccess
+════════════════════════════════════════════════════════════════════ */
+
+/* ── Profile-driven constants ─────────────────────────────────── */
+const DAILY_GOAL_CONFIG = {
+    relaxed: { time: 5,  xp: 10  },
+    normal:  { time: 10, xp: 20  },
+    serious: { time: 15, xp: 30  },
+    great:   { time: 30, xp: 60  },
+    awesome: { time: 60, xp: 100 },
+};
+
+const PROF_LABELS = {
+    1: { en: 'Absolute Beginner', fr: 'Débutant absolu',  color: '#ef4444' },
+    2: { en: 'Elementary',        fr: 'Élémentaire',      color: '#f59e0b' },
+    3: { en: 'Intermediate',      fr: 'Intermédiaire',    color: '#22c55e' },
+    4: { en: 'Advanced',          fr: 'Avancé',           color: '#0056D2' },
+};
+
+const REASON_META = {
+    fun:       { emoji: '😁', en: 'Just for fun',    fr: 'Pour le plaisir',    challengeEn: 'Play 3 fun mini-games',          challengeFr: 'Jouer à 3 mini-jeux',           reward: 25 },
+    career:    { emoji: '💼', en: 'Career growth',   fr: 'Carrière',           challengeEn: 'Learn 5 professional expressions', challengeFr: 'Apprendre 5 expressions pro',    reward: 35 },
+    education: { emoji: '🎓', en: 'Education',        fr: 'Éducation',          challengeEn: 'Complete 2 study exercises',       challengeFr: 'Finir 2 exercices scolaires',    reward: 30 },
+    vacation:  { emoji: '✈️', en: 'Travel',           fr: 'Voyage',             challengeEn: 'Master 5 travel phrases',          challengeFr: 'Maîtriser 5 phrases de voyage',  reward: 30 },
+    other:     { emoji: '🧩', en: 'Personal goal',   fr: 'Objectif perso',     challengeEn: 'Beat your daily best',             challengeFr: 'Battre votre record du jour',    reward: 20 },
+};
+
+const GOAL_META = {
+    speak: { emoji: '💬', en: 'Speak fluently',       fr: 'Parler couramment'   },
+    vocab: { emoji: '📇', en: 'Master vocabulary',    fr: 'Maîtriser le vocab'  },
+    habit: { emoji: '⏰', en: 'Build study habits',   fr: 'Habitudes d\'étude'  },
+};
+
+const GEM_PACKAGES = [
+    { id: 'p1', gems: 500,  price: '$1.99',  popular: false, label: '💎 500' },
+    { id: 'p2', gems: 1200, price: '$3.99',  popular: true,  label: '💎 1,200' },
+    { id: 'p3', gems: 2000, price: '$5.99',  popular: false, label: '💎 2,000' },
+    { id: 'p4', gems: 5000, price: '$12.99', popular: false, label: '💎 5,000' },
+];
+
+const PAYMENT_METHODS = [
+    { id: 'paypal',     icon: '🅿️',  label: 'PayPal'      },
+    { id: 'googlepay',  icon: '🇬',  label: 'Google Pay'  },
+    { id: 'applepay',   icon: '🍎',  label: 'Apple Pay'   },
+    { id: 'mastercard', icon: '💳',  label: 'Mastercard'  },
+];
+
+const LEADERBOARD_DATA = [
+    { rank: 1,  name: 'Alice M.',    xp: 2840, badge: '🥇', you: false },
+    { rank: 2,  name: 'Jean K.',     xp: 2560, badge: '🥈', you: false },
+    { rank: 3,  name: 'Sophie T.',   xp: 2190, badge: '🥉', you: false },
+    { rank: 4,  name: 'Marc D.',     xp: 1980, badge: null,  you: false },
+    { rank: 5,  name: 'Luc N.',      xp: 1740, badge: null,  you: false },
+    { rank: 6,  name: 'Emma W.',     xp: 1600, badge: null,  you: false },
+    { rank: 7,  name: 'You',         xp: 1340, badge: null,  you: true  },
+    { rank: 8,  name: 'Paul F.',     xp: 1200, badge: null,  you: false },
+    { rank: 9,  name: 'Nina C.',     xp: 980,  badge: null,  you: false },
+    { rank: 10, name: 'Omar B.',     xp: 760,  badge: null,  you: false },
+];
+
+const DAILY_CHALLENGES = [
+    { id: 'dc1', icon: '⚡', titleEn: 'Complete 3 lessons',    titleFr: 'Terminer 3 leçons',       progress: 2, total: 3, reward: 20 },
+    { id: 'dc2', icon: '🔥', titleEn: 'Keep your streak',     titleFr: 'Maintenir votre série',    progress: 1, total: 1, reward: 15 },
+    { id: 'dc3', icon: '⭐', titleEn: 'Earn 50 XP today',     titleFr: 'Gagner 50 XP aujourd\'hui', progress: 34, total: 50, reward: 25 },
+];
+
+const WEEKLY_CHALLENGES = [
+    { id: 'wc1', icon: '🏅', titleEn: 'Perfect week streak',  titleFr: 'Semaine parfaite',         progress: 5, total: 7,  reward: 100 },
+    { id: 'wc2', icon: '🎯', titleEn: 'Practice 5 skills',   titleFr: 'Pratiquer 5 compétences',  progress: 2, total: 5,  reward: 80  },
+    { id: 'wc3', icon: '💬', titleEn: 'Translate 30 phrases', titleFr: 'Traduire 30 phrases',      progress: 18, total: 30, reward: 60  },
+];
+
+/* ── small reusable progress bar ── */
+const Bar = ({ value, max, color = '#0056D2' }) => {
+    const pct = Math.min((value / max) * 100, 100);
+    return (
+        <div style={{ width: '100%', height: '8px', backgroundColor: '#e2e8f0', borderRadius: '99px', overflow: 'hidden' }}>
+            <div style={{ width: `${pct}%`, height: '100%', backgroundColor: color, borderRadius: '99px', transition: 'width 0.4s ease' }} />
+        </div>
+    );
+};
+
+/* ══════════════════════════════════════════════════════════════════════
+   MAIN COMPONENT
+══════════════════════════════════════════════════════════════════════ */
+const DashboardPage = ({
+    userStats    = { streak: 7, xp: 340, gems: 50, hearts: 4 },
+    nativeLang   = null,
+    learningLang = null,
+    profile      = {},  // { name, age, email, proficiency, reason, goals, dailyGoal }
+}) => {
+    /* ── local lang override ── */
+    const [lang, setLang]           = useState(nativeLang === 'french' ? 'fr' : 'en');
+    const isFr                      = lang === 'fr';
+
+    /* ── profile shorthands ── */
+    const userName    = profile.name        || '';
+    const profLevel   = profile.proficiency || 1;   // 1-4
+    const userReason  = profile.reason      || 'fun';
+    const userGoals   = profile.goals       || [];
+    const goalCfg     = DAILY_GOAL_CONFIG[profile.dailyGoal ?? 'normal'];
+    const reasonMeta  = REASON_META[userReason] ?? REASON_META.fun;
+    const profMeta    = PROF_LABELS[profLevel]  ?? PROF_LABELS[1];
+
+    /* ── compute lesson statuses from proficiency ──
+       profLevel 1 → lesson index 0 active (true beginner)
+       profLevel 2 → lesson 0 done, index 1 active
+       profLevel 3 → lessons 0-1 done, index 2 active
+       profLevel 4 → lessons 0-2 done, index 3 active
+    ── */
+    const applyProgress = (units) => units.map((unit, uIdx) => {
+        if (uIdx > 0) return unit; // only unlock progress in unit 1
+        let regularSeen = 0;
+        const doneCount = profLevel - 1; // number of regular lessons pre-completed
+        return {
+            ...unit,
+            lessons: unit.lessons.map((lesson) => {
+                if (lesson.type === 'chest' || lesson.type === 'boss') {
+                    return { ...lesson, status: 'locked' };
+                }
+                const idx = regularSeen++;
+                if (idx < doneCount)       return { ...lesson, status: 'completed' };
+                if (idx === doneCount)     return { ...lesson, status: 'active' };
+                return { ...lesson, status: 'locked' };
+            }),
+        };
+    });
+
+    /* ── learning language (what the user is studying) ── */
+    const defaultLearnLang = learningLang === 'english' ? 'english' : 'medumba';
+    const [learnLang, setLearnLang] = useState(defaultLearnLang);
+
+    /* ── lesson flow ── */
+    const [lessonFlow,   setLessonFlow]   = useState(null);   // null | 'loading' | 'lesson'
+    const [activeLesson, setActiveLesson] = useState(null);
+
+    /* ── navigation ── */
+    const [activeNav, setActiveNav] = useState('home');
+
+    /* ── leaderboard tab ── */
+    const [lbTab, setLbTab]         = useState('weekly');
+
+    /* ── gems count (grows after purchase) ── */
+    const [gems, setGems]           = useState(userStats.gems);
+
+    /* ── purchase flow ──
+       null | 'packages' | 'payment' | 'summary' | 'success'
+    ── */
+    const [purchaseFlow,  setPurchaseFlow]  = useState(null);
+    const [selectedPkg,   setSelectedPkg]   = useState(null);
+    const [payMethod,     setPayMethod]     = useState(null);
+    const [cardNum,       setCardNum]       = useState('');
+    const [cardName,      setCardName]      = useState('');
+    const [cardExpiry,    setCardExpiry]    = useState('');
+    const [cardCvv,       setCardCvv]       = useState('');
+
+    const XP_TO_NEXT = 500;
+    const xpProgress = Math.min((userStats.xp / XP_TO_NEXT) * 100, 100);
+
+    /* ── nav items ── */
+    const navItems = [
+        { id: 'home',        icon: '🏠', labelEn: 'HOME',        labelFr: 'ACCUEIL'    },
+        { id: 'leaderboard', icon: '🏆', labelEn: 'LEADERBOARD', labelFr: 'CLASSEMENT' },
+        { id: 'challenge',   icon: '⚡', labelEn: 'CHALLENGE',   labelFr: 'DÉFI'       },
+        { id: 'premium',     icon: '💎', labelEn: 'PREMIUM',     labelFr: 'PREMIUM'    },
+        { id: 'account',     icon: '👤', labelEn: 'ACCOUNT',     labelFr: 'COMPTE'     },
+    ];
+
+    /* ── learning path data — Medumba track ── */
+    const unitsMedumba = [
+        {
+            id: 1, color: '#0056D2', accent: '#0041a3', emoji: '🔤',
+            titleEn: 'Foundations',   titleFr: 'Les Bases',
+            subEn:   'Learn the basics of Medumba',
+            subFr:   'Apprenez les bases du Medumba',
+            lessons: [
+                { id: 'l1', titleEn: 'Basics 1',  titleFr: 'Bases 1',     type: 'lesson', status: 'completed' },
+                { id: 'l2', titleEn: 'Basics 2',  titleFr: 'Bases 2',     type: 'lesson', status: 'active'    },
+                { id: 'l3', titleEn: 'Greetings', titleFr: 'Salutations', type: 'lesson', status: 'locked'    },
+                { id: 'c1', titleEn: 'Chest',     titleFr: 'Coffre',      type: 'chest',  status: 'locked'    },
+                { id: 'l4', titleEn: 'Numbers',   titleFr: 'Nombres',     type: 'lesson', status: 'locked'    },
+                { id: 'l5', titleEn: 'Colors',    titleFr: 'Couleurs',    type: 'lesson', status: 'locked'    },
+            ],
+        },
+        {
+            id: 2, color: '#2563eb', accent: '#1d4ed8', emoji: '👥',
+            titleEn: 'People',        titleFr: 'Les Gens',
+            subEn:   'Talk about people and family',
+            subFr:   'Parlez des personnes et de la famille',
+            lessons: [
+                { id: 'l6', titleEn: 'Family',     titleFr: 'Famille',    type: 'lesson', status: 'locked' },
+                { id: 'l7', titleEn: 'Friends',    titleFr: 'Amis',       type: 'lesson', status: 'locked' },
+                { id: 'l8', titleEn: 'Travel',     titleFr: 'Voyage',     type: 'lesson', status: 'locked' },
+                { id: 'b1', titleEn: 'Boss Fight', titleFr: 'Défi Boss',  type: 'boss',   status: 'locked' },
+            ],
+        },
+        {
+            id: 3, color: '#0891b2', accent: '#0e7490', emoji: '🌿',
+            titleEn: 'Daily Life',    titleFr: 'Vie Quotidienne',
+            subEn:   'Everyday expressions & phrases',
+            subFr:   'Expressions pour tous les jours',
+            lessons: [
+                { id: 'l9',  titleEn: 'Food',    titleFr: 'Nourriture', type: 'lesson', status: 'locked' },
+                { id: 'l10', titleEn: 'Time',    titleFr: 'Temps',      type: 'lesson', status: 'locked' },
+                { id: 'l11', titleEn: 'Weather', titleFr: 'Météo',      type: 'lesson', status: 'locked' },
+                { id: 'c2',  titleEn: 'Chest',   titleFr: 'Coffre',     type: 'chest',  status: 'locked' },
+            ],
+        },
+    ];
+
+    /* ── learning path data — English track ── */
+    const unitsEnglish = [
+        {
+            id: 1, color: '#0056D2', accent: '#0041a3', emoji: '🗣️',
+            titleEn: 'First Words',   titleFr: 'Premiers Mots',
+            subEn:   'Start speaking English from day one',
+            subFr:   'Commencez à parler anglais dès le premier jour',
+            lessons: [
+                { id: 'e1', titleEn: 'Hello!',      titleFr: 'Bonjour !',    type: 'lesson', status: 'completed' },
+                { id: 'e2', titleEn: 'Alphabet',    titleFr: 'Alphabet',     type: 'lesson', status: 'active'    },
+                { id: 'e3', titleEn: 'Numbers',     titleFr: 'Chiffres',     type: 'lesson', status: 'locked'    },
+                { id: 'c1', titleEn: 'Chest',       titleFr: 'Coffre',       type: 'chest',  status: 'locked'    },
+                { id: 'e4', titleEn: 'Colors',      titleFr: 'Couleurs',     type: 'lesson', status: 'locked'    },
+                { id: 'e5', titleEn: 'Animals',     titleFr: 'Animaux',      type: 'lesson', status: 'locked'    },
+            ],
+        },
+        {
+            id: 2, color: '#2563eb', accent: '#1d4ed8', emoji: '🏙️',
+            titleEn: 'City Life',     titleFr: 'Vie Urbaine',
+            subEn:   'Navigate daily English situations',
+            subFr:   'Naviguer dans les situations du quotidien',
+            lessons: [
+                { id: 'e6', titleEn: 'Shopping',    titleFr: 'Achats',       type: 'lesson', status: 'locked' },
+                { id: 'e7', titleEn: 'Directions',  titleFr: 'Directions',   type: 'lesson', status: 'locked' },
+                { id: 'e8', titleEn: 'Restaurant',  titleFr: 'Restaurant',   type: 'lesson', status: 'locked' },
+                { id: 'b1', titleEn: 'Boss Fight',  titleFr: 'Défi Boss',    type: 'boss',   status: 'locked' },
+            ],
+        },
+        {
+            id: 3, color: '#0891b2', accent: '#0e7490', emoji: '💼',
+            titleEn: 'Work & Study',  titleFr: 'Travail & Études',
+            subEn:   'English for professional contexts',
+            subFr:   'L\'anglais dans un contexte professionnel',
+            lessons: [
+                { id: 'e9',  titleEn: 'Introductions', titleFr: 'Présentations', type: 'lesson', status: 'locked' },
+                { id: 'e10', titleEn: 'Emails',        titleFr: 'E-mails',       type: 'lesson', status: 'locked' },
+                { id: 'e11', titleEn: 'Meetings',      titleFr: 'Réunions',      type: 'lesson', status: 'locked' },
+                { id: 'c2',  titleEn: 'Chest',         titleFr: 'Coffre',        type: 'chest',  status: 'locked' },
+            ],
+        },
+    ];
+
+    const units = applyProgress(learnLang === 'english' ? unitsEnglish : unitsMedumba);
+
+    const zigzag     = [0, 56, 90, 56, 0, -56, -90, -56, 0, 56, 90];
+    let   globalIdx  = 0;
+
+    /* ════════════════════════════════════════════════════════════════
+       PURCHASE FLOW VIEWS
+    ════════════════════════════════════════════════════════════════ */
+
+    /* ── Payment Method ── */
+    const renderPaymentMethod = () => {
+        const isMC = payMethod === 'mastercard';
+        const mcReady = isMC
+            ? cardNum.replace(/\s/g, '').length === 16 && cardName.trim() && cardExpiry.length === 5 && cardCvv.length === 3
+            : true;
+        const canContinue = payMethod !== null && mcReady;
+
+        return (
+            <div style={{ flex: 1, overflowY: 'auto', padding: '2rem' }}>
+                <button onClick={() => setPurchaseFlow('packages')} style={{
+                    background: 'none', border: 'none', fontSize: '1.5rem',
+                    cursor: 'pointer', color: '#0f172a', marginBottom: '1.5rem', padding: '0',
+                }}>←</button>
+
+                <h2 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.5rem' }}>
+                    {isFr ? 'Mode de paiement 💳' : 'Payment Method 💳'}
+                </h2>
+                <p style={{ fontSize: '0.9rem', color: '#64748b', marginBottom: '1.5rem' }}>
+                    {isFr ? 'Choisissez votre méthode de paiement' : 'Choose your payment method'}
+                </p>
+
+                {/* Package summary */}
+                {selectedPkg && (
+                    <div style={{
+                        padding: '0.9rem 1.2rem', borderRadius: '14px',
+                        backgroundColor: '#eff6ff', border: '2px solid #bfdbfe',
+                        marginBottom: '1.5rem', display: 'flex',
+                        justifyContent: 'space-between', alignItems: 'center',
+                    }}>
+                        <span style={{ fontWeight: '700', color: '#0056D2' }}>{selectedPkg.label} gems</span>
+                        <span style={{ fontWeight: '800', color: '#0056D2', fontSize: '1.1rem' }}>{selectedPkg.price}</span>
+                    </div>
+                )}
+
+                {/* Payment options */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                    {PAYMENT_METHODS.map((pm) => {
+                        const sel = payMethod === pm.id;
+                        return (
+                            <button
+                                key={pm.id}
+                                onClick={() => setPayMethod(pm.id)}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '1rem',
+                                    padding: '1rem 1.2rem', borderRadius: '16px',
+                                    border: `2px solid ${sel ? '#0056D2' : '#e2e8f0'}`,
+                                    backgroundColor: sel ? '#eff6ff' : '#fff',
+                                    cursor: 'pointer', fontFamily: 'inherit',
+                                    transition: 'all 0.15s',
+                                }}
+                            >
+                                <span style={{ fontSize: '1.5rem' }}>{pm.icon}</span>
+                                <span style={{ fontWeight: '700', color: sel ? '#0056D2' : '#334155', fontSize: '1rem' }}>
+                                    {pm.label}
+                                </span>
+                                {sel && <span style={{ marginLeft: 'auto', color: '#0056D2', fontSize: '1.2rem' }}>✓</span>}
+                            </button>
+                        );
+                    })}
+                </div>
+
+                {/* Mastercard fields */}
+                {isMC && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                        <input
+                            placeholder={isFr ? 'Numéro de carte (16 chiffres)' : 'Card number (16 digits)'}
+                            maxLength={19}
+                            value={cardNum}
+                            onChange={(e) => {
+                                const v = e.target.value.replace(/\D/g,'').slice(0,16);
+                                setCardNum(v.replace(/(.{4})/g,'$1 ').trim());
+                            }}
+                            style={inputStyle}
+                        />
+                        <input
+                            placeholder={isFr ? 'Nom sur la carte' : 'Name on card'}
+                            value={cardName}
+                            onChange={(e) => setCardName(e.target.value)}
+                            style={inputStyle}
+                        />
+                        <div style={{ display: 'flex', gap: '0.75rem' }}>
+                            <input
+                                placeholder="MM/YY"
+                                maxLength={5}
+                                value={cardExpiry}
+                                onChange={(e) => {
+                                    const v = e.target.value.replace(/\D/g,'').slice(0,4);
+                                    setCardExpiry(v.length > 2 ? v.slice(0,2)+'/'+v.slice(2) : v);
+                                }}
+                                style={{ ...inputStyle, flex: 1 }}
+                            />
+                            <input
+                                placeholder="CVV"
+                                maxLength={3}
+                                value={cardCvv}
+                                onChange={(e) => setCardCvv(e.target.value.replace(/\D/g,'').slice(0,3))}
+                                style={{ ...inputStyle, flex: 1 }}
+                            />
+                        </div>
+                    </div>
+                )}
+
+                <button
+                    onClick={() => canContinue && setPurchaseFlow('summary')}
+                    disabled={!canContinue}
+                    style={ctaStyle(canContinue)}
+                >
+                    {isFr ? 'Continuer' : 'Continue'}
+                </button>
+            </div>
+        );
+    };
+
+    /* ── Order Summary ── */
+    const renderOrderSummary = () => (
+        <div style={{ flex: 1, overflowY: 'auto', padding: '2rem' }}>
+            <button onClick={() => setPurchaseFlow('payment')} style={{
+                background: 'none', border: 'none', fontSize: '1.5rem',
+                cursor: 'pointer', color: '#0f172a', marginBottom: '1.5rem', padding: '0',
+            }}>←</button>
+
+            <h2 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.5rem' }}>
+                {isFr ? 'Récapitulatif 📋' : 'Order Summary 📋'}
+            </h2>
+            <p style={{ fontSize: '0.9rem', color: '#64748b', marginBottom: '1.5rem' }}>
+                {isFr ? 'Vérifiez votre commande avant de confirmer' : 'Review your order before confirming'}
+            </p>
+
+            {/* Summary card */}
+            <div style={{
+                borderRadius: '20px', border: '2px solid #e2e8f0',
+                overflow: 'hidden', marginBottom: '1.5rem',
+            }}>
+                <div style={{
+                    background: 'linear-gradient(135deg, #0056D2, #38bdf8)',
+                    padding: '1.5rem', textAlign: 'center', color: '#fff',
+                }}>
+                    <div style={{ fontSize: '2.5rem', marginBottom: '0.25rem' }}>💎</div>
+                    <div style={{ fontSize: '1.8rem', fontWeight: '800' }}>
+                        {selectedPkg?.gems.toLocaleString()} {isFr ? 'diamants' : 'diamonds'}
+                    </div>
+                </div>
+                <div style={{ padding: '1rem 1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    {[
+                        { labelEn: 'Package', labelFr: 'Forfait', val: selectedPkg?.label },
+                        { labelEn: 'Payment', labelFr: 'Paiement', val: PAYMENT_METHODS.find(p => p.id === payMethod)?.label },
+                        payMethod === 'mastercard' && { labelEn: 'Card', labelFr: 'Carte', val: `•••• •••• •••• ${cardNum.slice(-4)}` },
+                    ].filter(Boolean).map((row, i) => (
+                        <div key={i} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <span style={{ fontSize: '0.88rem', color: '#64748b', fontWeight: '600' }}>
+                                {isFr ? row.labelFr : row.labelEn}
+                            </span>
+                            <span style={{ fontSize: '0.88rem', color: '#0f172a', fontWeight: '700' }}>{row.val}</span>
+                        </div>
+                    ))}
+                    <div style={{ height: '1px', backgroundColor: '#e2e8f0' }} />
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <span style={{ fontWeight: '800', color: '#0f172a' }}>Total</span>
+                        <span style={{ fontWeight: '800', color: '#0056D2', fontSize: '1.1rem' }}>
+                            {selectedPkg?.price}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <button
+                onClick={() => {
+                    setGems((g) => g + (selectedPkg?.gems || 0));
+                    setPurchaseFlow('success');
+                }}
+                style={ctaStyle(true)}
+            >
+                {isFr ? 'Confirmer le paiement' : 'Confirm Payment'}
+            </button>
+        </div>
+    );
+
+    /* ── Payment Success ── */
+    const renderPaymentSuccess = () => (
+        <div style={{
+            flex: 1, display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center',
+            padding: '2rem', textAlign: 'center',
+        }}>
+            <style>{`
+                @keyframes yeeaayy-bounce {
+                    0%,100% { transform: scale(1) rotate(-2deg); }
+                    50%     { transform: scale(1.08) rotate(2deg); }
+                }
+                @keyframes success-pop {
+                    0%   { transform: scale(0.5); opacity: 0; }
+                    70%  { transform: scale(1.05); opacity: 1; }
+                    100% { transform: scale(1); }
+                }
+            `}</style>
+
+            <h1 style={{
+                fontSize: '2.4rem', fontWeight: '900', color: '#0056D2',
+                marginBottom: '1.5rem', letterSpacing: '-0.02em',
+                animation: 'yeeaayy-bounce 1s ease-in-out infinite',
+            }}>
+                Yeeaayy !! 🎉
+            </h1>
+
+            <img
+                src={profileWelcomeVector}
+                alt="Success"
+                style={{
+                    width: '200px', height: 'auto', marginBottom: '1.5rem',
+                    animation: 'success-pop 0.6s cubic-bezier(0.175,0.885,0.32,1.275) both',
+                }}
+            />
+
+            <h2 style={{ fontSize: '1.6rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.75rem' }}>
+                {isFr ? 'Succès !' : 'Successful!'}
+            </h2>
+            <p style={{
+                fontSize: '1rem', color: '#64748b', maxWidth: '280px',
+                lineHeight: '1.65', marginBottom: '2.5rem', fontWeight: '500',
+            }}>
+                {selectedPkg
+                    ? (isFr
+                        ? `${selectedPkg.gems.toLocaleString()} diamants ont été ajoutés à votre compte.`
+                        : `${selectedPkg.gems.toLocaleString()} diamonds have been added to your account.`)
+                    : ''}
+            </p>
+
+            <button
+                onClick={() => {
+                    setPurchaseFlow(null);
+                    setSelectedPkg(null);
+                    setPayMethod(null);
+                    setCardNum(''); setCardName(''); setCardExpiry(''); setCardCvv('');
+                    setActiveNav('home');
+                }}
+                style={ctaStyle(true)}
+            >
+                OK
+            </button>
+        </div>
+    );
+
+    /* ════════════════════════════════════════════════════════════════
+       TAB CONTENT
+    ════════════════════════════════════════════════════════════════ */
+
+    /* ── HOME: Learning Path ── */
+    const renderHome = () => (
+        <div style={{ flex: 1, overflowY: 'auto', paddingBottom: '4rem' }}>
+            <style>{`
+                @keyframes pulse-ring {
+                    0%   { box-shadow: 0 6px 0 #0041a3, 0 0 0 0 rgba(0,86,210,0.45); }
+                    70%  { box-shadow: 0 6px 0 #0041a3, 0 0 0 14px rgba(0,86,210,0); }
+                    100% { box-shadow: 0 6px 0 #0041a3, 0 0 0 0 rgba(0,86,210,0); }
+                }
+            `}</style>
+            {units.map((unit, uIdx) => {
+                const unitStart = globalIdx;
+                globalIdx += unit.lessons.length;
+                return (
+                    <div key={unit.id}>
+                        {/* Unit header */}
+                        <div style={{
+                            margin: '2rem 2rem 0',
+                            padding: '1.2rem 1.6rem', borderRadius: '20px',
+                            background: `linear-gradient(135deg, ${unit.color}, ${unit.accent})`,
+                            color: '#fff', display: 'flex', justifyContent: 'space-between',
+                            alignItems: 'center', boxShadow: `0 8px 24px ${unit.color}44`,
+                        }}>
+                            <div>
+                                <div style={{ fontSize: '0.72rem', fontWeight: '700', letterSpacing: '1px', opacity: 0.75, marginBottom: '0.2rem' }}>
+                                    {(isFr ? `UNITÉ ${unit.id}` : `UNIT ${unit.id}`) + ' · ' + (learnLang === 'english' ? '🇬🇧' : '🇨🇲')}
+                                </div>
+                                <div style={{ fontSize: '1.1rem', fontWeight: '800' }}>{isFr ? unit.titleFr : unit.titleEn}</div>
+                                <div style={{ fontSize: '0.78rem', opacity: 0.85, marginTop: '0.2rem' }}>{isFr ? unit.subFr : unit.subEn}</div>
+                            </div>
+                            <div style={{
+                                width: '52px', height: '52px', borderRadius: '14px',
+                                backgroundColor: 'rgba(255,255,255,0.2)', display: 'flex',
+                                alignItems: 'center', justifyContent: 'center', fontSize: '1.85rem',
+                            }}>{unit.emoji}</div>
+                        </div>
+
+                        {/* Lesson nodes */}
+                        <div style={{
+                            display: 'flex', flexDirection: 'column',
+                            alignItems: 'center', padding: '2rem 0', gap: '1.6rem',
+                        }}>
+                            {unit.lessons.map((lesson, lIdx) => {
+                                const offset  = zigzag[(unitStart + lIdx) % zigzag.length];
+                                const done    = lesson.status === 'completed';
+                                const active  = lesson.status === 'active';
+                                const locked  = lesson.status === 'locked';
+                                const isBoss  = lesson.type === 'boss';
+                                const isChest = lesson.type === 'chest';
+                                const size    = isBoss ? 88 : isChest ? 72 : 68;
+                                const radius  = isBoss ? '20px' : isChest ? '18px' : '50%';
+                                const bg      = done || active ? unit.color : '#e2e8f0';
+                                const sh      = done || active ? unit.accent : '#b2b2b2';
+                                const icon    = done ? '✓'
+                                    : locked ? (isChest ? '💰' : isBoss ? '🏆' : '🔒')
+                                    : (isChest ? '💰' : isBoss ? '🏆' : '⭐');
+
+                                return (
+                                    <div key={lesson.id} style={{
+                                        display: 'flex', flexDirection: 'column',
+                                        alignItems: 'center', gap: '0.55rem',
+                                        transform: `translateX(${offset}px)`, position: 'relative',
+                                    }}>
+                                        {active && (
+                                            <div style={{
+                                                position: 'absolute', top: `-${size / 2 + 28}px`,
+                                                backgroundColor: unit.color, color: '#fff',
+                                                padding: '0.4rem 1rem', borderRadius: '10px',
+                                                fontWeight: '800', fontSize: '0.78rem',
+                                                letterSpacing: '0.6px', whiteSpace: 'nowrap',
+                                                boxShadow: `0 4px 0 ${unit.accent}`, zIndex: 5,
+                                            }}>
+                                                {isFr ? 'COMMENCER' : 'START'}
+                                                <div style={{
+                                                    position: 'absolute', bottom: '-7px', left: '50%',
+                                                    transform: 'translateX(-50%)',
+                                                    borderLeft: '7px solid transparent',
+                                                    borderRight: '7px solid transparent',
+                                                    borderTop: `7px solid ${unit.color}`,
+                                                }} />
+                                            </div>
+                                        )}
+                                        <div
+                                            onClick={() => {
+                                                if (!locked && !isChest && !isBoss) {
+                                                    setActiveLesson({ ...lesson, unitColor: unit.color, unitAccent: unit.accent });
+                                                    setLessonFlow('loading');
+                                                }
+                                            }}
+                                            style={{
+                                                width: `${size}px`, height: `${size}px`,
+                                                borderRadius: radius, backgroundColor: bg,
+                                                boxShadow: `0 6px 0 ${sh}`,
+                                                display: 'flex', flexDirection: 'column',
+                                                justifyContent: 'center', alignItems: 'center',
+                                                cursor: locked || isChest || isBoss ? 'default' : 'pointer',
+                                                opacity: locked ? 0.55 : 1, gap: '2px',
+                                                animation: active ? 'pulse-ring 2s ease-out infinite' : 'none',
+                                            }}
+                                            onMouseDown={(e) => { if (!locked && !isChest && !isBoss) e.currentTarget.style.transform = 'translateY(5px)'; }}
+                                            onMouseUp={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                                            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                                        >
+                                            <span style={{ fontSize: isBoss ? '1.9rem' : isChest ? '1.6rem' : '1.5rem' }}>{icon}</span>
+                                            {isBoss && <span style={{ fontSize: '0.55rem', fontWeight: '800', color: '#fff', letterSpacing: '0.5px' }}>BOSS</span>}
+                                        </div>
+                                        <span style={{
+                                            fontWeight: '700', fontSize: '0.78rem',
+                                            color: done || active ? unit.color : '#9ca3af',
+                                            textAlign: 'center', maxWidth: '84px', lineHeight: 1.3,
+                                        }}>
+                                            {isFr ? lesson.titleFr : lesson.titleEn}
+                                        </span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        {uIdx < units.length - 1 && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', margin: '0.5rem 2rem', color: '#cbd5e1' }}>
+                                <div style={{ flex: 1, height: '2px', backgroundColor: '#e5e7eb' }} />
+                                <span style={{ fontSize: '0.75rem', fontWeight: '600', color: '#cbd5e1' }}>
+                                    {isFr ? 'UNITÉ SUIVANTE' : 'NEXT UNIT'}
+                                </span>
+                                <div style={{ flex: 1, height: '2px', backgroundColor: '#e5e7eb' }} />
+                            </div>
+                        )}
+                    </div>
+                );
+            })}
+        </div>
+    );
+
+    /* ── LEADERBOARD ── */
+    const renderLeaderboard = () => (
+        <div style={{ flex: 1, overflowY: 'auto', padding: '2rem' }}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.25rem' }}>
+                {isFr ? '🏆 Classement' : '🏆 Leaderboard'}
+            </h2>
+            <p style={{ fontSize: '0.88rem', color: '#64748b', marginBottom: '1.5rem' }}>
+                {isFr ? 'Voyez où vous vous situez cette semaine' : 'See how you rank this week'}
+            </p>
+
+            {/* Tabs */}
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
+                {[
+                    { id: 'weekly', en: 'Weekly', fr: 'Hebdomadaire' },
+                    { id: 'alltime', en: 'All Time', fr: 'Depuis Toujours' },
+                ].map((t) => (
+                    <button key={t.id} onClick={() => setLbTab(t.id)} style={{
+                        padding: '0.5rem 1.2rem', borderRadius: '99px',
+                        border: `2px solid ${lbTab === t.id ? '#0056D2' : '#e2e8f0'}`,
+                        backgroundColor: lbTab === t.id ? '#eff6ff' : '#fff',
+                        color: lbTab === t.id ? '#0056D2' : '#64748b',
+                        fontWeight: '700', fontSize: '0.82rem', cursor: 'pointer', fontFamily: 'inherit',
+                    }}>
+                        {isFr ? t.fr : t.en}
+                    </button>
+                ))}
+            </div>
+
+            {/* Top 3 Podium */}
+            <div style={{
+                display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+                gap: '1rem', marginBottom: '2rem',
+            }}>
+                {[LEADERBOARD_DATA[1], LEADERBOARD_DATA[0], LEADERBOARD_DATA[2]].map((entry, pi) => {
+                    const heights = [90, 120, 75];
+                    const colors  = ['#e2e8f0', '#fbbf24', '#d1d5db'];
+                    const order   = [2, 1, 3];
+                    return (
+                        <div key={entry.rank} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+                            <div style={{
+                                width: '44px', height: '44px', borderRadius: '50%',
+                                backgroundColor: colors[pi], display: 'flex',
+                                alignItems: 'center', justifyContent: 'center',
+                                fontSize: '1.2rem', fontWeight: '800', color: '#0f172a',
+                                border: `3px solid ${pi === 1 ? '#f59e0b' : '#e2e8f0'}`,
+                            }}>
+                                {entry.badge || entry.name[0]}
+                            </div>
+                            <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#334155', maxWidth: '60px', textAlign: 'center' }}>
+                                {entry.name}
+                            </span>
+                            <div style={{
+                                width: '64px', height: `${heights[pi]}px`,
+                                backgroundColor: pi === 1 ? '#fbbf24' : pi === 0 ? '#9ca3af' : '#d1d5db',
+                                borderRadius: '8px 8px 0 0', display: 'flex',
+                                alignItems: 'center', justifyContent: 'center',
+                                flexDirection: 'column', gap: '4px',
+                            }}>
+                                <span style={{ fontSize: '1.1rem', fontWeight: '800', color: '#fff' }}>{order[pi]}</span>
+                                <span style={{ fontSize: '0.6rem', color: '#fff', fontWeight: '700', opacity: 0.85 }}>{entry.xp} XP</span>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* Full list */}
+            <div style={{ borderRadius: '16px', border: '2px solid #e2e8f0', overflow: 'hidden' }}>
+                {LEADERBOARD_DATA.map((entry, i) => (
+                    <div key={entry.rank} style={{
+                        display: 'flex', alignItems: 'center', gap: '0.75rem',
+                        padding: '0.85rem 1.1rem',
+                        backgroundColor: entry.you ? '#eff6ff' : i % 2 === 0 ? '#fff' : '#fafafa',
+                        borderBottom: i < LEADERBOARD_DATA.length - 1 ? '1px solid #f1f5f9' : 'none',
+                    }}>
+                        <span style={{
+                            width: '24px', textAlign: 'center',
+                            fontWeight: '800', fontSize: '0.85rem',
+                            color: entry.rank <= 3 ? '#f59e0b' : '#9ca3af',
+                        }}>
+                            {entry.badge || entry.rank}
+                        </span>
+                        <div style={{
+                            width: '32px', height: '32px', borderRadius: '50%',
+                            backgroundColor: entry.you ? '#0056D2' : '#e2e8f0',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: '0.82rem', fontWeight: '800',
+                            color: entry.you ? '#fff' : '#334155',
+                        }}>
+                            {entry.name[0]}
+                        </div>
+                        <span style={{
+                            flex: 1, fontWeight: entry.you ? '800' : '600',
+                            fontSize: '0.88rem', color: entry.you ? '#0056D2' : '#334155',
+                        }}>
+                            {entry.you ? (isFr ? 'Vous' : 'You') : entry.name}
+                        </span>
+                        <span style={{ fontWeight: '800', fontSize: '0.82rem', color: '#0056D2' }}>
+                            {entry.xp} XP
+                        </span>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+
+    /* ── CHALLENGE ── */
+    const renderChallenge = () => (
+        <div style={{ flex: 1, overflowY: 'auto', padding: '2rem' }}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.25rem' }}>
+                {isFr ? '⚡ Défis' : '⚡ Challenges'}
+            </h2>
+            <p style={{ fontSize: '0.88rem', color: '#64748b', marginBottom: '1.5rem' }}>
+                {isFr ? 'Relevez des défis pour gagner des récompenses' : 'Complete challenges to earn rewards'}
+            </p>
+
+            {/* ── Personalised challenge based on user's reason ── */}
+            <div style={{
+                padding: '1rem 1.25rem', borderRadius: '16px', marginBottom: '1.75rem',
+                background: 'linear-gradient(135deg, #0056D2 0%, #38bdf8 100%)',
+                color: '#fff',
+            }}>
+                <div style={{ fontSize: '0.68rem', fontWeight: '800', letterSpacing: '0.8px', opacity: 0.8, marginBottom: '0.4rem', textTransform: 'uppercase' }}>
+                    {isFr ? `✨ Défi personnalisé · ${reasonMeta.fr}` : `✨ Personalised · ${reasonMeta.en}`}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
+                    <span style={{ fontSize: '1.5rem' }}>{reasonMeta.emoji}</span>
+                    <span style={{ fontWeight: '700', fontSize: '0.95rem' }}>
+                        {isFr ? reasonMeta.challengeFr : reasonMeta.challengeEn}
+                    </span>
+                    <span style={{
+                        marginLeft: 'auto', backgroundColor: 'rgba(255,255,255,0.2)',
+                        borderRadius: '99px', padding: '0.2rem 0.65rem',
+                        fontSize: '0.75rem', fontWeight: '800', whiteSpace: 'nowrap',
+                    }}>
+                        +{reasonMeta.reward} XP
+                    </span>
+                </div>
+                <Bar value={0} max={1} color="rgba(255,255,255,0.5)" />
+            </div>
+
+            {/* Daily */}
+            <h3 style={{ fontSize: '1rem', fontWeight: '800', color: '#0f172a', marginBottom: '1rem' }}>
+                {isFr ? '📅 Défis du jour' : '📅 Daily Challenges'}
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginBottom: '2rem' }}>
+                {DAILY_CHALLENGES.map((ch) => {
+                    const done = ch.progress >= ch.total;
+                    return (
+                        <div key={ch.id} style={{
+                            padding: '1rem 1.25rem', borderRadius: '16px',
+                            border: `2px solid ${done ? '#bbf7d0' : '#e2e8f0'}`,
+                            backgroundColor: done ? '#f0fdf4' : '#fff',
+                        }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.6rem' }}>
+                                <span style={{ fontSize: '1.4rem' }}>{ch.icon}</span>
+                                <span style={{ flex: 1, fontWeight: '700', fontSize: '0.9rem', color: '#0f172a' }}>
+                                    {isFr ? ch.titleFr : ch.titleEn}
+                                </span>
+                                <span style={{
+                                    padding: '0.25rem 0.65rem', borderRadius: '99px',
+                                    backgroundColor: '#fef9c3', color: '#ca8a04',
+                                    fontSize: '0.75rem', fontWeight: '800',
+                                }}>
+                                    +{ch.reward} XP
+                                </span>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: '#64748b', marginBottom: '0.4rem' }}>
+                                <span>{ch.progress} / {ch.total}</span>
+                                {done && <span style={{ color: '#16a34a', fontWeight: '700' }}>✓ {isFr ? 'Terminé' : 'Done'}</span>}
+                            </div>
+                            <Bar value={ch.progress} max={ch.total} color={done ? '#16a34a' : '#0056D2'} />
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* Weekly */}
+            <h3 style={{ fontSize: '1rem', fontWeight: '800', color: '#0f172a', marginBottom: '1rem' }}>
+                {isFr ? '📆 Défis de la semaine' : '📆 Weekly Challenges'}
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                {WEEKLY_CHALLENGES.map((ch) => {
+                    const done = ch.progress >= ch.total;
+                    return (
+                        <div key={ch.id} style={{
+                            padding: '1rem 1.25rem', borderRadius: '16px',
+                            border: `2px solid ${done ? '#bbf7d0' : '#e2e8f0'}`,
+                            backgroundColor: done ? '#f0fdf4' : '#fff',
+                        }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.6rem' }}>
+                                <span style={{ fontSize: '1.4rem' }}>{ch.icon}</span>
+                                <span style={{ flex: 1, fontWeight: '700', fontSize: '0.9rem', color: '#0f172a' }}>
+                                    {isFr ? ch.titleFr : ch.titleEn}
+                                </span>
+                                <span style={{
+                                    padding: '0.25rem 0.65rem', borderRadius: '99px',
+                                    backgroundColor: '#eff6ff', color: '#0056D2',
+                                    fontSize: '0.75rem', fontWeight: '800',
+                                }}>
+                                    💎 {ch.reward}
+                                </span>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: '#64748b', marginBottom: '0.4rem' }}>
+                                <span>{ch.progress} / {ch.total}</span>
+                                {done && <span style={{ color: '#16a34a', fontWeight: '700' }}>✓ {isFr ? 'Terminé' : 'Done'}</span>}
+                            </div>
+                            <Bar value={ch.progress} max={ch.total} color={done ? '#16a34a' : '#2563eb'} />
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+
+    /* ── PREMIUM (gem packages) ── */
+    const renderPremium = () => {
+        if (purchaseFlow === 'payment')  return renderPaymentMethod();
+        if (purchaseFlow === 'summary')  return renderOrderSummary();
+        if (purchaseFlow === 'success')  return renderPaymentSuccess();
+
+        return (
+            <div style={{ flex: 1, overflowY: 'auto', padding: '2rem' }}>
+                {/* Hero */}
+                <div style={{
+                    borderRadius: '20px', padding: '1.75rem',
+                    background: 'linear-gradient(135deg, #0056D2 0%, #38bdf8 100%)',
+                    color: '#fff', textAlign: 'center', marginBottom: '2rem',
+                }}>
+                    <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>💎</div>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: '800', marginBottom: '0.35rem' }}>
+                        {isFr ? 'Acheter des Diamants' : 'Buy Diamonds'}
+                    </h2>
+                    <p style={{ fontSize: '0.85rem', opacity: 0.9, lineHeight: 1.55 }}>
+                        {isFr
+                            ? 'Utilisez des diamants pour débloquer des boosts, des cours bonus et bien plus encore.'
+                            : 'Use diamonds to unlock boosts, bonus lessons, and much more.'}
+                    </p>
+                    <div style={{
+                        marginTop: '1rem', display: 'inline-flex', alignItems: 'center',
+                        gap: '0.5rem', backgroundColor: 'rgba(255,255,255,0.2)',
+                        padding: '0.4rem 1rem', borderRadius: '99px',
+                    }}>
+                        <span style={{ fontSize: '1.1rem' }}>💎</span>
+                        <span style={{ fontWeight: '800', fontSize: '1rem' }}>
+                            {gems.toLocaleString()} {isFr ? 'diamants' : 'diamonds'}
+                        </span>
+                    </div>
+                </div>
+
+                {/* Packages */}
+                <h3 style={{ fontSize: '1rem', fontWeight: '800', color: '#0f172a', marginBottom: '1rem' }}>
+                    {isFr ? 'Choisissez un forfait' : 'Choose a package'}
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginBottom: '2rem' }}>
+                    {GEM_PACKAGES.map((pkg) => (
+                        <div key={pkg.id} style={{
+                            padding: '1rem 1.25rem', borderRadius: '16px',
+                            border: `2px solid ${pkg.popular ? '#0056D2' : '#e2e8f0'}`,
+                            backgroundColor: pkg.popular ? '#eff6ff' : '#fff',
+                            display: 'flex', alignItems: 'center', gap: '0.75rem',
+                            position: 'relative',
+                        }}>
+                            {pkg.popular && (
+                                <div style={{
+                                    position: 'absolute', top: '-11px', left: '50%',
+                                    transform: 'translateX(-50%)',
+                                    backgroundColor: '#0056D2', color: '#fff',
+                                    fontSize: '0.68rem', fontWeight: '800',
+                                    padding: '0.2rem 0.75rem', borderRadius: '99px',
+                                    letterSpacing: '0.5px', whiteSpace: 'nowrap',
+                                }}>
+                                    {isFr ? '⭐ POPULAIRE' : '⭐ POPULAR'}
+                                </div>
+                            )}
+                            <span style={{ fontSize: '1.75rem' }}>💎</span>
+                            <div style={{ flex: 1 }}>
+                                <div style={{ fontWeight: '800', fontSize: '1rem', color: '#0f172a' }}>
+                                    {pkg.gems.toLocaleString()} {isFr ? 'diamants' : 'diamonds'}
+                                </div>
+                                <div style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: '600' }}>
+                                    {isFr ? `Environ ${(pkg.gems / parseFloat(pkg.price.slice(1))).toFixed(0)} par $` : `~${(pkg.gems / parseFloat(pkg.price.slice(1))).toFixed(0)} per $`}
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => { setSelectedPkg(pkg); setPurchaseFlow('payment'); }}
+                                style={{
+                                    padding: '0.6rem 1.2rem', borderRadius: '99px',
+                                    backgroundColor: '#0056D2', color: '#fff',
+                                    fontWeight: '800', fontSize: '0.88rem',
+                                    border: 'none', cursor: 'pointer', fontFamily: 'inherit',
+                                }}
+                            >
+                                {pkg.price}
+                            </button>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Perks */}
+                <div style={{
+                    padding: '1.25rem', borderRadius: '16px',
+                    border: '2px solid #e2e8f0', backgroundColor: '#fafafa',
+                }}>
+                    <h4 style={{ fontWeight: '800', fontSize: '0.9rem', color: '#0f172a', marginBottom: '0.75rem' }}>
+                        {isFr ? '💡 À quoi servent les diamants ?' : '💡 What can diamonds do?'}
+                    </h4>
+                    {[
+                        { icon: '❤️', en: 'Refill hearts instantly',      fr: 'Recharger les cœurs instantanément'  },
+                        { icon: '🎯', en: 'Unlock bonus lessons',         fr: 'Débloquer des leçons bonus'           },
+                        { icon: '⚡', en: 'Activate XP boosts',           fr: 'Activer des boosts XP'               },
+                        { icon: '🎨', en: 'Customize your profile',       fr: 'Personnaliser votre profil'          },
+                    ].map((perk, i) => (
+                        <div key={i} style={{
+                            display: 'flex', alignItems: 'center', gap: '0.65rem',
+                            padding: '0.4rem 0',
+                            borderBottom: i < 3 ? '1px solid #e2e8f0' : 'none',
+                        }}>
+                            <span>{perk.icon}</span>
+                            <span style={{ fontSize: '0.85rem', color: '#334155', fontWeight: '600' }}>
+                                {isFr ? perk.fr : perk.en}
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    };
+
+    /* ── ACCOUNT ── */
+    const renderAccount = () => {
+        const initials = userName
+            ? userName.trim().split(' ').map((w) => w[0].toUpperCase()).slice(0, 2).join('')
+            : '?';
+
+        return (
+            <div style={{ flex: 1, overflowY: 'auto', padding: '2rem' }}>
+
+                {/* ── Profile card ── */}
+                <div style={{
+                    padding: '1.5rem', borderRadius: '20px',
+                    border: '2px solid #e2e8f0', backgroundColor: '#fff',
+                    display: 'flex', alignItems: 'center', gap: '1.25rem', marginBottom: '1rem',
+                }}>
+                    {/* Avatar with initials */}
+                    <div style={{
+                        width: '64px', height: '64px', borderRadius: '50%',
+                        background: 'linear-gradient(135deg, #0056D2, #38bdf8)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: '1.4rem', fontWeight: '900', color: '#fff', flexShrink: 0,
+                        letterSpacing: '-0.5px',
+                    }}>
+                        {initials}
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontWeight: '800', fontSize: '1.1rem', color: '#0f172a', marginBottom: '2px' }}>
+                            {userName || (isFr ? 'Mon Profil' : 'My Profile')}
+                        </div>
+                        {profile.email && (
+                            <div style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: '600', marginBottom: '6px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                {profile.email}
+                            </div>
+                        )}
+                        {profile.age && (
+                            <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: '600' }}>
+                                {isFr ? `${profile.age} ans` : `${profile.age} years old`}
+                            </div>
+                        )}
+                    </div>
+                    <button style={{
+                        padding: '0.3rem 0.9rem', borderRadius: '99px',
+                        border: '2px solid #0056D2', backgroundColor: 'transparent',
+                        color: '#0056D2', fontSize: '0.75rem', fontWeight: '700',
+                        cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0,
+                    }}>
+                        {isFr ? 'Modifier' : 'Edit'}
+                    </button>
+                </div>
+
+                {/* ── Profile info chips ── */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.5rem' }}>
+                    {/* Proficiency */}
+                    <div style={{
+                        display: 'flex', alignItems: 'center', gap: '0.4rem',
+                        padding: '0.35rem 0.85rem', borderRadius: '99px',
+                        backgroundColor: profMeta.color + '18',
+                        border: `2px solid ${profMeta.color}44`,
+                    }}>
+                        <span style={{ fontSize: '0.8rem' }}>📊</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '800', color: profMeta.color }}>
+                            {isFr ? profMeta.fr : profMeta.en}
+                        </span>
+                    </div>
+                    {/* Reason */}
+                    {profile.reason && (
+                        <div style={{
+                            display: 'flex', alignItems: 'center', gap: '0.4rem',
+                            padding: '0.35rem 0.85rem', borderRadius: '99px',
+                            backgroundColor: '#f0fdf4', border: '2px solid #bbf7d0',
+                        }}>
+                            <span style={{ fontSize: '0.8rem' }}>{reasonMeta.emoji}</span>
+                            <span style={{ fontSize: '0.75rem', fontWeight: '800', color: '#16a34a' }}>
+                                {isFr ? reasonMeta.fr : reasonMeta.en}
+                            </span>
+                        </div>
+                    )}
+                    {/* Daily goal */}
+                    <div style={{
+                        display: 'flex', alignItems: 'center', gap: '0.4rem',
+                        padding: '0.35rem 0.85rem', borderRadius: '99px',
+                        backgroundColor: '#fffbeb', border: '2px solid #fde68a',
+                    }}>
+                        <span style={{ fontSize: '0.8rem' }}>⏱️</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '800', color: '#d97706' }}>
+                            {goalCfg.time} {isFr ? 'min/j' : 'min/d'}
+                        </span>
+                    </div>
+                    {/* Learning language */}
+                    <div style={{
+                        display: 'flex', alignItems: 'center', gap: '0.4rem',
+                        padding: '0.35rem 0.85rem', borderRadius: '99px',
+                        backgroundColor: '#eff6ff', border: '2px solid #bfdbfe',
+                    }}>
+                        <span style={{ fontSize: '0.8rem' }}>{learnLang === 'english' ? '🇬🇧' : '🇨🇲'}</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '800', color: '#0056D2' }}>
+                            {learnLang === 'english' ? 'English' : 'Medumba'}
+                        </span>
+                    </div>
+                </div>
+
+                {/* ── Goals ── */}
+                {userGoals.length > 0 && (
+                    <div style={{ marginBottom: '1.5rem' }}>
+                        <h3 style={{ fontSize: '0.88rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.75rem' }}>
+                            {isFr ? '🎯 Mes Objectifs' : '🎯 My Goals'}
+                        </h3>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                            {userGoals.map((g) => {
+                                const gm = GOAL_META[g];
+                                if (!gm) return null;
+                                return (
+                                    <div key={g} style={{
+                                        display: 'flex', alignItems: 'center', gap: '0.6rem',
+                                        padding: '0.6rem 1rem', borderRadius: '12px',
+                                        backgroundColor: '#f8fafc', border: '1px solid #e2e8f0',
+                                    }}>
+                                        <span>{gm.emoji}</span>
+                                        <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#334155' }}>
+                                            {isFr ? gm.fr : gm.en}
+                                        </span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
+
+                {/* ── Stats ── */}
+                <h3 style={{ fontSize: '0.95rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.85rem' }}>
+                    {isFr ? '📊 Mes Statistiques' : '📊 My Stats'}
+                </h3>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                    {[
+                        { icon: '🔥', valEn: `${userStats.streak} days`, valFr: `${userStats.streak} jours`, labelEn: 'Streak', labelFr: 'Série' },
+                        { icon: '⚡', valEn: `${userStats.xp} XP`,      valFr: `${userStats.xp} XP`,        labelEn: 'Total XP', labelFr: 'XP Total' },
+                        { icon: '💎', valEn: `${gems}`,                  valFr: `${gems}`,                    labelEn: 'Diamonds', labelFr: 'Diamants' },
+                        { icon: '❤️', valEn: `${userStats.hearts}/5`,   valFr: `${userStats.hearts}/5`,      labelEn: 'Hearts',   labelFr: 'Cœurs' },
+                    ].map((stat, i) => (
+                        <div key={i} style={{
+                            padding: '1rem', borderRadius: '14px',
+                            border: '2px solid #e2e8f0', backgroundColor: '#fff', textAlign: 'center',
+                        }}>
+                            <div style={{ fontSize: '1.5rem', marginBottom: '0.3rem' }}>{stat.icon}</div>
+                            <div style={{ fontWeight: '800', fontSize: '1.1rem', color: '#0056D2' }}>
+                                {isFr ? stat.valFr : stat.valEn}
+                            </div>
+                            <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: '600', marginTop: '2px' }}>
+                                {isFr ? stat.labelFr : stat.labelEn}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* ── Settings ── */}
+                <h3 style={{ fontSize: '0.95rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.85rem' }}>
+                    {isFr ? '⚙️ Paramètres' : '⚙️ Settings'}
+                </h3>
+                <div style={{ borderRadius: '16px', border: '2px solid #e2e8f0', overflow: 'hidden', marginBottom: '1rem' }}>
+                    {[
+                        { icon: '🔔', en: 'Notifications',      fr: 'Notifications'        },
+                        { icon: '🌙', en: 'Dark Mode',          fr: 'Mode Sombre'          },
+                        { icon: '🔒', en: 'Privacy & Security', fr: 'Confidentialité'      },
+                        { icon: '📖', en: 'About Medumba',      fr: 'À propos de Medumba'  },
+                    ].map((item, i, arr) => (
+                        <div key={i} style={{
+                            display: 'flex', alignItems: 'center', gap: '0.75rem',
+                            padding: '0.9rem 1.1rem', cursor: 'pointer', backgroundColor: '#fff',
+                            borderBottom: i < arr.length - 1 ? '1px solid #f1f5f9' : 'none',
+                        }}>
+                            <span style={{ fontSize: '1.1rem' }}>{item.icon}</span>
+                            <span style={{ flex: 1, fontWeight: '600', fontSize: '0.9rem', color: '#334155' }}>
+                                {isFr ? item.fr : item.en}
+                            </span>
+                            <span style={{ color: '#9ca3af' }}>›</span>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Logout */}
+                <button style={{
+                    width: '100%', padding: '0.9rem', borderRadius: '14px',
+                    border: '2px solid #fee2e2', backgroundColor: '#fff',
+                    color: '#ef4444', fontWeight: '800', fontSize: '0.9rem',
+                    cursor: 'pointer', fontFamily: 'inherit', letterSpacing: '0.3px',
+                }}>
+                    🚪 {isFr ? 'Se déconnecter' : 'Log out'}
+                </button>
+            </div>
+        );
+    };
+
+    /* ── right panel (home only) ── */
+    const renderRightPanel = () => (
+        <aside style={{
+            width: '272px', minWidth: '272px',
+            borderLeft: '2px solid #e5e7eb', padding: '1.5rem 1.1rem',
+            display: 'flex', flexDirection: 'column', gap: '1.1rem',
+            backgroundColor: '#fff', overflowY: 'auto',
+        }}>
+            {/* Daily goal */}
+            <div style={{ padding: '1.1rem 1.2rem', borderRadius: '16px', border: '2px solid #e5e7eb' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem' }}>
+                    <span style={{ fontWeight: '800', fontSize: '0.88rem', color: '#0f172a' }}>
+                        {isFr ? 'Objectif du jour' : 'Daily Goal'}
+                    </span>
+                    <span style={{ fontSize: '1.1rem' }}>🎯</span>
+                </div>
+                <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: '600', marginBottom: '0.5rem' }}>
+                    {goalCfg.time} {isFr ? 'min / jour' : 'min / day'}
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#64748b', marginBottom: '0.5rem' }}>
+                    <span>0 / {goalCfg.xp} XP</span>
+                    <span style={{ fontWeight: '700', color: '#0056D2' }}>0%</span>
+                </div>
+                <Bar value={0} max={goalCfg.xp} />
+            </div>
+
+            {/* Streak week tracker */}
+            <div style={{ padding: '1.1rem 1.2rem', borderRadius: '16px', border: '2px solid #fde68a', backgroundColor: '#fffbeb' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.9rem' }}>
+                    <span style={{ fontWeight: '800', fontSize: '0.88rem', color: '#92400e' }}>
+                        {isFr ? 'Ma Série' : 'My Streak'}
+                    </span>
+                    <span style={{ fontSize: '1.1rem' }}>🔥</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    {(isFr ? ['L','M','M','J','V','S','D'] : ['M','T','W','T','F','S','S']).map((day, i) => {
+                        const on = i < userStats.streak;
+                        return (
+                            <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                                <div style={{
+                                    width: '28px', height: '28px', borderRadius: '50%',
+                                    backgroundColor: on ? '#f59e0b' : '#e2e8f0',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    fontSize: on ? '0.8rem' : '0',
+                                }}>
+                                    {on && '🔥'}
+                                </div>
+                                <span style={{ fontSize: '0.62rem', color: '#9ca3af', fontWeight: '600' }}>{day}</span>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+
+            {/* Leaderboard teaser */}
+            <div style={{ padding: '1.1rem 1.2rem', borderRadius: '16px', border: '2px solid #e5e7eb' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                    <span style={{ fontWeight: '800', fontSize: '0.88rem', color: '#0f172a' }}>
+                        {isFr ? 'Classement' : 'Leaderboard'}
+                    </span>
+                    <span style={{ fontSize: '1.1rem' }}>🏆</span>
+                </div>
+                {LEADERBOARD_DATA.slice(0, 3).map((entry, i, arr) => (
+                    <div key={entry.rank} style={{
+                        display: 'flex', alignItems: 'center', gap: '0.55rem',
+                        padding: '0.45rem 0',
+                        borderBottom: i < arr.length - 1 ? '1px solid #f1f5f9' : 'none',
+                    }}>
+                        <span style={{ fontSize: '1rem' }}>{entry.badge}</span>
+                        <span style={{ flex: 1, fontWeight: '600', fontSize: '0.82rem', color: '#334155' }}>{entry.name}</span>
+                        <span style={{ fontWeight: '800', fontSize: '0.78rem', color: '#0056D2' }}>{entry.xp} XP</span>
+                    </div>
+                ))}
+                <button
+                    onClick={() => setActiveNav('leaderboard')}
+                    style={{
+                        marginTop: '0.75rem', width: '100%', padding: '0.5rem',
+                        borderRadius: '8px', backgroundColor: 'transparent',
+                        border: '2px solid #e5e7eb', color: '#0056D2',
+                        fontWeight: '700', fontSize: '0.78rem', cursor: 'pointer',
+                        fontFamily: 'inherit', letterSpacing: '0.5px',
+                    }}
+                >
+                    {isFr ? 'VOIR TOUT' : 'VIEW ALL'}
+                </button>
+            </div>
+
+            {/* Upgrade card */}
+            <div style={{
+                padding: '1.2rem', borderRadius: '16px',
+                background: 'linear-gradient(135deg, #0056D2 0%, #38bdf8 100%)',
+                color: '#fff', textAlign: 'center',
+            }}>
+                <div style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>✨</div>
+                <div style={{ fontWeight: '800', fontSize: '0.95rem', marginBottom: '0.35rem' }}>Medumba Plus</div>
+                <div style={{ fontSize: '0.78rem', opacity: 0.9, marginBottom: '1rem', lineHeight: 1.5 }}>
+                    {isFr ? 'Cœurs illimités. Sans publicités. Hors ligne.' : 'Unlimited hearts. No ads. Offline mode.'}
+                </div>
+                <button
+                    onClick={() => setActiveNav('premium')}
+                    style={{
+                        backgroundColor: '#fff', color: '#0056D2',
+                        width: '100%', padding: '0.6rem', borderRadius: '10px',
+                        fontWeight: '800', fontSize: '0.82rem', border: 'none',
+                        cursor: 'pointer', fontFamily: 'inherit', letterSpacing: '0.5px',
+                    }}
+                >
+                    {isFr ? 'METTRE À NIVEAU' : 'UPGRADE'}
+                </button>
+            </div>
+        </aside>
+    );
+
+    /* ════════════════════════════════════════════════════════════════
+       LESSON FLOW — full-screen take-over
+    ════════════════════════════════════════════════════════════════ */
+    if (lessonFlow === 'loading') {
+        return (
+            <LessonLoadingPage
+                isFr={isFr}
+                lessonTitle={isFr ? (activeLesson?.titleFr ?? '') : (activeLesson?.titleEn ?? '')}
+                userName={userName}
+                onReady={() => setLessonFlow('lesson')}
+            />
+        );
+    }
+
+    if (lessonFlow === 'lesson') {
+        return (
+            <LessonPage
+                lesson={activeLesson}
+                learnLang={learnLang}
+                isFr={isFr}
+                onFinish={() => { setLessonFlow(null); setActiveLesson(null); setActiveNav('home'); }}
+                onClose={() =>  { setLessonFlow(null); setActiveLesson(null); }}
+            />
+        );
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+       RENDER
+    ════════════════════════════════════════════════════════════════ */
+    return (
+        <div style={{
+            display: 'flex', width: '100%', height: '100vh',
+            backgroundColor: '#f8fafc',
+            fontFamily: "'Outfit', system-ui, sans-serif",
+            overflow: 'hidden',
+        }}>
+
+            {/* ══════════════ LEFT SIDEBAR ══════════════ */}
+            <aside style={{
+                width: '220px', minWidth: '220px',
+                borderRight: '2px solid #e5e7eb',
+                display: 'flex', flexDirection: 'column',
+                height: '100%', backgroundColor: '#fff',
+                padding: '1.5rem 0.75rem',
+            }}>
+                {/* Brand */}
+                <div
+                    onClick={() => { setActiveNav('home'); setPurchaseFlow(null); }}
+                    style={{
+                        display: 'flex', alignItems: 'center', gap: '0.65rem',
+                        padding: '0 0.5rem', marginBottom: '1.25rem',
+                        cursor: 'pointer', userSelect: 'none',
+                    }}
+                >
+                    <img src={logo} alt="Medumba" style={{ width: '34px', height: 'auto' }} />
+                    <span style={{ fontSize: '1.35rem', fontWeight: '800', color: '#0056D2' }}>Medumba</span>
+                </div>
+
+                {/* Interface language switcher */}
+                <div style={{ padding: '0 0.5rem', marginBottom: '0.65rem' }}>
+                    <div style={{ fontSize: '0.68rem', fontWeight: '700', color: '#94a3b8', letterSpacing: '0.6px', marginBottom: '0.3rem', textTransform: 'uppercase' }}>
+                        {isFr ? 'Langue de l\'app' : 'App language'}
+                    </div>
+                    <select
+                        value={lang}
+                        onChange={(e) => setLang(e.target.value)}
+                        style={selectStyle}
+                    >
+                        <option value="en">🇺🇸 English</option>
+                        <option value="fr">🇫🇷 Français</option>
+                    </select>
+                </div>
+
+                {/* Learning language switcher */}
+                <div style={{ padding: '0 0.5rem', marginBottom: '1.5rem' }}>
+                    <div style={{ fontSize: '0.68rem', fontWeight: '700', color: '#94a3b8', letterSpacing: '0.6px', marginBottom: '0.3rem', textTransform: 'uppercase' }}>
+                        {isFr ? 'J\'apprends' : 'I\'m learning'}
+                    </div>
+                    <select
+                        value={learnLang}
+                        onChange={(e) => setLearnLang(e.target.value)}
+                        style={{ ...selectStyle, border: '2px solid #bfdbfe', backgroundColor: '#eff6ff', color: '#0056D2' }}
+                    >
+                        <option value="medumba">🇨🇲 Medumba</option>
+                        <option value="english">🇬🇧 English</option>
+                    </select>
+                </div>
+
+                {/* Nav items */}
+                <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', flex: 1 }}>
+                    {navItems.map((item) => {
+                        const on = activeNav === item.id;
+                        return (
+                            <button
+                                key={item.id}
+                                onClick={() => { setActiveNav(item.id); if (item.id !== 'premium') setPurchaseFlow(null); }}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '0.85rem',
+                                    padding: '0.78rem 1rem', borderRadius: '12px',
+                                    backgroundColor: on ? '#eff6ff' : 'transparent',
+                                    color: on ? '#0056D2' : '#6b7280',
+                                    border: on ? '2px solid #bfdbfe' : '2px solid transparent',
+                                    cursor: 'pointer', transition: 'all 0.15s',
+                                    textAlign: 'left', width: '100%', fontFamily: 'inherit',
+                                }}
+                                onMouseEnter={(e) => { if (!on) e.currentTarget.style.backgroundColor = '#f3f4f6'; }}
+                                onMouseLeave={(e) => { if (!on) e.currentTarget.style.backgroundColor = 'transparent'; }}
+                            >
+                                <span style={{ fontSize: '1.15rem' }}>{item.icon}</span>
+                                <span style={{ fontWeight: '700', fontSize: '0.8rem', letterSpacing: '0.7px' }}>
+                                    {isFr ? item.labelFr : item.labelEn}
+                                </span>
+                            </button>
+                        );
+                    })}
+                </nav>
+
+                {/* Streak badge */}
+                <div style={{
+                    borderRadius: '14px', border: '2px solid #fde68a',
+                    backgroundColor: '#fffbeb', padding: '0.9rem 1rem',
+                    display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: 'auto',
+                }}>
+                    <span style={{ fontSize: '1.9rem' }}>🔥</span>
+                    <div>
+                        <div style={{ fontWeight: '800', fontSize: '1.2rem', color: '#d97706', lineHeight: 1 }}>
+                            {userStats.streak}
+                        </div>
+                        <div style={{ fontSize: '0.72rem', color: '#92400e', fontWeight: '600', marginTop: '2px' }}>
+                            {isFr ? 'jours de suite' : 'day streak'}
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            {/* ══════════════ MAIN ══════════════ */}
+            <main style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+
+                {/* Top Stats Bar */}
+                <header style={{
+                    backgroundColor: '#fff', borderBottom: '2px solid #e5e7eb',
+                    padding: '0.8rem 2rem', display: 'flex',
+                    alignItems: 'center', justifyContent: 'flex-end',
+                    gap: '1.75rem', flexShrink: 0, zIndex: 10,
+                }}>
+                    {/* XP */}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                            <span style={{ fontSize: '1rem' }}>⚡</span>
+                            <span style={{ fontWeight: '800', color: '#0056D2', fontSize: '0.9rem' }}>
+                                {userStats.xp} XP
+                            </span>
+                        </div>
+                        <div style={{ width: '72px', height: '5px', backgroundColor: '#dbeafe', borderRadius: '99px', overflow: 'hidden' }}>
+                            <div style={{ width: `${xpProgress}%`, height: '100%', backgroundColor: '#0056D2', borderRadius: '99px', transition: 'width 0.4s ease' }} />
+                        </div>
+                    </div>
+                    {/* Gems */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <span style={{ fontSize: '1.15rem' }}>💎</span>
+                        <span style={{ fontWeight: '800', color: '#0284c7', fontSize: '0.9rem' }}>{gems}</span>
+                    </div>
+                    {/* Hearts */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+                        {[...Array(5)].map((_, i) => (
+                            <span key={i} style={{
+                                fontSize: '0.95rem',
+                                filter: i < userStats.hearts ? 'none' : 'grayscale(1)',
+                                opacity: i < userStats.hearts ? 1 : 0.3,
+                            }}>❤️</span>
+                        ))}
+                    </div>
+                </header>
+
+                {/* Tab content */}
+                <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                        {activeNav === 'home'        && renderHome()}
+                        {activeNav === 'leaderboard' && renderLeaderboard()}
+                        {activeNav === 'challenge'   && renderChallenge()}
+                        {activeNav === 'premium'     && renderPremium()}
+                        {activeNav === 'account'     && renderAccount()}
+                    </div>
+
+                    {/* Right panel — home tab only */}
+                    {activeNav === 'home' && renderRightPanel()}
+                </div>
+            </main>
+        </div>
+    );
+};
+
+/* ── shared style helpers ── */
+const selectStyle = {
+    width: '100%', padding: '0.55rem 0.75rem',
+    borderRadius: '12px', border: '2px solid #e2e8f0',
+    backgroundColor: '#f8fafc', color: '#0f172a',
+    fontSize: '0.85rem', fontWeight: '700',
+    cursor: 'pointer', fontFamily: 'inherit',
+    outline: 'none', appearance: 'none',
+    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%230056D2' d='M1 1l5 5 5-5'/%3E%3C/svg%3E")`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'right 0.75rem center',
+    paddingRight: '2rem',
+};
+
+const inputStyle = {
+    padding: '0.9rem 1rem', borderRadius: '14px',
+    border: '2px solid #e2e8f0', fontSize: '0.95rem',
+    width: '100%', outline: 'none', backgroundColor: '#fff',
+    color: '#0f172a', fontFamily: 'inherit', boxSizing: 'border-box',
+};
+
+const ctaStyle = (enabled) => ({
+    width: '100%', backgroundColor: enabled ? '#0056D2' : '#cbd5e1',
+    color: '#fff', padding: '1.1rem', borderRadius: '9999px',
+    fontSize: '1rem', fontWeight: '700', border: 'none',
+    cursor: enabled ? 'pointer' : 'not-allowed',
+    boxShadow: enabled ? '0 8px 20px rgba(0,86,210,0.3)' : 'none',
+    letterSpacing: '0.4px', fontFamily: 'inherit',
+});
+
+export default DashboardPage;

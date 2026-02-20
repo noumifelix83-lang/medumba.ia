@@ -1,17 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --color-primary: #0056D2; /* Premium Blue */
+  --color-primary: #0056D2;
+  /* Premium Blue */
   --color-primary-dark: #0041a3;
   --color-white: #FFFFFF;
   --color-text-grey: #6B7280;
   --color-bg: #F8FAFC;
-  --radius-button: 9999px; /* Pill shape */
-  
+  --radius-button: 9999px;
+  /* Pill shape */
+
   font-family: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  
+
   color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;

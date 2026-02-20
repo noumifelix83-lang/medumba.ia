@@ -191,7 +191,7 @@ const ProficiencyPage = ({ onNext, onBack, nativeLang, learningLang }) => {
 
                     {/* Continue Button */}
                     <button
-                        onClick={onNext}
+                        onClick={() => onNext(selectedLevel)}
                         disabled={!selectedLevel}
                         style={{
                             width: '100%',
