@@ -153,6 +153,7 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
     const [correctCount,   setCorrectCount]   = useState(0);
     const [completed,      setCompleted]      = useState(false);
     const [speaking,       setSpeaking]       = useState(false);
+    const [showExitModal,  setShowExitModal]  = useState(false);
 
     const q    = questions[currentQ];
     const type = q?.type ?? 'tile';
@@ -389,7 +390,64 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
                     0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,86,210,0.4); }
                     50%      { transform: scale(1.06); box-shadow: 0 0 0 16px rgba(0,86,210,0); }
                 }
+                @keyframes modal-in {
+                    from { transform: scale(0.85) translateY(20px); opacity: 0; }
+                    to   { transform: scale(1) translateY(0);        opacity: 1; }
+                }
             `}</style>
+
+            {/* ── Exit confirmation modal ── */}
+            {showExitModal && (
+                <div style={{
+                    position: 'fixed', inset: 0, zIndex: 999,
+                    backgroundColor: 'rgba(15,23,42,0.55)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    padding: '1.5rem',
+                }}>
+                    <div style={{
+                        backgroundColor: '#fff', borderRadius: '28px',
+                        padding: '2.25rem 1.75rem', width: '100%', maxWidth: '340px',
+                        textAlign: 'center', boxShadow: '0 24px 64px rgba(0,0,0,0.22)',
+                        animation: 'modal-in 0.25s cubic-bezier(0.175,0.885,0.32,1.275) both',
+                        fontFamily: "'Outfit', system-ui, sans-serif",
+                    }}>
+                        <div style={{ fontSize: '3.5rem', marginBottom: '0.75rem', lineHeight: 1 }}>😟</div>
+                        <h2 style={{ fontSize: '1.35rem', fontWeight: '900', color: '#0f172a', marginBottom: '0.5rem' }}>
+                            {isFr ? 'Quitter la leçon ?' : 'Leave the lesson?'}
+                        </h2>
+                        <p style={{ fontSize: '0.9rem', color: '#64748b', marginBottom: '1.75rem', lineHeight: 1.6 }}>
+                            {isFr
+                                ? 'Votre progression dans cet exercice sera perdue.'
+                                : 'Your progress in this exercise will be lost.'}
+                        </p>
+                        <div style={{ display: 'flex', gap: '0.75rem' }}>
+                            <button
+                                onClick={onClose}
+                                style={{
+                                    flex: 1, padding: '0.9rem', borderRadius: '9999px',
+                                    backgroundColor: '#fee2e2', color: '#dc2626',
+                                    border: '2px solid #fecaca', fontWeight: '700',
+                                    fontSize: '0.9rem', cursor: 'pointer', fontFamily: 'inherit',
+                                }}
+                            >
+                                {isFr ? 'Quitter' : 'Leave'}
+                            </button>
+                            <button
+                                onClick={() => setShowExitModal(false)}
+                                style={{
+                                    flex: 2, padding: '0.9rem', borderRadius: '9999px',
+                                    backgroundColor: '#0056D2', color: '#fff',
+                                    border: 'none', fontWeight: '700',
+                                    fontSize: '0.9rem', cursor: 'pointer', fontFamily: 'inherit',
+                                    boxShadow: '0 6px 16px rgba(0,86,210,0.35)',
+                                }}
+                            >
+                                {isFr ? 'Continuer ✊' : 'Keep going ✊'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* ── Top bar ── */}
             <div style={{
@@ -397,7 +455,7 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
                 padding: '0.85rem 1.5rem',
                 display: 'flex', alignItems: 'center', gap: '1rem', flexShrink: 0,
             }}>
-                <button onClick={onClose} style={{
+                <button onClick={() => setShowExitModal(true)} style={{
                     width: '36px', height: '36px', borderRadius: '50%',
                     border: '2px solid #e2e8f0', backgroundColor: 'transparent',
                     cursor: 'pointer', fontSize: '1rem', fontWeight: '700',

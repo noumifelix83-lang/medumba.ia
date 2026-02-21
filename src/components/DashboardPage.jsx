@@ -573,6 +573,41 @@ const DashboardPage = ({
                     100% { box-shadow: 0 6px 0 #0041a3, 0 0 0 0 rgba(0,86,210,0); }
                 }
             `}</style>
+            {/* ── Welcome hero banner ── */}
+            {userName && (
+                <div style={{
+                    margin: isMobile ? '1rem 0.75rem 0' : '1.5rem 2rem 0',
+                    borderRadius: '22px', overflow: 'hidden',
+                    background: 'linear-gradient(135deg, #0056D2 0%, #0891b2 60%, #06b6d4 100%)',
+                    padding: '1.4rem 1.6rem',
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    boxShadow: '0 8px 28px rgba(0,86,210,0.25)',
+                    position: 'relative',
+                }}>
+                    <div style={{ zIndex: 1 }}>
+                        <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.75)', fontWeight: '700', letterSpacing: '0.6px', textTransform: 'uppercase', marginBottom: '0.2rem' }}>
+                            {isFr ? 'Bon retour !' : 'Welcome back!'}
+                        </div>
+                        <div style={{ fontSize: '1.3rem', fontWeight: '900', color: '#fff', marginBottom: '0.3rem' }}>
+                            {userName} 👋
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '3px', backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: '99px', padding: '0.2rem 0.7rem' }}>
+                                <span style={{ fontSize: '0.9rem' }}>🔥</span>
+                                <span style={{ fontSize: '0.78rem', fontWeight: '800', color: '#fff' }}>{userStats.streak} {isFr ? 'j.' : 'day streak'}</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '3px', backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: '99px', padding: '0.2rem 0.7rem' }}>
+                                <span style={{ fontSize: '0.9rem' }}>⚡</span>
+                                <span style={{ fontSize: '0.78rem', fontWeight: '800', color: '#fff' }}>{userStats.xp} XP</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style={{ fontSize: '3.5rem', flexShrink: 0, filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))' }}>
+                        {reasonMeta.emoji}
+                    </div>
+                </div>
+            )}
+
             {/* ── Personalized tip banner ── */}
             {(profile.reason || (profile.goals && profile.goals.length > 0)) && (
                 <div style={{
@@ -1090,122 +1125,105 @@ const DashboardPage = ({
                     </div>
                 )}
 
-                {/* ── Profile card ── */}
+                {/* ── Profile hero card ── */}
                 <div style={{
-                    padding: '1.5rem', borderRadius: '20px',
-                    border: '2px solid #e2e8f0', backgroundColor: '#fff',
-                    display: 'flex', alignItems: 'center', gap: '1.25rem', marginBottom: '1rem',
+                    borderRadius: '24px', marginBottom: '1.25rem', overflow: 'hidden',
+                    boxShadow: '0 8px 24px rgba(0,86,210,0.15)',
                 }}>
-                    {/* Avatar with initials */}
+                    {/* Gradient header */}
                     <div style={{
-                        width: '64px', height: '64px', borderRadius: '50%',
-                        background: 'linear-gradient(135deg, #0056D2, #38bdf8)',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: '1.4rem', fontWeight: '900', color: '#fff', flexShrink: 0,
-                        letterSpacing: '-0.5px',
+                        background: 'linear-gradient(135deg, #0056D2 0%, #0891b2 100%)',
+                        padding: '1.5rem 1.5rem 3.5rem',
+                        position: 'relative',
                     }}>
-                        {initials}
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontWeight: '800', fontSize: '1.1rem', color: '#0f172a', marginBottom: '2px' }}>
-                            {userName || (isFr ? 'Mon Profil' : 'My Profile')}
+                        <div style={{ fontSize: '0.75rem', fontWeight: '700', color: 'rgba(255,255,255,0.75)', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                            {isFr ? 'Mon profil' : 'My profile'}
+                        </div>
+                        <div style={{ fontSize: '1.4rem', fontWeight: '900', color: '#fff', marginTop: '0.25rem' }}>
+                            {userName || (isFr ? 'Apprenant' : 'Learner')}
                         </div>
                         {profile.email && (
-                            <div style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: '600', marginBottom: '6px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            <div style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.8)', marginTop: '0.2rem' }}>
                                 {profile.email}
                             </div>
                         )}
-                        {profile.age && (
-                            <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: '600' }}>
-                                {isFr ? `${profile.age} ans` : `${profile.age} years old`}
+                    </div>
+                    {/* Overlapping avatar */}
+                    <div style={{ backgroundColor: '#fff', padding: '0 1.5rem 1.25rem', position: 'relative' }}>
+                        <div style={{ display: 'flex', alignItems: 'flex-end', gap: '1rem', marginTop: '-2.25rem', marginBottom: '1rem' }}>
+                            <div style={{
+                                width: '72px', height: '72px', borderRadius: '50%',
+                                background: 'linear-gradient(135deg, #0056D2, #38bdf8)',
+                                border: '4px solid #fff',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                fontSize: '1.6rem', fontWeight: '900', color: '#fff',
+                                boxShadow: '0 4px 16px rgba(0,86,210,0.3)', flexShrink: 0,
+                            }}>{initials}</div>
+                            <div style={{ paddingBottom: '0.25rem' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                                    <span style={{
+                                        fontSize: '0.72rem', fontWeight: '800', color: profMeta.color,
+                                        backgroundColor: profMeta.color + '18', border: `1.5px solid ${profMeta.color}44`,
+                                        borderRadius: '99px', padding: '0.15rem 0.6rem',
+                                    }}>📊 {isFr ? profMeta.fr : profMeta.en}</span>
+                                    <span style={{
+                                        fontSize: '0.72rem', fontWeight: '800', color: '#0056D2',
+                                        backgroundColor: '#eff6ff', border: '1.5px solid #bfdbfe',
+                                        borderRadius: '99px', padding: '0.15rem 0.6rem',
+                                    }}>{learnLang === 'english' ? '🇬🇧 English' : '🇨🇲 Medumba'}</span>
+                                </div>
                             </div>
-                        )}
-                    </div>
-                    <button style={{
-                        padding: '0.3rem 0.9rem', borderRadius: '99px',
-                        border: '2px solid #0056D2', backgroundColor: 'transparent',
-                        color: '#0056D2', fontSize: '0.75rem', fontWeight: '700',
-                        cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0,
-                    }}>
-                        {isFr ? 'Modifier' : 'Edit'}
-                    </button>
-                </div>
-
-                {/* ── Profile info chips ── */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.5rem' }}>
-                    {/* Proficiency */}
-                    <div style={{
-                        display: 'flex', alignItems: 'center', gap: '0.4rem',
-                        padding: '0.35rem 0.85rem', borderRadius: '99px',
-                        backgroundColor: profMeta.color + '18',
-                        border: `2px solid ${profMeta.color}44`,
-                    }}>
-                        <span style={{ fontSize: '0.8rem' }}>📊</span>
-                        <span style={{ fontSize: '0.75rem', fontWeight: '800', color: profMeta.color }}>
-                            {isFr ? profMeta.fr : profMeta.en}
-                        </span>
-                    </div>
-                    {/* Reason */}
-                    {profile.reason && (
-                        <div style={{
-                            display: 'flex', alignItems: 'center', gap: '0.4rem',
-                            padding: '0.35rem 0.85rem', borderRadius: '99px',
-                            backgroundColor: '#f0fdf4', border: '2px solid #bbf7d0',
-                        }}>
-                            <span style={{ fontSize: '0.8rem' }}>{reasonMeta.emoji}</span>
-                            <span style={{ fontSize: '0.75rem', fontWeight: '800', color: '#16a34a' }}>
-                                {isFr ? reasonMeta.fr : reasonMeta.en}
-                            </span>
                         </div>
-                    )}
-                    {/* Daily goal */}
-                    <div style={{
-                        display: 'flex', alignItems: 'center', gap: '0.4rem',
-                        padding: '0.35rem 0.85rem', borderRadius: '99px',
-                        backgroundColor: '#fffbeb', border: '2px solid #fde68a',
-                    }}>
-                        <span style={{ fontSize: '0.8rem' }}>⏱️</span>
-                        <span style={{ fontSize: '0.75rem', fontWeight: '800', color: '#d97706' }}>
-                            {goalCfg.time} {isFr ? 'min/j' : 'min/d'}
-                        </span>
-                    </div>
-                    {/* Learning language */}
-                    <div style={{
-                        display: 'flex', alignItems: 'center', gap: '0.4rem',
-                        padding: '0.35rem 0.85rem', borderRadius: '99px',
-                        backgroundColor: '#eff6ff', border: '2px solid #bfdbfe',
-                    }}>
-                        <span style={{ fontSize: '0.8rem' }}>{learnLang === 'english' ? '🇬🇧' : '🇨🇲'}</span>
-                        <span style={{ fontSize: '0.75rem', fontWeight: '800', color: '#0056D2' }}>
-                            {learnLang === 'english' ? 'English' : 'Medumba'}
-                        </span>
-                    </div>
-                </div>
 
-                {/* ── Goals ── */}
-                {userGoals.length > 0 && (
-                    <div style={{ marginBottom: '1.5rem' }}>
-                        <h3 style={{ fontSize: '0.88rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.75rem' }}>
-                            {isFr ? '🎯 Mes Objectifs' : '🎯 My Goals'}
+                        {/* ── Personal info rows ── */}
+                        <h3 style={{ fontSize: '0.82rem', fontWeight: '800', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '0.65rem' }}>
+                            {isFr ? 'Informations personnelles' : 'Personal information'}
                         </h3>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            {userGoals.map((g) => {
-                                const gm = GOAL_META[g];
-                                if (!gm) return null;
-                                return (
-                                    <div key={g} style={{
-                                        display: 'flex', alignItems: 'center', gap: '0.6rem',
-                                        padding: '0.6rem 1rem', borderRadius: '12px',
-                                        backgroundColor: '#f8fafc', border: '1px solid #e2e8f0',
-                                    }}>
-                                        <span>{gm.emoji}</span>
-                                        <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#334155' }}>
-                                            {isFr ? gm.fr : gm.en}
-                                        </span>
-                                    </div>
-                                );
-                            })}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+                            {[
+                                { icon: '👤', labelEn: 'Full Name',      labelFr: 'Nom complet',     value: profile.name  || '—' },
+                                { icon: '📧', labelEn: 'Email address',  labelFr: 'Adresse e-mail',  value: profile.email || '—' },
+                                { icon: '🎂', labelEn: 'Age',            labelFr: 'Âge',             value: profile.age ? `${profile.age} ${isFr ? 'ans' : 'years old'}` : '—' },
+                                { icon: '🎯', labelEn: 'Learning goal',  labelFr: 'Objectif',        value: profile.reason ? `${reasonMeta.emoji} ${isFr ? reasonMeta.fr : reasonMeta.en}` : '—' },
+                                { icon: '⏱️', labelEn: 'Daily practice', labelFr: 'Pratique/jour',   value: `${goalCfg.time} min — ${goalCfg.xp} XP` },
+                            ].map((row, i, arr) => (
+                                <div key={i} style={{
+                                    display: 'flex', alignItems: 'center', gap: '0.75rem',
+                                    padding: '0.75rem 0',
+                                    borderBottom: i < arr.length - 1 ? '1px solid #f1f5f9' : 'none',
+                                }}>
+                                    <span style={{ fontSize: '1rem', flexShrink: 0, width: '22px', textAlign: 'center' }}>{row.icon}</span>
+                                    <span style={{ fontSize: '0.78rem', color: '#94a3b8', fontWeight: '600', width: '100px', flexShrink: 0 }}>
+                                        {isFr ? row.labelFr : row.labelEn}
+                                    </span>
+                                    <span style={{ fontSize: '0.88rem', fontWeight: '700', color: '#0f172a', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                        {row.value}
+                                    </span>
+                                </div>
+                            ))}
                         </div>
+                    </div>
+                </div>
+
+                {/* ── Goals chips ── */}
+                {userGoals.length > 0 && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.25rem' }}>
+                        {userGoals.map((g) => {
+                            const gm = GOAL_META[g];
+                            if (!gm) return null;
+                            return (
+                                <div key={g} style={{
+                                    display: 'flex', alignItems: 'center', gap: '0.4rem',
+                                    padding: '0.35rem 0.85rem', borderRadius: '99px',
+                                    backgroundColor: '#f0fdf4', border: '2px solid #bbf7d0',
+                                }}>
+                                    <span>{gm.emoji}</span>
+                                    <span style={{ fontSize: '0.75rem', fontWeight: '800', color: '#16a34a' }}>
+                                        {isFr ? gm.fr : gm.en}
+                                    </span>
+                                </div>
+                            );
+                        })}
                     </div>
                 )}
 
