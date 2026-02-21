@@ -4,6 +4,106 @@
    4257 total entries — columns A (Medumba) & E (French)
 ════════════════════════════════════════════════════════════════ */
 
+/* ════════════════════════════════════════════════════════════════
+   VARIETY_QUESTIONS — mixed exercise types (meaning / audio / match)
+   Interleaved into every Medumba lesson to break monotony.
+════════════════════════════════════════════════════════════════ */
+export const VARIETY_QUESTIONS = [
+    /* ── meaning: show Medumba word, choose translation ── */
+    {
+        type: 'meaning',
+        sourceFr: 'Mbʉ', sourceEn: 'Mbʉ', audio: 'Mbʉ',
+        options: ['Dog', 'Cat', 'Bird', 'Fish'],
+        optionsFr: ['Chien', 'Chat', 'Oiseau', 'Poisson'],
+        answer: 'Dog', answerFr: 'Chien',
+    },
+    {
+        type: 'meaning',
+        sourceFr: 'Ntsə', sourceEn: 'Ntsə', audio: 'Ntsə',
+        options: ['Water', 'Fire', 'Earth', 'Wind'],
+        optionsFr: ['Eau', 'Feu', 'Terre', 'Vent'],
+        answer: 'Water', answerFr: 'Eau',
+    },
+    {
+        type: 'meaning',
+        sourceFr: 'Nyàm', sourceEn: 'Nyàm', audio: 'Nyàm',
+        options: ['Moon', 'Sun', 'Star', 'Rain'],
+        optionsFr: ['Lune', 'Soleil', 'Étoile', 'Pluie'],
+        answer: 'Sun', answerFr: 'Soleil',
+    },
+    {
+        type: 'meaning',
+        sourceFr: 'Mɛn', sourceEn: 'Mɛn', audio: 'Mɛn',
+        options: ['Adult', 'Child', 'Elder', 'Teacher'],
+        optionsFr: ['Adulte', 'Enfant', 'Aîné', 'Professeur'],
+        answer: 'Child', answerFr: 'Enfant',
+    },
+    {
+        type: 'meaning',
+        sourceFr: 'Mbwoge', sourceEn: 'Mbwoge', audio: 'Mbwoge',
+        options: ['Water', 'Wind', 'Fire', 'Stone'],
+        optionsFr: ['Eau', 'Vent', 'Feu', 'Pierre'],
+        answer: 'Fire', answerFr: 'Feu',
+    },
+    {
+        type: 'meaning',
+        sourceFr: 'Ngòn', sourceEn: 'Ngòn', audio: 'Ngòn',
+        options: ['Boy', 'Girl', 'Mother', 'Sister'],
+        optionsFr: ['Garçon', 'Fille', 'Mère', 'Sœur'],
+        answer: 'Girl', answerFr: 'Fille',
+    },
+    /* ── audio: listen then choose meaning ── */
+    {
+        type: 'audio',
+        audio: 'Bùsi',
+        options: ['Dog', 'Cat', 'Cow', 'Bird'],
+        optionsFr: ['Chien', 'Chat', 'Vache', 'Oiseau'],
+        answer: 'Cat', answerFr: 'Chat',
+    },
+    {
+        type: 'audio',
+        audio: 'Leꞌe',
+        options: ['Night', 'Week', 'Day', 'Month'],
+        optionsFr: ['Nuit', 'Semaine', 'Jour', 'Mois'],
+        answer: 'Day', answerFr: 'Jour',
+    },
+    {
+        type: 'audio',
+        audio: 'Mαŋwʉ',
+        options: ['Sun', 'Star', 'Moon', 'Cloud'],
+        optionsFr: ['Soleil', 'Étoile', 'Lune', 'Nuage'],
+        answer: 'Moon', answerFr: 'Lune',
+    },
+    {
+        type: 'audio',
+        audio: 'Tswəꞌ',
+        options: ['Morning', 'Evening', 'Night', 'Noon'],
+        optionsFr: ['Matin', 'Soir', 'Nuit', 'Midi'],
+        answer: 'Night', answerFr: 'Nuit',
+    },
+    /* ── match: pair 5 Medumba words with their meanings ── */
+    {
+        type: 'match',
+        pairs: [
+            { medumba: 'Mbʉ',    french: 'Chien',   english: 'Dog'   },
+            { medumba: 'Bùsi',   french: 'Chat',    english: 'Cat'   },
+            { medumba: 'Ntsə',   french: 'Eau',     english: 'Water' },
+            { medumba: 'Nyàm',   french: 'Soleil',  english: 'Sun'   },
+            { medumba: 'Mɛn',    french: 'Enfant',  english: 'Child' },
+        ],
+    },
+    {
+        type: 'match',
+        pairs: [
+            { medumba: 'Leꞌe',   french: 'Jour',    english: 'Day'   },
+            { medumba: 'Tswəꞌ',  french: 'Nuit',    english: 'Night' },
+            { medumba: 'Mαŋwʉ',  french: 'Lune',    english: 'Moon'  },
+            { medumba: 'Mbwoge', french: 'Feu',     english: 'Fire'  },
+            { medumba: 'Ngòn',   french: 'Fille',   english: 'Girl'  },
+        ],
+    },
+];
+
 /* Lesson theme metadata */
 export const THEMES_META = {
   "l1": {

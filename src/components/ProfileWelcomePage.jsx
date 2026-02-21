@@ -1,5 +1,5 @@
 import React from 'react';
-import profileVector from '../assets/profile_welcome_vector.png';
+import profileVector from '../assets/welcom vector.png';
 import logo from '../assets/logo.png';
 
 const ProfileWelcomePage = ({ onNext, onSkip, nativeLang }) => {

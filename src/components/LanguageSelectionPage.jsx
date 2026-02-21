@@ -1,5 +1,5 @@
 import React from 'react';
-import tutor from '../assets/tutor.png';
+import tutor from '../assets/teacher2.png';
 
 const LanguageSelectionPage = ({
     onNext,

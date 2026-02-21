@@ -1,8 +1,14 @@
 import { useState, useEffect } from 'react';
 import logo from '../assets/logo.png';
 import profileWelcomeVector from '../assets/profile_welcome_vector.png';
+import celebrationImg from '../assets/Auto Layout Vertical.png';
+import person1Img from '../assets/person1.png';
+import person2Img from '../assets/person2.png';
+import laptopImg  from '../assets/laptop 1.png';
+import globeImg   from '../assets/globe 1.png';
 import LessonLoadingPage from './LessonLoadingPage';
 import LessonPage        from './LessonPage';
+import { getPersonalizedTip } from '../utils/lessonGenerator';
 
 /* ════════════════════════════════════════════════════════════════════
    DashboardPage
@@ -142,8 +148,10 @@ const DashboardPage = ({
     const [learnLang, setLearnLang] = useState(defaultLearnLang);
 
     /* ── lesson flow ── */
-    const [lessonFlow,   setLessonFlow]   = useState(null);   // null | 'loading' | 'lesson'
+    // null | 'loading' | 'lesson' | 'lesson_complete' | 'daily_mission' | 'congrats' | 'share'
+    const [lessonFlow,   setLessonFlow]   = useState(null);
     const [activeLesson, setActiveLesson] = useState(null);
+    const [lessonResult, setLessonResult] = useState(null); // { xp, diamonds, time, accuracy }
 
     /* ── navigation ── */
     const [activeNav, setActiveNav] = useState('home');
@@ -535,6 +543,18 @@ const DashboardPage = ({
                     100% { box-shadow: 0 6px 0 #0041a3, 0 0 0 0 rgba(0,86,210,0); }
                 }
             `}</style>
+            {/* ── Personalized tip banner ── */}
+            {(profile.reason || (profile.goals && profile.goals.length > 0)) && (
+                <div style={{
+                    margin: isMobile ? '1rem 0.75rem 0' : '1.5rem 2rem 0',
+                    padding: '0.9rem 1.2rem', borderRadius: '16px',
+                    backgroundColor: '#eff6ff', border: '2px solid #bfdbfe',
+                    fontSize: '0.85rem', fontWeight: '600', color: '#1e40af', lineHeight: 1.5,
+                }}>
+                    {getPersonalizedTip(profile, isFr)}
+                </div>
+            )}
+
             {units.map((unit, uIdx) => {
                 const unitStart = globalIdx;
                 globalIdx += unit.lessons.length;
@@ -582,12 +602,32 @@ const DashboardPage = ({
                                     : locked ? (isChest ? '💰' : isBoss ? '🏆' : '🔒')
                                     : (isChest ? '💰' : isBoss ? '🏆' : '⭐');
 
+                                // Decorative illustrations placed beside specific nodes
+                                const globalNodeIdx = unitStart + lIdx;
+                                const decorators = [
+                                    { idx: 0, src: person2Img, side: 'right', alt: '' },
+                                    { idx: 2, src: laptopImg,  side: 'right', alt: '' },
+                                    { idx: 4, src: globeImg,   side: 'right', alt: '' },
+                                    { idx: 6, src: person1Img, side: 'left',  alt: '' },
+                                ];
+                                const decorator = decorators.find(d => d.idx === globalNodeIdx);
+
                                 return (
                                     <div key={lesson.id} style={{
                                         display: 'flex', flexDirection: 'column',
                                         alignItems: 'center', gap: '0.55rem',
                                         transform: `translateX(${offset}px)`, position: 'relative',
                                     }}>
+                                        {decorator && (
+                                            <img src={decorator.src} alt={decorator.alt} style={{
+                                                position: 'absolute',
+                                                top: '50%', transform: 'translateY(-50%)',
+                                                [decorator.side]: decorator.side === 'right' ? '-90px' : '-90px',
+                                                width: '78px', height: 'auto',
+                                                pointerEvents: 'none', userSelect: 'none',
+                                                opacity: 0.92,
+                                            }} />
+                                        )}
                                         {active && (
                                             <div style={{
                                                 position: 'absolute', top: `-${size / 2 + 28}px`,
@@ -1336,9 +1376,253 @@ const DashboardPage = ({
                 lesson={activeLesson}
                 learnLang={learnLang}
                 isFr={isFr}
-                onFinish={() => { setLessonFlow(null); setActiveLesson(null); setActiveNav('home'); }}
-                onClose={() =>  { setLessonFlow(null); setActiveLesson(null); }}
+                profile={profile}
+                onFinish={(result) => { setLessonResult(result); setLessonFlow('lesson_complete'); }}
+                onShare={() => setLessonFlow('share')}
+                onClose={() => { setLessonFlow(null); setActiveLesson(null); }}
             />
+        );
+    }
+
+    /* ── Lesson complete screen ── */
+    if (lessonFlow === 'lesson_complete') {
+        const res = lessonResult ?? { xp: 0, diamonds: 0, time: 0, accuracy: 0 };
+        const formatTime = (s) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
+        return (
+            <div style={{
+                width: '100%', height: '100vh', backgroundColor: '#f8fafc',
+                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                justifyContent: 'center', padding: '2rem 1.5rem', textAlign: 'center',
+                fontFamily: "'Outfit', system-ui, sans-serif", gap: '1.25rem',
+            }}>
+                <h1 style={{ fontSize: '1.8rem', fontWeight: '900', color: '#0056D2', margin: 0 }}>
+                    {isFr ? 'Leçon terminée !' : 'Lesson completed!'}
+                </h1>
+                <img src={celebrationImg} alt="Celebration" style={{ width: '240px', maxWidth: '80%', height: 'auto' }} />
+                <div style={{ width: '100%', maxWidth: '320px', backgroundColor: '#0056D2', borderRadius: '16px', padding: '1rem', color: '#fff' }}>
+                    <div style={{ fontSize: '0.8rem', fontWeight: '700', opacity: 0.8, marginBottom: '0.4rem' }}>
+                        {isFr ? 'Diamants' : 'Diamonds'}
+                    </div>
+                    <div style={{ fontSize: '2rem', fontWeight: '900' }}>💎 {res.diamonds}</div>
+                </div>
+                <div style={{ display: 'flex', gap: '0.75rem', width: '100%', maxWidth: '320px' }}>
+                    {[
+                        { label: 'Total XP',                    value: res.xp,              bg: '#f59e0b', icon: '⚡' },
+                        { label: isFr ? 'Temps' : 'Time',       value: formatTime(res.time), bg: '#22c55e', icon: '⏱' },
+                        { label: isFr ? 'Précision' : 'Accuracy', value: `${res.accuracy}%`, bg: '#ef4444', icon: '🎯' },
+                    ].map(s => (
+                        <div key={s.label} style={{ flex: 1, backgroundColor: s.bg, borderRadius: '14px', padding: '0.75rem 0.5rem', color: '#fff', textAlign: 'center' }}>
+                            <div style={{ fontSize: '1.2rem' }}>{s.icon}</div>
+                            <div style={{ fontSize: '1rem', fontWeight: '900' }}>{s.value}</div>
+                            <div style={{ fontSize: '0.65rem', fontWeight: '700', opacity: 0.85 }}>{s.label}</div>
+                        </div>
+                    ))}
+                </div>
+                <button onClick={() => setLessonFlow('daily_mission')} style={{
+                    width: '100%', maxWidth: '320px', backgroundColor: '#0056D2', color: '#fff',
+                    padding: '1.1rem', borderRadius: '9999px', fontSize: '1rem', fontWeight: '700',
+                    border: 'none', cursor: 'pointer', fontFamily: 'inherit',
+                    boxShadow: '0 8px 20px rgba(0,86,210,0.35)',
+                }}>
+                    {isFr ? 'Continuer →' : 'Continue →'}
+                </button>
+            </div>
+        );
+    }
+
+    /* ── Daily mission screen ── */
+    if (lessonFlow === 'daily_mission') {
+        const res = lessonResult ?? { xp: 0, diamonds: 0, accuracy: 0 };
+        const missions = [
+            { icon: '💎', labelEn: 'Get 25 Diamonds',        labelFr: 'Obtenir 25 Diamants',      current: Math.min(res.diamonds, 25),        total: 25,  color: '#0056D2' },
+            { icon: '⚡', labelEn: 'Get 40 XP',              labelFr: 'Obtenir 40 XP',             current: Math.min(userStats.xp + res.xp, 40), total: 40,  color: '#f59e0b' },
+            { icon: '🎯', labelEn: 'Get 2 perfect lessons',  labelFr: '2 leçons parfaites',        current: res.accuracy === 100 ? 1 : 0,       total: 2,   color: '#ef4444' },
+            { icon: '🔥', labelEn: 'Complete 1 challenge',   labelFr: 'Terminer 1 défi',           current: 1,                                  total: 1,   color: '#f97316' },
+        ];
+        return (
+            <div style={{
+                width: '100%', height: '100vh', backgroundColor: '#f8fafc',
+                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                padding: '2.5rem 1.5rem', fontFamily: "'Outfit', system-ui, sans-serif", overflowY: 'auto',
+            }}>
+                <h1 style={{ fontSize: '1.6rem', fontWeight: '900', color: '#0056D2', margin: '0 0 1.5rem' }}>
+                    {isFr ? 'Missions quotidiennes !' : 'Daily mission updates!'}
+                </h1>
+                <div style={{ width: '100%', maxWidth: '360px', display: 'flex', flexDirection: 'column', gap: '0.85rem', flex: 1 }}>
+                    {missions.map(m => (
+                        <div key={m.labelEn} style={{
+                            backgroundColor: '#fff', borderRadius: '16px', padding: '1rem 1.25rem',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                            display: 'flex', alignItems: 'center', gap: '1rem',
+                        }}>
+                            <span style={{ fontSize: '1.8rem', flexShrink: 0 }}>{m.icon}</span>
+                            <div style={{ flex: 1 }}>
+                                <div style={{ fontWeight: '700', fontSize: '0.95rem', color: '#0f172a', marginBottom: '0.4rem' }}>
+                                    {isFr ? m.labelFr : m.labelEn}
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                    <div style={{ flex: 1, height: '8px', backgroundColor: '#e2e8f0', borderRadius: '99px', overflow: 'hidden' }}>
+                                        <div style={{ height: '100%', width: `${Math.min((m.current / m.total) * 100, 100)}%`, backgroundColor: m.color, borderRadius: '99px', transition: 'width 0.5s ease' }} />
+                                    </div>
+                                    <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#64748b', whiteSpace: 'nowrap' }}>
+                                        {m.current} / {m.total}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <button onClick={() => setLessonFlow('congrats')} style={{
+                    width: '100%', maxWidth: '360px', backgroundColor: '#0056D2', color: '#fff',
+                    padding: '1.1rem', borderRadius: '9999px', fontSize: '1rem', fontWeight: '700',
+                    border: 'none', cursor: 'pointer', fontFamily: 'inherit', marginTop: '1.5rem',
+                    boxShadow: '0 8px 20px rgba(0,86,210,0.35)',
+                }}>
+                    {isFr ? 'Continuer →' : 'Continue →'}
+                </button>
+            </div>
+        );
+    }
+
+    /* ── Congrats / streak screen ── */
+    if (lessonFlow === 'congrats') {
+        const streak   = userStats.streak;
+        const today    = new Date().getDay(); // 0=Sun
+        const days     = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+        // map JS day (0=Sun) → Monday-first index
+        const todayIdx = today === 0 ? 6 : today - 1;
+        const checked  = days.map((_, i) => i <= todayIdx && (todayIdx - i) < streak);
+        return (
+            <div style={{
+                width: '100%', height: '100vh', backgroundColor: '#fff',
+                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                justifyContent: 'center', padding: '2rem 1.5rem', textAlign: 'center',
+                fontFamily: "'Outfit', system-ui, sans-serif", gap: '1.25rem',
+            }}>
+                <span style={{ fontSize: '5rem', lineHeight: 1 }}>🔥</span>
+                <h1 style={{ fontSize: '1.9rem', fontWeight: '900', color: '#0056D2', margin: 0 }}>
+                    {isFr ? `${streak} jours de suite !` : `${streak} days straight!`}
+                </h1>
+                {/* Week calendar */}
+                <div style={{ width: '100%', maxWidth: '320px', backgroundColor: '#f8fafc', borderRadius: '18px', padding: '1.25rem', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '0.75rem' }}>
+                        {days.map(d => <span key={d} style={{ fontSize: '0.75rem', fontWeight: '700', color: '#64748b' }}>{d}</span>)}
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                        {checked.map((done, i) => (
+                            <div key={i} style={{
+                                width: '32px', height: '32px', borderRadius: '6px',
+                                border: `2px solid ${done ? '#0056D2' : '#cbd5e1'}`,
+                                backgroundColor: done ? '#0056D2' : 'transparent',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            }}>
+                                {done && <span style={{ color: '#fff', fontSize: '1rem', fontWeight: '900' }}>✓</span>}
+                            </div>
+                        ))}
+                    </div>
+                    <hr style={{ margin: '1rem 0', border: 'none', borderTop: '1px solid #e2e8f0' }} />
+                    <p style={{ margin: 0, fontSize: '0.88rem', color: '#475569', fontWeight: '600', lineHeight: 1.6 }}>
+                        {isFr
+                            ? 'Augmente si vous pratiquez chaque jour et revient à zéro si vous ratez une journée !'
+                            : 'Increases if you practice every day and will return to zero if you skip a day!'}
+                    </p>
+                </div>
+                <div style={{ display: 'flex', gap: '0.75rem', width: '100%', maxWidth: '320px' }}>
+                    <button onClick={() => setLessonFlow('share')} style={{
+                        flex: 1, padding: '1rem', borderRadius: '9999px',
+                        backgroundColor: '#eff6ff', color: '#0056D2',
+                        border: '2px solid #bfdbfe', fontWeight: '700', fontSize: '0.95rem',
+                        cursor: 'pointer', fontFamily: 'inherit',
+                    }}>
+                        {isFr ? 'Partager' : 'Share'}
+                    </button>
+                    <button onClick={() => { setLessonFlow(null); setActiveLesson(null); setActiveNav('home'); }} style={{
+                        flex: 2, padding: '1rem', borderRadius: '9999px',
+                        backgroundColor: '#0056D2', color: '#fff', border: 'none',
+                        fontWeight: '700', fontSize: '0.95rem', cursor: 'pointer',
+                        fontFamily: 'inherit', boxShadow: '0 6px 16px rgba(0,86,210,0.35)',
+                    }}>
+                        {isFr ? 'Continuer →' : 'Continue →'}
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    /* ── Share screen ── */
+    if (lessonFlow === 'share') {
+        const streak = userStats.streak;
+        const shareText = `🔥 ${streak} ${isFr ? 'jours de suite sur Medumba.ia !' : 'days straight on Medumba.ia!'}`;
+        const doShare = async () => {
+            if (navigator.share) {
+                try { await navigator.share({ title: 'Medumba.ia', text: shareText }); } catch (_) {}
+            } else {
+                try { await navigator.clipboard.writeText(shareText); } catch (_) {}
+            }
+        };
+        const socials = [
+            { icon: '📘', label: 'Facebook'  },
+            { icon: '💬', label: 'WhatsApp'  },
+            { icon: '📷', label: 'Instagram' },
+            { icon: '🐦', label: 'Twitter'   },
+            { icon: '💚', label: 'Line'       },
+            { icon: '💼', label: 'LinkedIn'  },
+        ];
+        return (
+            <div style={{
+                width: '100%', height: '100vh', backgroundColor: '#fff',
+                display: 'flex', flexDirection: 'column',
+                fontFamily: "'Outfit', system-ui, sans-serif", overflowY: 'auto',
+            }}>
+                {/* Header */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '1.25rem 1.5rem', borderBottom: '1px solid #e5e7eb' }}>
+                    <button onClick={() => setLessonFlow('congrats')} style={{ background: 'none', border: 'none', fontSize: '1.1rem', cursor: 'pointer', color: '#475569' }}>✕</button>
+                    <span style={{ fontWeight: '800', fontSize: '1.1rem', color: '#0f172a' }}>
+                        {isFr ? 'Partager' : 'Share'}
+                    </span>
+                </div>
+
+                <div style={{ flex: 1, padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.25rem' }}>
+                    {/* Share card */}
+                    <div style={{
+                        width: '100%', maxWidth: '360px', backgroundColor: '#f8fafc',
+                        borderRadius: '18px', padding: '1.75rem', textAlign: 'center',
+                        border: '1px solid #e2e8f0',
+                    }}>
+                        <span style={{ fontSize: '3rem' }}>🔥</span>
+                        <div style={{ fontSize: '1.4rem', fontWeight: '900', color: '#0f172a', margin: '0.5rem 0 0.25rem' }}>
+                            {isFr ? `${streak} jours de suite !` : `${streak} days straight!`}
+                        </div>
+                        <div style={{ fontSize: '1rem', fontWeight: '700', color: '#0056D2' }}>Medumba.ia</div>
+                    </div>
+
+                    {/* Social list */}
+                    <div style={{ width: '100%', maxWidth: '360px', backgroundColor: '#fff', borderRadius: '18px', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+                        {socials.map((s, i) => (
+                            <button key={s.label} onClick={doShare} style={{
+                                width: '100%', display: 'flex', alignItems: 'center', gap: '1rem',
+                                padding: '1rem 1.25rem',
+                                borderBottom: i < socials.length - 1 ? '1px solid #f1f5f9' : 'none',
+                                background: 'none', border: 'none',
+                                cursor: 'pointer', fontFamily: 'inherit',
+                                fontSize: '1rem', fontWeight: '600', color: '#0f172a',
+                            }}>
+                                <span style={{ fontSize: '1.5rem' }}>{s.icon}</span>
+                                {s.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    <button onClick={() => { setLessonFlow(null); setActiveLesson(null); setActiveNav('home'); }} style={{
+                        width: '100%', maxWidth: '360px', padding: '1.1rem', borderRadius: '9999px',
+                        backgroundColor: '#0056D2', color: '#fff', border: 'none',
+                        fontWeight: '700', fontSize: '1rem', cursor: 'pointer', fontFamily: 'inherit',
+                        boxShadow: '0 8px 20px rgba(0,86,210,0.35)',
+                    }}>
+                        {isFr ? 'Terminé' : 'Done'}
+                    </button>
+                </div>
+            </div>
         );
     }
 

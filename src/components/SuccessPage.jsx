@@ -1,4 +1,4 @@
-import maleTutor from '../assets/male_tutor.png';
+import maleTutor from '../assets/welcom vector.png';
 
 const SuccessPage = ({ onNext, nativeLang }) => {
   const isFrench = nativeLang === 'french';

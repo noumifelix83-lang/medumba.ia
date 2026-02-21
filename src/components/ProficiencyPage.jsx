@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import maleTutor from '../assets/male_tutor_yellow.png';
+import maleTutor from '../assets/teacher 1.png';
 
 const ProficiencyPage = ({ onNext, onBack, nativeLang, learningLang }) => {
     const [selectedLevel, setSelectedLevel] = useState(null);
