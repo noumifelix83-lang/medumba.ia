@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import logo from '../assets/logo.png';
 import profileWelcomeVector from '../assets/profile_welcome_vector.png';
 import LessonLoadingPage from './LessonLoadingPage';
@@ -168,6 +168,14 @@ const DashboardPage = ({
     const XP_TO_NEXT = 500;
     const xpProgress = Math.min((userStats.xp / XP_TO_NEXT) * 100, 100);
 
+    /* ── mobile breakpoint ── */
+    const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+    useEffect(() => {
+        const fn = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', fn);
+        return () => window.removeEventListener('resize', fn);
+    }, []);
+
     /* ── nav items ── */
     const navItems = [
         { id: 'home',        icon: '🏠', labelEn: 'HOME',        labelFr: 'ACCUEIL'    },
@@ -263,7 +271,9 @@ const DashboardPage = ({
 
     const units = applyProgress(learnLang === 'english' ? unitsEnglish : unitsMedumba);
 
-    const zigzag     = [0, 56, 90, 56, 0, -56, -90, -56, 0, 56, 90];
+    const zigzagFull   = [0, 56, 90, 56, 0, -56, -90, -56, 0, 56, 90];
+    const zigzagMobile = [0, 36, 56, 36, 0, -36, -56, -36, 0, 36, 56];
+    const zigzag       = isMobile ? zigzagMobile : zigzagFull;
     let   globalIdx  = 0;
 
     /* ════════════════════════════════════════════════════════════════
@@ -279,7 +289,7 @@ const DashboardPage = ({
         const canContinue = payMethod !== null && mcReady;
 
         return (
-            <div style={{ flex: 1, overflowY: 'auto', padding: '2rem' }}>
+            <div style={{ flex: 1, overflowY: 'auto', padding: isMobile ? '1rem' : '2rem' }}>
                 <button onClick={() => setPurchaseFlow('packages')} style={{
                     background: 'none', border: 'none', fontSize: '1.5rem',
                     cursor: 'pointer', color: '#0f172a', marginBottom: '1.5rem', padding: '0',
@@ -519,7 +529,7 @@ const DashboardPage = ({
 
     /* ── HOME: Learning Path ── */
     const renderHome = () => (
-        <div style={{ flex: 1, overflowY: 'auto', paddingBottom: '4rem' }}>
+        <div style={{ flex: 1, overflowY: 'auto', paddingBottom: '2rem' }}>
             <style>{`
                 @keyframes pulse-ring {
                     0%   { box-shadow: 0 6px 0 #0041a3, 0 0 0 0 rgba(0,86,210,0.45); }
@@ -534,8 +544,8 @@ const DashboardPage = ({
                     <div key={unit.id}>
                         {/* Unit header */}
                         <div style={{
-                            margin: '2rem 2rem 0',
-                            padding: '1.2rem 1.6rem', borderRadius: '20px',
+                            margin: isMobile ? '1rem 0.75rem 0' : '2rem 2rem 0',
+                            padding: isMobile ? '1rem 1.1rem' : '1.2rem 1.6rem', borderRadius: '20px',
                             background: `linear-gradient(135deg, ${unit.color}, ${unit.accent})`,
                             color: '#fff', display: 'flex', justifyContent: 'space-between',
                             alignItems: 'center', boxShadow: `0 8px 24px ${unit.color}44`,
@@ -652,7 +662,7 @@ const DashboardPage = ({
 
     /* ── LEADERBOARD ── */
     const renderLeaderboard = () => (
-        <div style={{ flex: 1, overflowY: 'auto', padding: '2rem' }}>
+        <div style={{ flex: 1, overflowY: 'auto', padding: isMobile ? '1rem' : '2rem' }}>
             <h2 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.25rem' }}>
                 {isFr ? '🏆 Classement' : '🏆 Leaderboard'}
             </h2>
@@ -758,7 +768,7 @@ const DashboardPage = ({
 
     /* ── CHALLENGE ── */
     const renderChallenge = () => (
-        <div style={{ flex: 1, overflowY: 'auto', padding: '2rem' }}>
+        <div style={{ flex: 1, overflowY: 'auto', padding: isMobile ? '1rem' : '2rem' }}>
             <h2 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a', marginBottom: '0.25rem' }}>
                 {isFr ? '⚡ Défis' : '⚡ Challenges'}
             </h2>
@@ -872,7 +882,7 @@ const DashboardPage = ({
         if (purchaseFlow === 'success')  return renderPaymentSuccess();
 
         return (
-            <div style={{ flex: 1, overflowY: 'auto', padding: '2rem' }}>
+            <div style={{ flex: 1, overflowY: 'auto', padding: isMobile ? '1rem' : '2rem' }}>
                 {/* Hero */}
                 <div style={{
                     borderRadius: '20px', padding: '1.75rem',
@@ -986,7 +996,31 @@ const DashboardPage = ({
             : '?';
 
         return (
-            <div style={{ flex: 1, overflowY: 'auto', padding: '2rem' }}>
+            <div style={{ flex: 1, overflowY: 'auto', padding: isMobile ? '1rem' : '2rem' }}>
+
+                {/* ── Language selectors — mobile only ── */}
+                {isMobile && (
+                    <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                        <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '0.68rem', fontWeight: '700', color: '#94a3b8', letterSpacing: '0.5px', marginBottom: '0.3rem', textTransform: 'uppercase' }}>
+                                {isFr ? 'Langue app' : 'App language'}
+                            </div>
+                            <select value={lang} onChange={(e) => setLang(e.target.value)} style={selectStyle}>
+                                <option value="en">🇺🇸 English</option>
+                                <option value="fr">🇫🇷 Français</option>
+                            </select>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '0.68rem', fontWeight: '700', color: '#94a3b8', letterSpacing: '0.5px', marginBottom: '0.3rem', textTransform: 'uppercase' }}>
+                                {isFr ? 'J\'apprends' : 'Learning'}
+                            </div>
+                            <select value={learnLang} onChange={(e) => setLearnLang(e.target.value)} style={{ ...selectStyle, border: '2px solid #bfdbfe', backgroundColor: '#eff6ff', color: '#0056D2' }}>
+                                <option value="medumba">🇨🇲 Medumba</option>
+                                <option value="english">🇬🇧 English</option>
+                            </select>
+                        </div>
+                    </div>
+                )}
 
                 {/* ── Profile card ── */}
                 <div style={{
@@ -1321,8 +1355,8 @@ const DashboardPage = ({
             overflow: 'hidden',
         }}>
 
-            {/* ══════════════ LEFT SIDEBAR ══════════════ */}
-            <aside style={{
+            {/* ══════════════ LEFT SIDEBAR — desktop only ══════════════ */}
+            {!isMobile && <aside style={{
                 width: '220px', minWidth: '220px',
                 borderRight: '2px solid #e5e7eb',
                 display: 'flex', flexDirection: 'column',
@@ -1417,44 +1451,65 @@ const DashboardPage = ({
                         </div>
                     </div>
                 </div>
-            </aside>
+            </aside>}
 
             {/* ══════════════ MAIN ══════════════ */}
-            <main style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
 
                 {/* Top Stats Bar */}
                 <header style={{
                     backgroundColor: '#fff', borderBottom: '2px solid #e5e7eb',
-                    padding: '0.8rem 2rem', display: 'flex',
-                    alignItems: 'center', justifyContent: 'flex-end',
-                    gap: '1.75rem', flexShrink: 0, zIndex: 10,
+                    padding: isMobile ? '0.65rem 1rem' : '0.8rem 2rem',
+                    display: 'flex', alignItems: 'center',
+                    justifyContent: isMobile ? 'space-between' : 'flex-end',
+                    gap: '1rem', flexShrink: 0, zIndex: 10,
                 }}>
-                    {/* XP */}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
+                    {/* Logo — mobile only */}
+                    {isMobile && (
+                        <div onClick={() => { setActiveNav('home'); setPurchaseFlow(null); }}
+                             style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
+                            <img src={logo} alt="" style={{ width: '24px', height: 'auto' }} />
+                            <span style={{ fontWeight: '800', color: '#0056D2', fontSize: '1rem' }}>Medumba</span>
+                        </div>
+                    )}
+                    {/* Stats */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '0.75rem' : '1.75rem' }}>
+                        {/* XP — desktop only */}
+                        {!isMobile && (
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                                    <span style={{ fontSize: '1rem' }}>⚡</span>
+                                    <span style={{ fontWeight: '800', color: '#0056D2', fontSize: '0.9rem' }}>
+                                        {userStats.xp} XP
+                                    </span>
+                                </div>
+                                <div style={{ width: '72px', height: '5px', backgroundColor: '#dbeafe', borderRadius: '99px', overflow: 'hidden' }}>
+                                    <div style={{ width: `${xpProgress}%`, height: '100%', backgroundColor: '#0056D2', borderRadius: '99px', transition: 'width 0.4s ease' }} />
+                                </div>
+                            </div>
+                        )}
+                        {/* Gems */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                            <span style={{ fontSize: '1rem' }}>⚡</span>
-                            <span style={{ fontWeight: '800', color: '#0056D2', fontSize: '0.9rem' }}>
-                                {userStats.xp} XP
-                            </span>
+                            <span style={{ fontSize: '1.1rem' }}>💎</span>
+                            <span style={{ fontWeight: '800', color: '#0284c7', fontSize: '0.88rem' }}>{gems}</span>
                         </div>
-                        <div style={{ width: '72px', height: '5px', backgroundColor: '#dbeafe', borderRadius: '99px', overflow: 'hidden' }}>
-                            <div style={{ width: `${xpProgress}%`, height: '100%', backgroundColor: '#0056D2', borderRadius: '99px', transition: 'width 0.4s ease' }} />
+                        {/* Hearts */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1px' }}>
+                            {[...Array(5)].map((_, i) => (
+                                <span key={i} style={{
+                                    fontSize: isMobile ? '0.75rem' : '0.95rem',
+                                    filter: i < userStats.hearts ? 'none' : 'grayscale(1)',
+                                    opacity: i < userStats.hearts ? 1 : 0.3,
+                                }}>❤️</span>
+                            ))}
                         </div>
-                    </div>
-                    {/* Gems */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                        <span style={{ fontSize: '1.15rem' }}>💎</span>
-                        <span style={{ fontWeight: '800', color: '#0284c7', fontSize: '0.9rem' }}>{gems}</span>
-                    </div>
-                    {/* Hearts */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-                        {[...Array(5)].map((_, i) => (
-                            <span key={i} style={{
-                                fontSize: '0.95rem',
-                                filter: i < userStats.hearts ? 'none' : 'grayscale(1)',
-                                opacity: i < userStats.hearts ? 1 : 0.3,
-                            }}>❤️</span>
-                        ))}
+                        {/* Streak — mobile only */}
+                        {isMobile && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+                                <span style={{ fontSize: '1rem' }}>🔥</span>
+                                <span style={{ fontWeight: '800', color: '#d97706', fontSize: '0.88rem' }}>{userStats.streak}</span>
+                            </div>
+                        )}
                     </div>
                 </header>
 
@@ -1468,10 +1523,43 @@ const DashboardPage = ({
                         {activeNav === 'account'     && renderAccount()}
                     </div>
 
-                    {/* Right panel — home tab only */}
-                    {activeNav === 'home' && renderRightPanel()}
+                    {/* Right panel — home tab, desktop only */}
+                    {!isMobile && activeNav === 'home' && renderRightPanel()}
                 </div>
-            </main>
+
+                {/* ══════════════ BOTTOM NAV — mobile only ══════════════ */}
+                {isMobile && (
+                    <nav style={{
+                        display: 'flex', flexShrink: 0,
+                        borderTop: '2px solid #e5e7eb',
+                        backgroundColor: '#fff',
+                        height: '62px',
+                    }}>
+                        {navItems.map((item) => {
+                            const on = activeNav === item.id;
+                            return (
+                                <button
+                                    key={item.id}
+                                    onClick={() => { setActiveNav(item.id); if (item.id !== 'premium') setPurchaseFlow(null); }}
+                                    style={{
+                                        flex: 1, display: 'flex', flexDirection: 'column',
+                                        alignItems: 'center', justifyContent: 'center', gap: '2px',
+                                        background: 'none', border: 'none', cursor: 'pointer',
+                                        borderTop: `3px solid ${on ? '#0056D2' : 'transparent'}`,
+                                        color: on ? '#0056D2' : '#9ca3af',
+                                        fontFamily: 'inherit', padding: '0',
+                                    }}
+                                >
+                                    <span style={{ fontSize: '1.25rem' }}>{item.icon}</span>
+                                    <span style={{ fontSize: '0.56rem', fontWeight: '700', letterSpacing: '0.3px' }}>
+                                        {isFr ? item.labelFr : item.labelEn}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </nav>
+                )}
+            </div>
         </div>
     );
 };
