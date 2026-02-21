@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { MEDUMBA_QUESTIONS } from '../data/medumbaDictionary';
 
 /* ════════════════════════════════════════════════════════════════════
    QUESTION DATA
@@ -107,44 +108,13 @@ const QUESTIONS = {
             audio:  'How much does it cost',
         },
     ],
-    /* ── Medumba course (demo placeholders) ── */
-    l2: [   // Basics 2
-        {
-            sourceFr: 'Bonjour, comment allez-vous',
-            sourceEn: 'Hello, how are you',
-            answer: ['Mbè', 'ā', 'pā'],
-            bank:   ['Mbè', 'ā', 'pā', 'kā', 'nǒ', 'lē', 'fē', 'jò'],
-            audio:  'Mbè ā pā',
-        },
-        {
-            sourceFr: 'Je m\'appelle Jean',
-            sourceEn: 'My name is Jean',
-            answer: ['Mbà', 'tò', 'Jean'],
-            bank:   ['Mbà', 'tò', 'Jean', 'nǒ', 'kā', 'lē', 'yē', 'Marie'],
-            audio:  'Mbà tò Jean',
-        },
-        {
-            sourceFr: 'Merci beaucoup',
-            sourceEn: 'Thank you very much',
-            answer: ['Fā', 'sī', 'kō'],
-            bank:   ['Fā', 'sī', 'kō', 'Mbè', 'pā', 'ā', 'nǒ', 'lē'],
-            audio:  'Fā sī kō',
-        },
-    ],
-    l3: [   // Greetings
-        {
-            sourceFr: 'Bonne nuit',
-            sourceEn: 'Good night',
-            answer: ['Mbè', 'nū'],
-            bank:   ['Mbè', 'nū', 'pā', 'kā', 'fā', 'sī', 'jō', 'lē'],
-            audio:  'Mbè nū',
-        },
-    ],
+    /* ── Medumba course — from Dictionnaire Ncobnkùn.xlsx ── */
+    ...MEDUMBA_QUESTIONS,
 };
 
 /* fallback pool when no specific lesson data exists */
 const FALLBACK_EN = QUESTIONS.e2;
-const FALLBACK_MD = QUESTIONS.l2;
+const FALLBACK_MD = QUESTIONS.l1;
 
 const DIAMONDS_PER_Q = 5;
 const XP_PER_Q       = 10;
