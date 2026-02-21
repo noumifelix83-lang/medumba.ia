@@ -1,5 +1,4 @@
 import logo from '../assets/logo.png';
-import welcomeVector from '../assets/welcom vector.png';
 
 const WelcomePage = ({ onNext, onLogin }) => (
   <div style={{
@@ -14,7 +13,7 @@ const WelcomePage = ({ onNext, onLogin }) => (
     textAlign: 'center',
   }}>
 
-    {/* Logo + illustration + title + tagline */}
+    {/* Logo + title + tagline */}
     <div style={{
       flex: 1,
       display: 'flex',
@@ -26,12 +25,7 @@ const WelcomePage = ({ onNext, onLogin }) => (
       <img
         src={logo}
         alt="Medumba"
-        style={{ width: '100px', height: 'auto', marginBottom: '0.75rem' }}
-      />
-      <img
-        src={welcomeVector}
-        alt="Welcome"
-        style={{ width: '280px', height: 'auto', marginBottom: '1.25rem' }}
+        style={{ width: '160px', height: 'auto', marginBottom: '1.5rem' }}
       />
       <h1 style={{
         fontSize: '2.25rem',

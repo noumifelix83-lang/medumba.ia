@@ -143,6 +143,36 @@ const DashboardPage = ({
         };
     });
 
+    /* ── session-completed lessons (unlocks next in path) ── */
+    const [completedLessons, setCompletedLessons] = useState(() => new Set());
+
+    const applySessionProgress = (units) => {
+        if (completedLessons.size === 0) return units;
+
+        // Step 1: flatten all lessons and mark session-completed ones
+        const allLessons = units.flatMap(u => u.lessons).map(lesson =>
+            completedLessons.has(lesson.id) ? { ...lesson, status: 'completed' } : lesson
+        );
+
+        // Step 2: promote the first locked regular lesson after a completed one to 'active'
+        let lastWasCompleted = false;
+        let promotedOne = false;
+        const updated = allLessons.map(lesson => {
+            if (lesson.type === 'chest' || lesson.type === 'boss') return lesson;
+            if (lesson.status === 'completed') { lastWasCompleted = true; return lesson; }
+            if (lastWasCompleted && !promotedOne && lesson.status !== 'active') {
+                promotedOne = true;
+                lastWasCompleted = false;
+                return { ...lesson, status: 'active' };
+            }
+            return lesson;
+        });
+
+        // Step 3: rebuild unit structure
+        let i = 0;
+        return units.map(unit => ({ ...unit, lessons: unit.lessons.map(() => updated[i++]) }));
+    };
+
     /* ── learning language (what the user is studying) ── */
     const defaultLearnLang = learningLang === 'english' ? 'english' : 'medumba';
     const [learnLang, setLearnLang] = useState(defaultLearnLang);
@@ -275,7 +305,7 @@ const DashboardPage = ({
         },
     ];
 
-    const units = applyProgress(learnLang === 'english' ? unitsEnglish : unitsMedumba);
+    const units = applySessionProgress(applyProgress(learnLang === 'english' ? unitsEnglish : unitsMedumba));
 
     const zigzagFull   = [0, 56, 90, 56, 0, -56, -90, -56, 0, 56, 90];
     const zigzagMobile = [0, 36, 56, 36, 0, -36, -56, -36, 0, 36, 56];
@@ -1377,7 +1407,13 @@ const DashboardPage = ({
                 learnLang={learnLang}
                 isFr={isFr}
                 profile={profile}
-                onFinish={(result) => { setLessonResult(result); setLessonFlow('lesson_complete'); }}
+                onFinish={(result) => {
+                    if (activeLesson?.id) {
+                        setCompletedLessons(prev => new Set([...prev, activeLesson.id]));
+                    }
+                    setLessonResult(result);
+                    setLessonFlow('lesson_complete');
+                }}
                 onShare={() => setLessonFlow('share')}
                 onClose={() => { setLessonFlow(null); setActiveLesson(null); }}
             />
