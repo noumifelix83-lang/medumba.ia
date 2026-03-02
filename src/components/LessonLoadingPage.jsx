@@ -91,6 +91,9 @@ const LessonLoadingPage = ({ onReady, isFr, lessonTitle, userName }) => {
             </div>
 
             {/* ── Teacher illustration ──────────────────────────────────────── */}
+            {/* loading vec.png: woman arms spread wide, face at upper-center (~50% x, 18% y).
+                Speech bubble goes to her RIGHT, tail (borderBottomLeftRadius) points back left
+                toward her face which is to the lower-left of the bubble. */}
             <div style={{
                 position: 'relative',
                 width: '100%', maxWidth: '400px',
@@ -109,6 +112,28 @@ const LessonLoadingPage = ({ onReady, isFr, lessonTitle, userName }) => {
                         animation: 'teacher-bounce 2s ease-in-out infinite',
                     }}
                 />
+                {/* Speech bubble near woman's face (upper-right of her) */}
+                <div style={{
+                    position: 'absolute',
+                    top: '12%',
+                    right: '2%',
+                    backgroundColor: '#fff',
+                    border: '2px solid #c5d8fb',
+                    borderRadius: '14px',
+                    borderBottomLeftRadius: '3px',
+                    padding: '0.55rem 0.85rem',
+                    boxShadow: '0 4px 14px rgba(30,136,229,0.15)',
+                    maxWidth: '140px',
+                    textAlign: 'left',
+                    animation: 'badge-pop 2s ease-in-out infinite',
+                }}>
+                    <div style={{ fontSize: '0.72rem', fontWeight: '900', color: '#1565C0', lineHeight: 1.3 }}>
+                        {lessonTitle}
+                    </div>
+                    <div style={{ fontSize: '0.62rem', fontWeight: '700', color: '#78909C', marginTop: '0.15rem' }}>
+                        {isFr ? '🌟 Prêt(e) ?' : '🌟 Ready?'}
+                    </div>
+                </div>
             </div>
 
             {/* ── Bottom content ────────────────────────────────────────────── */}

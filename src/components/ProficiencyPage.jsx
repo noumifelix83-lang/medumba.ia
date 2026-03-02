@@ -130,23 +130,29 @@ const ProficiencyPage = ({ onNext, onBack, nativeLang, learningLang }) => {
                             }}
                         />
 
-                        {/* Speech Bubble */}
+                        {/* Speech Bubble
+                            teacher 1.png: man waving RIGHT hand, face at upper-center of image.
+                            Bubble goes to his RIGHT. Face is at ~y:55px in the 240px image.
+                            Bubble top at 5px, height ~90px → face at y:55px sits near bottom of bubble.
+                            borderBottomLeftRadius:'4px' → tail at bottom-left corner points back LEFT
+                            toward the man's face which is to the lower-left of the bubble. */}
                         <div style={{
                             position: 'absolute',
-                            top: '20px',
-                            right: '-85px', // More spacing
+                            top: '5px',
+                            right: '-90px',
                             backgroundColor: 'white',
-                            padding: '1rem',
-                            borderRadius: '20px',
+                            padding: '0.9rem 1rem',
+                            borderRadius: '16px',
                             borderBottomLeftRadius: '4px',
-                            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-                            width: '180px',
-                            textAlign: 'left'
+                            boxShadow: '0 6px 20px rgba(0,0,0,0.12)',
+                            width: '175px',
+                            textAlign: 'left',
+                            border: '1.5px solid #e2e8f0',
                         }}>
                             <p style={{
                                 color: '#0f172a',
-                                fontSize: '0.95rem',
-                                fontWeight: '600',
+                                fontSize: '0.9rem',
+                                fontWeight: '700',
                                 lineHeight: '1.4',
                                 margin: 0
                             }}>

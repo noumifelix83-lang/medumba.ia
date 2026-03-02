@@ -43,21 +43,27 @@ const LanguageSelectionPage = ({ onNext, onBack, nativeLang, setNativeLang }) =>
 
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '500px', margin: '0 auto', padding: '0 1.5rem 2rem' }}>
 
-                {/* ── Tutor + speech bubble ── */}
-                <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center', marginTop: '1rem', marginBottom: '1.75rem' }}>
+                {/* ── Tutor + speech bubble ──
+                     teacher2.png: woman faces right, left arm raised, face at upper-center of image.
+                     Bubble goes to her LEFT side (she is on the right, bubble on left),
+                     tail is borderBottomRightRadius:'4px' pointing right → back toward her face. */}
+                <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center', marginTop: '0.5rem', marginBottom: '1.75rem' }}>
                     <div style={{ position: 'relative', zIndex: 1, width: 'fit-content' }}>
-                        <img src={tutor} alt="Tutor" style={{ width: '210px', height: 'auto', display: 'block' }} />
+                        {/* Bubble left of teacher, tail (bottom-right corner) points toward her */}
                         <div style={{
-                            position: 'absolute', top: '20px', right: '-80px',
-                            backgroundColor: '#fff', padding: '0.9rem 1.1rem',
-                            borderRadius: '20px', borderBottomLeftRadius: '4px',
-                            boxShadow: '0 8px 24px rgba(0,0,0,0.1)', width: '180px', textAlign: 'left',
+                            position: 'absolute', top: '22px', left: '-175px',
+                            backgroundColor: '#fff', padding: '0.85rem 1rem',
+                            borderRadius: '16px', borderBottomRightRadius: '4px',
+                            boxShadow: '0 6px 20px rgba(0,0,0,0.12)',
+                            width: '160px', textAlign: 'left',
+                            border: '1.5px solid #e2e8f0',
                             animation: 'lang-in 0.4s ease-out 0.2s both',
                         }}>
-                            <p style={{ color: '#0f172a', fontSize: '0.9rem', fontWeight: '700', lineHeight: 1.4, margin: 0 }}>
+                            <p style={{ color: '#0f172a', fontSize: '0.88rem', fontWeight: '700', lineHeight: 1.4, margin: 0 }}>
                                 {bubbleText}
                             </p>
                         </div>
+                        <img src={tutor} alt="Tutor" style={{ width: '200px', height: 'auto', display: 'block' }} />
                     </div>
                 </div>
 
