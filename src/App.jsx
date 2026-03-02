@@ -111,6 +111,7 @@ function App() {
       {step === 24 && (
         <HubPage
           nativeLang={nativeLang}
+          onBack={      () => go(2)}
           onCalendar={  () => go(25)}
           onVideo={     () => go(26)}
           onCounting={  () => go(27)}

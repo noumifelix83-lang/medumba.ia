@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import logo from '../assets/logo.png';
 
-const HubPage = ({ nativeLang, onCalendar, onVideo, onCounting, onDictionary, onCourses }) => {
+const HubPage = ({ nativeLang, onBack, onCalendar, onVideo, onCounting, onDictionary, onCourses }) => {
     const isFr = nativeLang === 'french';
     const [visited, setVisited] = useState(new Set());
 
@@ -110,7 +110,11 @@ const HubPage = ({ nativeLang, onCalendar, onVideo, onCounting, onDictionary, on
                 <div style={{ position: 'absolute', top: '40%', left: '55%', width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
 
                 {/* Content */}
-                <div style={{ position: 'relative', zIndex: 1, padding: '2.5rem 1.5rem 0', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+                <div style={{ position: 'relative', zIndex: 1, padding: '1.25rem 1.5rem 0', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+                    {/* Back button */}
+                    <div style={{ width: '100%', display: 'flex', alignItems: 'center', marginBottom: '0.75rem' }}>
+                        <button onClick={onBack} style={{ background: 'rgba(255,255,255,0.2)', border: '1.5px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '40px', height: '40px', cursor: 'pointer', fontSize: '1.1rem', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(8px)', flexShrink: 0 }}>←</button>
+                    </div>
                     <img src={logo} alt="Medumba" style={{ width: '80px', height: 'auto', marginBottom: '1rem', filter: 'drop-shadow(0 8px 20px rgba(0,0,0,0.25))', animation: 'hub-logo-pop 0.7s cubic-bezier(0.175,0.885,0.32,1.275) both' }} />
 
                     <h1 style={{ fontSize: '2.4rem', fontWeight: '900', color: '#fff', margin: '0 0 0.4rem', letterSpacing: '-0.03em', textShadow: '0 2px 12px rgba(0,0,0,0.2)', animation: 'hub-fade-up 0.5s ease-out 0.15s both' }}>
