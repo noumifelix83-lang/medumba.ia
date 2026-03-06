@@ -45,8 +45,8 @@ function App() {
   const [step, setStep] = useState(0);
 
   // ── Language selection ───────────────────────────────────────────
-  const [nativeLang,   setNativeLang]   = useState(null);
-  const learningLang = 'medumba';
+  const [nativeLang,    setNativeLang]    = useState('');
+  const [learningLang,  setLearningLang]  = useState('medumba');
 
   // ── Onboarding profile ───────────────────────────────────────────
   const [proficiency, setProficiency] = useState(null);
@@ -93,6 +93,7 @@ function App() {
         <LanguageSelectionPage
           onNext={() => go(3)} onBack={back}
           nativeLang={nativeLang} setNativeLang={setNativeLang}
+          learningLang={learningLang} setLearningLang={setLearningLang}
         />
       )}
 

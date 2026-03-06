@@ -23,11 +23,11 @@ const ProfileWelcomePage = ({ onNext, onSkip, nativeLang }) => {
             {/* Logo */}
             <img src={logo} alt="Medumba Logo" style={{ width: '90px', height: 'auto', marginBottom: '0.75rem', animation: 'pw-fade 0.4s ease-out both' }} />
 
-            {/* Welcom vector with overlaid text on each character's speech bubble */}
+            {/* Illustration with heritage speech bubbles */}
             <div style={{ position: 'relative', width: '100%', maxWidth: '360px', marginBottom: '1.5rem', animation: 'pw-fade 0.45s ease-out 0.1s both' }}>
-                <img src={profileVector} alt="Friends chatting" style={{ width: '100%', height: 'auto', display: 'block' }} />
+                <img src={profileVector} alt="Heritage learners" style={{ width: '100%', height: 'auto', display: 'block' }} />
 
-                {/* BOY's speech bubble (orange/amber, upper-center-left of image ~32–50% x, 5–28% y) */}
+                {/* Left bubble */}
                 <div style={{
                     position: 'absolute', top: '6%', left: '30%',
                     backgroundColor: '#d97706', color: '#fff',
@@ -38,37 +38,37 @@ const ProfileWelcomePage = ({ onNext, onSkip, nativeLang }) => {
                     whiteSpace: 'nowrap',
                     animation: 'pw-pop 0.5s cubic-bezier(0.175,0.885,0.32,1.275) 0.3s both',
                 }}>
-                    {isFrench ? '📈 Mes progrès' : '📈 Track progress'}
+                    {isFrench ? '🌱 Mon parcours' : '🌱 My journey'}
                 </div>
 
-                {/* GIRL's speech bubble (red, upper-right area ~62–85% x, 2–20% y) */}
+                {/* Right bubble */}
                 <div style={{
                     position: 'absolute', top: '3%', right: '6%',
-                    backgroundColor: '#dc2626', color: '#fff',
+                    backgroundColor: '#1B4FD8', color: '#fff',
                     borderRadius: '10px 10px 2px 10px',
                     padding: '0.25rem 0.7rem',
                     fontSize: '0.7rem', fontWeight: '900',
-                    boxShadow: '0 2px 8px rgba(220,38,38,0.4)',
+                    boxShadow: '0 2px 8px rgba(27,79,216,0.4)',
                     whiteSpace: 'nowrap',
                     animation: 'pw-pop 0.5s cubic-bezier(0.175,0.885,0.32,1.275) 0.45s both',
                 }}>
-                    {isFrench ? '👥 Mes amis' : '👥 Connect friends'}
+                    {isFrench ? '🔥 Ma progression' : '🔥 My progress'}
                 </div>
             </div>
 
-            {/* Bouncing welcome */}
-            <div style={{ fontSize: '1.35rem', fontWeight: '900', color: '#1B4FD8', marginBottom: '0.6rem', animation: 'pw-bounce 2s infinite' }}>
-                {isFrench ? 'Bienvenue ! 🎉' : 'Welcome! 🎉'}
+            {/* Heading */}
+            <div style={{ fontSize: '1.35rem', fontWeight: '900', color: '#1B4FD8', marginBottom: '0.5rem', animation: 'pw-bounce 2s infinite' }}>
+                {isFrench ? 'Sauvegardez votre voyage 🏡' : 'Save your reconnection journey 🏡'}
             </div>
 
             {/* Description */}
             <p style={{ fontSize: '0.92rem', color: '#64748b', marginBottom: '0.4rem', fontWeight: '600', maxWidth: '300px', lineHeight: 1.6, animation: 'pw-fade 0.5s ease-out 0.2s both' }}>
                 {isFrench
-                    ? 'Créez un profil pour sauvegarder vos progrès et vous connecter avec des amis.'
-                    : 'Create a profile to save your progress and connect with friends.'}
+                    ? 'Créez un profil pour ne jamais perdre vos progrès et retrouver votre chemin chaque jour.'
+                    : 'Create a profile to never lose your progress and find your way back every day.'}
             </p>
             <p style={{ fontSize: '0.82rem', color: '#94a3b8', marginBottom: '2rem', fontWeight: '600' }}>
-                {isFrench ? 'Ou vous pouvez passer' : 'Or skip for now'}
+                {isFrench ? 'Vous pouvez aussi continuer sans profil' : 'Or continue without a profile'}
             </p>
 
             {/* Buttons */}
@@ -77,10 +77,10 @@ const ProfileWelcomePage = ({ onNext, onSkip, nativeLang }) => {
                     width: '100%', backgroundColor: '#1B4FD8', color: 'white',
                     padding: '1.1rem', borderRadius: '9999px',
                     fontSize: '1rem', fontWeight: '800', border: 'none',
-                    cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,86,210,0.3)',
+                    cursor: 'pointer', boxShadow: '0 8px 20px rgba(27,79,216,0.3)',
                     letterSpacing: '0.3px',
                 }}>
-                    {isFrench ? 'CRÉER UN PROFIL' : 'CREATE PROFILE'}
+                    {isFrench ? 'CRÉER MON PROFIL' : 'CREATE MY PROFILE'}
                 </button>
                 <button onClick={onSkip} style={{
                     width: '100%', backgroundColor: 'transparent', color: '#64748b',
@@ -88,7 +88,7 @@ const ProfileWelcomePage = ({ onNext, onSkip, nativeLang }) => {
                     fontSize: '0.95rem', fontWeight: '700',
                     border: '2px solid #e2e8f0', cursor: 'pointer',
                 }}>
-                    {isFrench ? 'PASSER' : 'SKIP'}
+                    {isFrench ? 'PASSER POUR L\'INSTANT' : 'SKIP FOR NOW'}
                 </button>
             </div>
         </div>

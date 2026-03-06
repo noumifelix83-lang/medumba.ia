@@ -1,11 +1,13 @@
 /**
  * lessonGenerator.js
- * Generates a personalized question list for a lesson session
- * based on the learner's profile (dailyGoal, goals, proficiency, reason).
+ * Builds a personalized question list for a lesson session based on:
+ *   - proficiency level (1–4) → determines exercise types & complexity
+ *   - dailyGoal → caps total question count
+ *   - goals → extra variety for meaning / audio / match weighting
  */
-import { VARIETY_QUESTIONS } from '../data/medumbaDictionary';
+import { VARIETY_QUESTIONS, LEVEL_QUESTIONS } from '../data/medumbaDictionary';
 
-/* ── Max questions per session by daily-goal ─────────────────────── */
+/* ── Session length cap by daily-goal ──────────────────────────── */
 const GOAL_QUESTION_CAP = {
     relaxed: 4,
     normal:  6,
@@ -14,73 +16,141 @@ const GOAL_QUESTION_CAP = {
     awesome: Infinity,
 };
 
-/* ── How many of each variety type to inject, driven by goals ─────── */
+/* ── Variety mix driven by learner goals (Level 4 only) ─────────── */
 function varietyMix(goals = []) {
     let meaning = 1;
     let audio   = 0;
     let match   = 1;
-    if (goals.includes('speak')) audio   += 1;  // speaking-focused → more audio
-    if (goals.includes('vocab')) { meaning += 1; match += 1; } // vocab → more meaning + match
-    // clamp to reasonable amounts
-    return { meaning: Math.min(meaning, 3), audio: Math.min(audio, 2), match: Math.min(match, 2) };
+    if (goals.includes('speak')) audio   = Math.min(audio + 1, 2);
+    if (goals.includes('vocab')) { meaning = Math.min(meaning + 1, 3); match = Math.min(match + 1, 2); }
+    return { meaning, audio, match };
 }
 
 function pickRandom(pool, n) {
     return [...pool].sort(() => Math.random() - 0.5).slice(0, n);
 }
 
+/** Alternate items from two arrays: [a0, b0, a1, b1, …] */
+function interleave(arr1, arr2) {
+    const out = [];
+    const len = Math.max(arr1.length, arr2.length);
+    for (let i = 0; i < len; i++) {
+        if (i < arr1.length) out.push(arr1[i]);
+        if (i < arr2.length) out.push(arr2[i]);
+    }
+    return out;
+}
+
 /**
  * generateLessonQuestions
  *
- * @param {string}  lessonId     - e.g. 'l1', 'e2'
- * @param {object}  profile      - { dailyGoal, goals, proficiency, reason, name }
- * @param {object}  allQuestions - QUESTIONS object from LessonPage (tile-type questions)
- * @param {string}  learnLang    - 'medumba' | 'english'
+ * Proficiency levels and their exercise style:
+ *   1 – Beginner     → only meaning questions (Medumba word → pick 1 of 4)
+ *   2 – Elementary   → meaning + simplified tile (bank trimmed to 4 words)
+ *   3 – Intermediate → full tile + 1 lesson-specific match
+ *   4 – Advanced     → full tile interleaved with meaning, audio & match
+ *
+ * @param {string}  lessonId     e.g. 'l1', 'e2'
+ * @param {object}  profile      { dailyGoal, goals, proficiency, reason, name }
+ * @param {object}  allQuestions QUESTIONS object from LessonPage (tile questions)
+ * @param {string}  learnLang    'medumba' | 'english'
  * @returns {Array} ordered question list for the session
  */
 export function generateLessonQuestions(lessonId, profile = {}, allQuestions = {}, learnLang = 'medumba') {
-    const fallbackEn = allQuestions.e2 ?? [];
-    const fallbackMd = allQuestions.l1 ?? [];
-    const baseQ = allQuestions[lessonId]
-        ?? (learnLang === 'english' ? fallbackEn : fallbackMd);
-
     const cap = GOAL_QUESTION_CAP[profile.dailyGoal ?? 'normal'] ?? 6;
 
-    /* ── English lessons: no variety exercises, just cap the count ── */
+    /* ── English course: always tile questions, just cap the count ── */
     if (learnLang === 'english') {
+        const baseQ = allQuestions[lessonId] ?? allQuestions.e2 ?? [];
         return cap === Infinity ? [...baseQ] : baseQ.slice(0, cap);
     }
 
-    /* ── Medumba lessons: build variety pool from learner goals ───── */
-    const { meaning: mCount, audio: aCount, match: matchCount } = varietyMix(profile.goals ?? []);
+    /* ── Medumba course ─────────────────────────────────────────── */
+    const proficiency = profile.proficiency ?? 1;
+    const tileQs      = allQuestions[lessonId] ?? allQuestions.l1 ?? [];
+    const levelData   = LEVEL_QUESTIONS[lessonId] ?? {};
+    const meaningQs   = levelData.meaning ?? [];
+    const matchQs     = levelData.match   ?? [];
 
-    const meaningPool = VARIETY_QUESTIONS.filter(q => q.type === 'meaning');
-    const audioPool   = VARIETY_QUESTIONS.filter(q => q.type === 'audio');
-    const matchPool   = VARIETY_QUESTIONS.filter(q => q.type === 'match');
+    let result = [];
 
-    const varietyItems = [
-        ...pickRandom(meaningPool, mCount),
-        ...pickRandom(audioPool,   aCount),
-        ...pickRandom(matchPool,   matchCount),
-    ];
+    if (proficiency === 1) {
+        /*
+         * BEGINNER — only meaning exercises.
+         * Show a Medumba word, pick its translation from 4 options.
+         * No word banks, no sentence building — pure vocabulary recognition.
+         */
+        result = [...meaningQs];
 
-    // Interleave variety questions at positions 2, 5, 8…
-    const result = [...baseQ];
-    varietyItems.forEach((vq, i) => {
-        const pos = Math.min(2 + i * 3, result.length);
-        result.splice(pos, 0, vq);
-    });
+    } else if (proficiency === 2) {
+        /*
+         * ELEMENTARY — meaning + simplified tile.
+         * Tile questions use a trimmed bank (4 words) so there are fewer
+         * distractors and sentence building is easier.
+         */
+        const simpleTiles = tileQs.map(q => ({ ...q, bank: q.bank.slice(0, 4) }));
+        result = interleave(meaningQs.slice(0, 3), simpleTiles);
+
+    } else if (proficiency === 3) {
+        /*
+         * INTERMEDIATE — full tile exercises + 1 lesson-specific match.
+         * Students now see the complete word bank and must also pair
+         * Medumba words with their translations.
+         */
+        result = [...tileQs, ...matchQs];
+
+    } else {
+        /*
+         * ADVANCED — everything: tile + meaning + audio + match,
+         * weighted by the learner's stated goals.
+         */
+        const { meaning: mCount, audio: aCount, match: matchCount } = varietyMix(profile.goals ?? []);
+
+        const meaningPool = VARIETY_QUESTIONS.filter(q => q.type === 'meaning');
+        const audioPool   = VARIETY_QUESTIONS.filter(q => q.type === 'audio');
+        const matchPool   = [
+            ...matchQs,
+            ...VARIETY_QUESTIONS.filter(q => q.type === 'match'),
+        ];
+
+        const varietyItems = [
+            ...pickRandom(meaningPool, mCount),
+            ...pickRandom(audioPool,   aCount),
+            ...pickRandom(matchPool,   matchCount),
+        ];
+
+        result = [...tileQs];
+        varietyItems.forEach((vq, i) => {
+            const pos = Math.min(2 + i * 3, result.length);
+            result.splice(pos, 0, vq);
+        });
+    }
 
     return cap === Infinity ? result : result.slice(0, cap);
 }
 
 /**
  * getPersonalizedTip
- * Returns a short tip/recommendation string based on learner profile.
+ * Returns a short motivational tip based on learner profile.
  */
 export function getPersonalizedTip(profile = {}, isFr = false) {
-    const { reason, goals = [], dailyGoal } = profile;
+    const { reason, goals = [], dailyGoal, proficiency = 1 } = profile;
 
+    if (proficiency === 1) {
+        return isFr
+            ? '🌱 Débutant ? Concentrez-vous sur la reconnaissance des mots !'
+            : '🌱 Beginner? Focus on recognizing words first!';
+    }
+    if (proficiency === 2) {
+        return isFr
+            ? '📈 Bien ! Vous construisez maintenant de petites phrases.'
+            : '📈 Good! You are now building short sentences.';
+    }
+    if (proficiency === 3) {
+        return isFr
+            ? '💪 Niveau intermédiaire — maîtrisez les associations de mots !'
+            : '💪 Intermediate level — master word matching!';
+    }
     if (reason === 'vacation') {
         return isFr
             ? '✈️ Pour votre voyage : commencez par Salutations et Nourriture !'
@@ -91,20 +161,10 @@ export function getPersonalizedTip(profile = {}, isFr = false) {
             ? '💼 Conseil pro : pratiquez les nombres et le temps chaque jour.'
             : '💼 Pro tip: practice Numbers and Time every day.';
     }
-    if (reason === 'education') {
-        return isFr
-            ? '🎓 Étudiez méthodiquement — corps humain, couleurs, chiffres.'
-            : '🎓 Study systematically — Body Parts, Colors, Numbers.';
-    }
     if (goals.includes('speak')) {
         return isFr
             ? '💬 Écoutez bien les exercices audio pour améliorer votre prononciation !'
             : '💬 Listen carefully to audio exercises to improve your pronunciation!';
-    }
-    if (goals.includes('vocab')) {
-        return isFr
-            ? '📇 Associez les mots pour mémoriser le vocabulaire plus vite !'
-            : '📇 Match words to memorize vocabulary faster!';
     }
     if (dailyGoal === 'awesome' || dailyGoal === 'great') {
         return isFr

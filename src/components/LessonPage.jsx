@@ -506,7 +506,7 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
                     textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '0.35rem',
                 }}>
                     {type === 'tile'    && (isFr ? 'Traduisez cette phrase' : 'Translate this sentence')}
-                    {type === 'meaning' && (isFr ? 'Que signifie ce mot ?' : 'What does this word mean?')}
+                    {type === 'meaning' && (isFr ? 'Quel mot Medumba correspond ?' : 'Which Medumba word matches?')}
                     {type === 'audio'   && (isFr ? "Qu'est-ce que dit l'audio ?" : 'What does the audio say?')}
                     {type === 'match'   && (isFr ? 'Associez les mots' : 'Match the words')}
                 </p>
@@ -597,22 +597,16 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
                 {/* ════ MEANING exercise ════ */}
                 {type === 'meaning' && (<>
                     <div style={{
-                        display: 'flex', alignItems: 'center', gap: '1rem',
                         backgroundColor: '#fff', border: '2px solid #e2e8f0',
-                        borderRadius: '18px', padding: '1.1rem 1.3rem',
+                        borderRadius: '18px', padding: '1.4rem 1.5rem',
                         marginBottom: '1.75rem', boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                        textAlign: 'center',
                     }}>
-                        <button onClick={() => playAudio(q?.audio, 'fr-FR')} style={{
-                            width: '48px', height: '48px', borderRadius: '50%',
-                            backgroundColor: speaking ? '#eff6ff' : '#f8fafc',
-                            border: `2px solid ${speaking ? '#0056D2' : '#e2e8f0'}`,
-                            cursor: 'pointer', fontSize: '1.4rem',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            flexShrink: 0, transition: 'all 0.15s',
-                            animation: speaking ? 'speaker-wave 0.6s ease-in-out infinite' : 'none',
-                        }}>{speaking ? '🔊' : '🔈'}</button>
-                        <span style={{ fontSize: '1.6rem', fontWeight: '900', color: '#0056D2', lineHeight: 1.2 }}>
-                            {q?.sourceFr}
+                        <div style={{ fontSize: '0.7rem', fontWeight: '700', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: '0.5rem' }}>
+                            {isFr ? 'Mot en français' : 'Word in English'}
+                        </div>
+                        <span style={{ fontSize: '2rem', fontWeight: '900', color: '#0f172a', lineHeight: 1.2 }}>
+                            {isFr ? q?.sourceFr : q?.sourceEn}
                         </span>
                     </div>
 
