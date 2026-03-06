@@ -1,102 +1,71 @@
-import logo from '../assets/logo.png';
+import welcomeVec from '../assets/welcom vector.png';
+
+const B = '#1B4FD8';
 
 const PasswordResetSuccessPage = ({ onNext, nativeLang }) => {
-    const isFrench = nativeLang === 'french';
-
-    const t = {
-        title:   isFrench ? 'Bon retour ! 🎉'                                                     : 'Welcome back! 🎉',
-        body:    isFrench ? 'Vous avez réinitialisé et créé un nouveau mot de passe avec succès.'  : 'You have successfully reset and created a new password.',
-        btn:     isFrench ? 'Continuer'                                                            : 'Continue',
-    };
+    const isFr = nativeLang === 'french';
 
     return (
         <div style={{
-            width: '100%',
-            minHeight: '100vh',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#f8fafc',
-            padding: '2rem',
-            textAlign: 'center',
+            width: '100%', minHeight: '100vh',
+            display: 'flex', flexDirection: 'column',
+            justifyContent: 'center', alignItems: 'center',
+            padding: '2.5rem 1.5rem', backgroundColor: '#fff', textAlign: 'center',
+            fontFamily: "'Outfit', system-ui, sans-serif",
         }}>
             <style>{`
-                @keyframes reset-bounce {
-                    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-                    40% { transform: translateY(-16px); }
-                    60% { transform: translateY(-8px); }
-                }
-                @keyframes reset-pop {
-                    0%   { transform: scale(0.6); opacity: 0; }
-                    60%  { transform: scale(1.1); opacity: 1; }
-                    100% { transform: scale(1); }
-                }
+                @keyframes rs-pop  { 0%{transform:scale(0.7);opacity:0;} 70%{transform:scale(1.06);} 100%{transform:scale(1);opacity:1;} }
+                @keyframes rs-fade { from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:translateY(0);} }
             `}</style>
 
-            {/* Animated check circle */}
+            {/* "Hurray!!" speech bubble */}
             <div style={{
-                width: '100px',
-                height: '100px',
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #0056D2, #38bdf8)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '2rem',
-                boxShadow: '0 12px 32px rgba(0,86,210,0.3)',
-                animation: 'reset-pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both',
+                backgroundColor: '#f8fafc', border: '1.5px solid #e2e8f0',
+                borderRadius: '20px 20px 20px 4px',
+                padding: '0.7rem 1.5rem', marginBottom: '1rem',
+                fontSize: '1rem', fontWeight: '700', color: '#0f172a',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                animation: 'rs-pop 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both',
             }}>
-                <span style={{ fontSize: '2.5rem' }}>✓</span>
+                {isFr ? 'Hourra !!' : 'Hurray!!'}
             </div>
 
-            {/* Logo */}
-            <img src={logo} alt="Medumba" style={{ width: '52px', height: 'auto', marginBottom: '1.5rem' }} />
+            {/* Welcom vector */}
+            <div style={{ width: '100%', maxWidth: '320px', marginBottom: '1.5rem', animation: 'rs-pop 0.55s cubic-bezier(0.175,0.885,0.32,1.275) 0.1s both' }}>
+                <img src={welcomeVec} alt="Welcome back" style={{ width: '100%', height: 'auto', display: 'block' }} />
+            </div>
 
-            {/* Title */}
+            {/* Heading */}
             <h1 style={{
-                fontSize: '2rem',
-                fontWeight: '800',
-                color: '#0056D2',
-                marginBottom: '0.75rem',
-                animation: 'reset-bounce 2s infinite',
-                letterSpacing: '-0.02em',
+                fontSize: '2rem', fontWeight: '900', color: B,
+                marginBottom: '0.6rem', letterSpacing: '-0.02em',
+                animation: 'rs-fade 0.5s ease-out 0.2s both',
             }}>
-                {t.title}
+                {isFr ? 'Bon retour ! 👋' : 'Welcome back!'}
             </h1>
 
-            {/* Body */}
+            {/* Subtext */}
             <p style={{
-                fontSize: '1rem',
-                color: '#64748b',
-                maxWidth: '280px',
-                lineHeight: '1.65',
-                marginBottom: '3rem',
-                fontWeight: '500',
+                fontSize: '1rem', color: '#64748b', maxWidth: '280px',
+                lineHeight: 1.6, marginBottom: '2.5rem', fontWeight: '500',
+                animation: 'rs-fade 0.5s ease-out 0.3s both',
             }}>
-                {t.body}
+                {isFr
+                    ? 'Vous avez réinitialisé et créé un nouveau mot de passe avec succès.'
+                    : 'You have successfully reset and created a new password.'}
             </p>
 
             {/* CTA */}
-            <button
-                onClick={onNext}
-                style={{
-                    width: '100%',
-                    maxWidth: '340px',
-                    backgroundColor: '#0056D2',
-                    color: '#fff',
-                    padding: '1.1rem',
-                    borderRadius: '9999px',
-                    fontSize: '1rem',
-                    fontWeight: '700',
-                    border: 'none',
-                    cursor: 'pointer',
-                    boxShadow: '0 8px 20px rgba(0,86,210,0.3)',
-                    letterSpacing: '0.4px',
-                    fontFamily: 'inherit',
-                }}
-            >
-                {t.btn}
+            <button onClick={onNext} style={{
+                width: '100%', maxWidth: '340px',
+                backgroundColor: B, color: '#fff',
+                padding: '1.1rem', borderRadius: '9999px',
+                fontSize: '1.05rem', fontWeight: '800', border: 'none',
+                cursor: 'pointer', boxShadow: '0 8px 24px rgba(27,79,216,0.3)',
+                letterSpacing: '0.5px',
+                animation: 'rs-fade 0.5s ease-out 0.4s both',
+            }}>
+                {isFr ? 'CONTINUER VERS L\'ACCUEIL' : 'CONTINUE TO HOME'}
             </button>
         </div>
     );

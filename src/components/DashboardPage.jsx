@@ -1414,6 +1414,7 @@ const DashboardPage = ({
                 lessonTitle={isFr ? (activeLesson?.titleFr ?? '') : (activeLesson?.titleEn ?? '')}
                 userName={userName}
                 onReady={() => setLessonFlow('lesson')}
+                onClose={() => { setLessonFlow(null); setActiveLesson(null); }}
             />
         );
     }

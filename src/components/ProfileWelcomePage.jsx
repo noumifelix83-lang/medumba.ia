@@ -9,7 +9,7 @@ const ProfileWelcomePage = ({ onNext, onSkip, nativeLang }) => {
         <div style={{
             width: '100%', minHeight: '100vh',
             display: 'flex', flexDirection: 'column',
-            backgroundColor: '#f8fafc', alignItems: 'center',
+            backgroundColor: '#fff', alignItems: 'center',
             justifyContent: 'center', textAlign: 'center',
             padding: '2rem 1.5rem',
             fontFamily: "'Outfit', system-ui, sans-serif",
@@ -57,7 +57,7 @@ const ProfileWelcomePage = ({ onNext, onSkip, nativeLang }) => {
             </div>
 
             {/* Bouncing welcome */}
-            <div style={{ fontSize: '1.35rem', fontWeight: '900', color: '#0056D2', marginBottom: '0.6rem', animation: 'pw-bounce 2s infinite' }}>
+            <div style={{ fontSize: '1.35rem', fontWeight: '900', color: '#1B4FD8', marginBottom: '0.6rem', animation: 'pw-bounce 2s infinite' }}>
                 {isFrench ? 'Bienvenue ! 🎉' : 'Welcome! 🎉'}
             </div>
 
@@ -74,7 +74,7 @@ const ProfileWelcomePage = ({ onNext, onSkip, nativeLang }) => {
             {/* Buttons */}
             <div style={{ width: '100%', maxWidth: '300px', display: 'flex', flexDirection: 'column', gap: '0.85rem', animation: 'pw-fade 0.5s ease-out 0.3s both' }}>
                 <button onClick={onNext} style={{
-                    width: '100%', backgroundColor: '#0255d4', color: 'white',
+                    width: '100%', backgroundColor: '#1B4FD8', color: 'white',
                     padding: '1.1rem', borderRadius: '9999px',
                     fontSize: '1rem', fontWeight: '800', border: 'none',
                     cursor: 'pointer', boxShadow: '0 8px 20px rgba(0,86,210,0.3)',

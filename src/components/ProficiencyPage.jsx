@@ -48,7 +48,7 @@ const ProficiencyPage = ({ onNext, onBack, nativeLang, learningLang }) => {
                         style={{
                             width: '4px',
                             height: `${4 + bar * 4}px`, // 8, 12, 16, 20px dynamic height
-                            backgroundColor: bar <= level ? '#0255d4' : '#cbd5e1', // Theme Blue or Grey
+                            backgroundColor: bar <= level ? '#1B4FD8' : '#cbd5e1', // Theme Blue or Grey
                             borderRadius: '2px'
                         }}
                     />
@@ -63,7 +63,7 @@ const ProficiencyPage = ({ onNext, onBack, nativeLang, learningLang }) => {
             minHeight: '100vh',
             display: 'flex',
             flexDirection: 'column',
-            backgroundColor: '#f8fafc',
+            backgroundColor: '#fff',
         }}>
             {/* Top Bar */}
             <div style={{
@@ -71,7 +71,7 @@ const ProficiencyPage = ({ onNext, onBack, nativeLang, learningLang }) => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '1rem',
-                backgroundColor: '#f8fafc',
+                backgroundColor: '#fff',
                 position: 'sticky',
                 top: 0,
                 zIndex: 50
@@ -92,7 +92,7 @@ const ProficiencyPage = ({ onNext, onBack, nativeLang, learningLang }) => {
                     <div style={{
                         width: '40%',
                         height: '100%',
-                        backgroundColor: '#0255d4',
+                        backgroundColor: '#1B4FD8',
                         borderRadius: '99px'
                     }} />
                 </div>
@@ -175,7 +175,7 @@ const ProficiencyPage = ({ onNext, onBack, nativeLang, learningLang }) => {
                                     justifyContent: 'space-between',
                                     padding: '1rem 1.25rem',
                                     borderRadius: '16px',
-                                    border: selectedLevel === level.id ? '2px solid #0255d4' : '1px solid #cbd5e1',
+                                    border: selectedLevel === level.id ? '2px solid #1B4FD8' : '1px solid #cbd5e1',
                                     backgroundColor: selectedLevel === level.id ? '#eff6ff' : 'white',
                                     cursor: 'pointer',
                                     transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -184,7 +184,7 @@ const ProficiencyPage = ({ onNext, onBack, nativeLang, learningLang }) => {
                             >
                                 <span style={{
                                     fontWeight: '600',
-                                    color: selectedLevel === level.id ? '#0255d4' : '#334155',
+                                    color: selectedLevel === level.id ? '#1B4FD8' : '#334155',
                                     fontSize: '1rem',
                                     paddingRight: '1rem'
                                 }}>
@@ -201,7 +201,7 @@ const ProficiencyPage = ({ onNext, onBack, nativeLang, learningLang }) => {
                         disabled={!selectedLevel}
                         style={{
                             width: '100%',
-                            backgroundColor: !selectedLevel ? '#cbd5e1' : '#0255d4',
+                            backgroundColor: !selectedLevel ? '#cbd5e1' : '#1B4FD8',
                             color: 'white',
                             padding: '1.125rem',
                             borderRadius: '9999px',

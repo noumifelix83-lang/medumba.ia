@@ -53,7 +53,7 @@ const WelcomePage = ({ onNext, onLogin }) => (
         {/* Title + tagline */}
         <div style={{ animation: 'welcome-fade 0.5s ease-out 0.2s both' }}>
             <h1 style={{
-                fontSize: '2.1rem', fontWeight: '900', color: '#0056D2',
+                fontSize: '2.1rem', fontWeight: '900', color: '#1B4FD8',
                 marginBottom: '0.6rem', letterSpacing: '-0.03em',
             }}>
                 Medumba
@@ -69,7 +69,7 @@ const WelcomePage = ({ onNext, onLogin }) => (
         {/* Action buttons */}
         <div style={{ width: '100%', maxWidth: '360px', display: 'flex', flexDirection: 'column', gap: '0.85rem', animation: 'welcome-fade 0.5s ease-out 0.3s both' }}>
             <button onClick={onNext} style={{
-                width: '100%', backgroundColor: '#0056D2', color: '#fff',
+                width: '100%', backgroundColor: '#1B4FD8', color: '#fff',
                 padding: '1.1rem', borderRadius: '9999px',
                 fontSize: '1rem', fontWeight: '800', border: 'none',
                 cursor: 'pointer', letterSpacing: '0.4px',
@@ -79,7 +79,7 @@ const WelcomePage = ({ onNext, onLogin }) => (
                 GET STARTED
             </button>
             <button onClick={onLogin} style={{
-                width: '100%', backgroundColor: '#eff6ff', color: '#0056D2',
+                width: '100%', backgroundColor: '#eff6ff', color: '#1B4FD8',
                 padding: '1.1rem', borderRadius: '9999px',
                 fontSize: '1rem', fontWeight: '700', border: '2px solid #bfdbfe',
                 cursor: 'pointer', letterSpacing: '0.4px',

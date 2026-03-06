@@ -8,20 +8,20 @@ const LanguageSelectionPage = ({ onNext, onBack, nativeLang, setNativeLang }) =>
         <div onClick={onClick} style={{
             display: 'flex', alignItems: 'center',
             padding: '1rem', borderRadius: '16px',
-            border: selected ? '2px solid #0056D2' : '1px solid #cbd5e1',
+            border: selected ? '2px solid #1B4FD8' : '1px solid #cbd5e1',
             backgroundColor: selected ? '#eff6ff' : 'white',
             cursor: 'pointer', transition: 'all 0.2s',
             position: 'relative',
         }}>
             <span style={{ fontSize: '2rem', marginRight: '1rem' }}>{flag}</span>
-            <span style={{ fontWeight: '600', fontSize: '1.1rem', color: selected ? '#0056D2' : '#334155' }}>
+            <span style={{ fontWeight: '600', fontSize: '1.1rem', color: selected ? '#1B4FD8' : '#334155' }}>
                 {label}
             </span>
             {selected && (
                 <div style={{
                     position: 'absolute', right: '1rem',
                     width: '12px', height: '12px', borderRadius: '50%',
-                    backgroundColor: '#0056D2',
+                    backgroundColor: '#1B4FD8',
                 }} />
             )}
         </div>
@@ -33,7 +33,7 @@ const LanguageSelectionPage = ({ onNext, onBack, nativeLang, setNativeLang }) =>
             <div style={{ padding: '1rem 1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', position: 'sticky', top: 0, backgroundColor: '#f8fafc', zIndex: 50 }}>
                 <button onClick={onBack} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: '#0f172a', padding: '0.5rem', borderRadius: '50%' }}>←</button>
                 <div style={{ flex: 1, height: '8px', backgroundColor: '#e2e8f0', borderRadius: '99px' }}>
-                    <div style={{ width: '20%', height: '100%', backgroundColor: '#0056D2', borderRadius: '99px' }} />
+                    <div style={{ width: '20%', height: '100%', backgroundColor: '#1B4FD8', borderRadius: '99px' }} />
                 </div>
             </div>
 
@@ -78,7 +78,7 @@ const LanguageSelectionPage = ({ onNext, onBack, nativeLang, setNativeLang }) =>
                             <div style={{ fontSize: '0.72rem', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                                 {isFr ? 'Langue à apprendre' : 'Learning language'}
                             </div>
-                            <div style={{ fontSize: '1rem', fontWeight: '800', color: '#0056D2' }}>Medumba</div>
+                            <div style={{ fontSize: '1rem', fontWeight: '800', color: '#1B4FD8' }}>Medumba</div>
                         </div>
                     </div>
 
@@ -86,7 +86,7 @@ const LanguageSelectionPage = ({ onNext, onBack, nativeLang, setNativeLang }) =>
                         onClick={onNext}
                         disabled={!nativeLang}
                         style={{
-                            width: '100%', backgroundColor: nativeLang ? '#0056D2' : '#cbd5e1',
+                            width: '100%', backgroundColor: nativeLang ? '#1B4FD8' : '#cbd5e1',
                             color: 'white', padding: '1.125rem', borderRadius: '9999px',
                             fontSize: '1.125rem', fontWeight: '600', border: 'none',
                             cursor: nativeLang ? 'pointer' : 'not-allowed', transition: 'all 0.2s',
