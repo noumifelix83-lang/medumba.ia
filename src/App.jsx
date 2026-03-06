@@ -2,11 +2,6 @@ import { useState } from 'react';
 import SplashScreen             from './components/SplashScreen';
 import WelcomePage              from './components/WelcomePage';
 import LanguageSelectionPage    from './components/LanguageSelectionPage';
-import HubPage                  from './components/HubPage';
-import CalendarPage             from './components/CalendarPage';
-import VideoPage                from './components/VideoPage';
-import CountingPage             from './components/CountingPage';
-import DictionaryPage           from './components/DictionaryPage';
 import ProficiencyPage          from './components/ProficiencyPage';
 import ReasonPage               from './components/ReasonPage';
 import AchievePage              from './components/AchievePage';
@@ -28,16 +23,11 @@ import ErrorBoundary            from './components/ErrorBoundary';
 // ─── Step map ───────────────────────────────────────────────────────────────
 //  0  Splash
 //  1  Welcome
-//  2  Language Selection (native lang only → learningLang always 'medumba')
-// 24  Hub Dashboard      ┐ new feature hub
-// 25  Calendar           │
-// 26  Videos             │
-// 27  Counting           │
-// 28  Dictionary         ┘
-//  3  Proficiency                ┐
-//  4  Reason                     │ Courses onboarding
-//  5  Achieve                    │
-//  6  Daily Goal                 ┘
+//  2  Language Selection
+//  3  Proficiency        ┐
+//  4  Reason             │ Courses onboarding
+//  5  Achieve            │
+//  6  Daily Goal         ┘
 //  7  Profile Welcome  (Skip→15) ┐
 //  8  Name                       │ Account creation
 //  9  Age                        │
@@ -56,7 +46,6 @@ function App() {
 
   // ── Language selection ───────────────────────────────────────────
   const [nativeLang,   setNativeLang]   = useState(null);
-  // learningLang is always 'medumba' — the app's sole purpose
   const learningLang = 'medumba';
 
   // ── Onboarding profile ───────────────────────────────────────────
@@ -99,44 +88,19 @@ function App() {
       {/* ── Welcome ── */}
       {step === 1 && <WelcomePage onNext={() => go(2)} onLogin={() => go(13)} />}
 
-      {/* ── Language selection (native only) ── */}
+      {/* ── Language selection ── */}
       {step === 2 && (
         <LanguageSelectionPage
-          onNext={() => go(24)} onBack={back}
+          onNext={() => go(3)} onBack={back}
           nativeLang={nativeLang} setNativeLang={setNativeLang}
         />
       )}
-
-      {/* ── Hub Dashboard ── */}
-      {step === 24 && (
-        <HubPage
-          nativeLang={nativeLang}
-          onBack={      () => go(2)}
-          onCalendar={  () => go(25)}
-          onVideo={     () => go(26)}
-          onCounting={  () => go(27)}
-          onDictionary={() => go(28)}
-          onCourses={   () => go(3)}
-        />
-      )}
-
-      {/* ── Calendar ── */}
-      {step === 25 && <CalendarPage   nativeLang={nativeLang} onBack={() => go(24)} />}
-
-      {/* ── Videos ── */}
-      {step === 26 && <VideoPage      nativeLang={nativeLang} onBack={() => go(24)} />}
-
-      {/* ── Counting ── */}
-      {step === 27 && <CountingPage   nativeLang={nativeLang} onBack={() => go(24)} />}
-
-      {/* ── Dictionary ── */}
-      {step === 28 && <DictionaryPage nativeLang={nativeLang} onBack={() => go(24)} />}
 
       {/* ── Courses onboarding ── */}
       {step === 3 && (
         <ProficiencyPage
           onNext={(level) => { setProficiency(level); go(4); }}
-          onBack={() => go(24)}
+          onBack={() => go(2)}
           nativeLang={nativeLang} learningLang={learningLang}
         />
       )}
