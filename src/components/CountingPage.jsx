@@ -40,7 +40,9 @@ const NUMBERS = [
 // Paired counting (Medumba then French) begins at seg1 for number 2.
 // Medumba = odd-indexed segments; shift: seg(2k-1) = MD(k+1) for k≥1
 const AUDIO_MAP = {
-    // 0 & 1 — embedded in intro, cannot isolate
+    // 0 & 1 — extracted from intro via RMS energy analysis
+    0:    [2.50,  3.60],    // bαnbαn
+    1:    [5.20,  6.05],    // ncʉ'
     // 2–9  (odd segs 1,3,5,7,9,11,13,15)
     2:    [7.90,  8.70],    // bα̂
     3:    [10.90, 11.40],   // tad
