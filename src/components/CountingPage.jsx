@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
+import vocalSrc from '../assets/vocal-count-medumba.ogg';
 
 // Medumba numbers — source: medumba_counter.jar (2016)
-// Connector word: ntog (used in compound numbers, e.g. 11 = gham ntog ncʉ')
 const NUMBERS = [
     { n: 0,    medumba: 'bαnbαn',               frEn: ['Zéro',      'Zero']        },
     { n: 1,    medumba: "ncʉ'",                  frEn: ['Un',        'One']         },
@@ -13,7 +13,7 @@ const NUMBERS = [
     { n: 7,    medumba: 'sὰmbα̂',                frEn: ['Sept',      'Seven']       },
     { n: 8,    medumba: 'fomə',                  frEn: ['Huit',      'Eight']       },
     { n: 9,    medumba: "bwə̀'ə",                frEn: ['Neuf',      'Nine']        },
-    { n: 10,   medumba: 'gham',                   frEn: ['Dix',       'Ten']         },
+    { n: 10,   medumba: 'gham',                  frEn: ['Dix',       'Ten']         },
     { n: 11,   medumba: "ncòbncʉ' gham",         frEn: ['Onze',      'Eleven']      },
     { n: 12,   medumba: 'ncòbbα̂ gham',           frEn: ['Douze',     'Twelve']      },
     { n: 13,   medumba: 'ncòbtad gham',          frEn: ['Treize',    'Thirteen']    },
@@ -23,9 +23,9 @@ const NUMBERS = [
     { n: 17,   medumba: 'ncòbsὰmbα̂ gham',       frEn: ['Dix-sept',  'Seventeen']   },
     { n: 18,   medumba: 'ncòbfomə gham',         frEn: ['Dix-huit',  'Eighteen']    },
     { n: 19,   medumba: "ncòbbwə̀'ə gham",       frEn: ['Dix-neuf',  'Nineteen']    },
-    { n: 20,   medumba: "ŋambα'",                  frEn: ['Vingt',     'Twenty']      },
+    { n: 20,   medumba: "ŋambα'",                frEn: ['Vingt',     'Twenty']      },
     { n: 30,   medumba: 'ŋamntad',               frEn: ['Trente',    'Thirty']      },
-    { n: 40,   medumba: 'ŋamkuὰ',                frEn: ['Quarante',  'Forty']       },
+    { n: 40,   medumba: 'ŋamkuὰ',               frEn: ['Quarante',  'Forty']       },
     { n: 50,   medumba: 'ŋamntὰn',               frEn: ['Cinquante', 'Fifty']       },
     { n: 60,   medumba: 'ŋamntogə',              frEn: ['Soixante',  'Sixty']       },
     { n: 70,   medumba: 'ŋamsὰmbα̂',             frEn: ['Soixante-dix','Seventy']   },
@@ -34,6 +34,40 @@ const NUMBERS = [
     { n: 100,  medumba: 'tû',                    frEn: ['Cent',      'Hundred']     },
     { n: 1000, medumba: "ncaꞌ",                  frEn: ['Mille',     'Thousand']    },
 ];
+
+// Audio timestamps (seconds) detected via silence-gap analysis of vocal-count-medumba.ogg
+// Recording order: intro(0), then 1–20, then 30,40,50,60,70,80,90,100,1000
+const AUDIO_MAP = {
+    1:    [7.90,  8.70],
+    2:    [9.60,  10.25],
+    3:    [10.90, 11.40],
+    4:    [11.85, 13.00],
+    5:    [13.45, 14.15],
+    6:    [14.75, 15.35],
+    7:    [16.60, 17.10],
+    8:    [17.70, 18.30],
+    9:    [18.75, 19.65],
+    10:   [20.25, 20.75],
+    11:   [21.30, 22.35],
+    12:   [22.90, 23.40],
+    13:   [23.95, 24.70],
+    14:   [25.30, 25.90],
+    15:   [26.40, 27.30],
+    16:   [27.90, 28.60],
+    17:   [28.95, 29.55],
+    18:   [30.35, 31.05],
+    19:   [31.40, 33.35],
+    20:   [33.70, 34.55],
+    30:   [34.85, 37.00],
+    40:   [37.40, 38.20],
+    50:   [38.50, 40.35],
+    60:   [40.75, 43.60],
+    70:   [44.05, 44.75],
+    80:   [45.05, 46.75],
+    90:   [47.10, 47.90],
+    100:  [48.20, 50.05],
+    1000: [50.40, 51.00],
+};
 
 // Simple quiz pool
 const makeQuiz = () => {
@@ -46,33 +80,92 @@ const makeQuiz = () => {
 
 const CountingPage = ({ nativeLang, onBack }) => {
     const isFr = nativeLang === 'french';
-    const [tab,       setTab]       = useState('list');   // 'list' | 'quiz'
-    const [speaking,  setSpeaking]  = useState(null);
-    const [quiz,      setQuiz]      = useState(() => makeQuiz());
-    const [picked,    setPicked]    = useState(null);
-    const [score,     setScore]     = useState(0);
-    const [total,     setTotal]     = useState(0);
+    const [tab,      setTab]      = useState('list');
+    const [speaking, setSpeaking] = useState(null);
+    const [quiz,     setQuiz]     = useState(() => makeQuiz());
+    const [picked,   setPicked]   = useState(null);
+    const [score,    setScore]    = useState(0);
+    const [total,    setTotal]    = useState(0);
 
-    const speak = (text) => {
-        if (!window.speechSynthesis) return;
-        window.speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(text);
-        u.lang = 'fr-FR'; u.rate = 0.8;
-        u.onstart = () => setSpeaking(text);
-        u.onend   = () => setSpeaking(null);
-        u.onerror = () => setSpeaking(null);
-        window.speechSynthesis.speak(u);
+    const audioCtxRef    = useRef(null);
+    const audioBufferRef = useRef(null);
+    const loadingRef     = useRef(false);
+    const sourceRef      = useRef(null);
+
+    const getCtx = () => {
+        if (!audioCtxRef.current)
+            audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+        return audioCtxRef.current;
     };
+
+    const loadAudio = useCallback(async () => {
+        if (audioBufferRef.current || loadingRef.current) return;
+        loadingRef.current = true;
+        try {
+            const ctx = getCtx();
+            const res = await fetch(vocalSrc);
+            const ab  = await res.arrayBuffer();
+            audioBufferRef.current = await ctx.decodeAudioData(ab);
+        } catch (e) {
+            console.warn('Audio load failed:', e);
+        }
+        loadingRef.current = false;
+    }, []);
+
+    const playNumber = useCallback(async (n) => {
+        const seg = AUDIO_MAP[n];
+        if (!seg) return; // n=0 not in recording
+
+        await loadAudio();
+        if (!audioBufferRef.current) return;
+
+        const ctx = getCtx();
+        if (ctx.state === 'suspended') await ctx.resume();
+
+        // Stop any currently playing segment
+        if (sourceRef.current) {
+            try { sourceRef.current.stop(); } catch (_) {}
+        }
+
+        const source = ctx.createBufferSource();
+        source.buffer = audioBufferRef.current;
+        source.connect(ctx.destination);
+        source.start(0, seg[0], seg[1] - seg[0]);
+        source.onended = () => setSpeaking(null);
+        sourceRef.current = source;
+        setSpeaking(n);
+    }, [loadAudio]);
 
     const pick = (opt) => {
         if (picked) return;
         setPicked(opt.n);
-        const correct = opt.n === quiz.q.n;
         setTotal(t => t + 1);
-        if (correct) setScore(s => s + 1);
+        if (opt.n === quiz.q.n) setScore(s => s + 1);
     };
 
     const nextQuiz = () => { setPicked(null); setQuiz(makeQuiz()); };
+
+    const SpeakerBtn = ({ n }) => {
+        const hasAudio = AUDIO_MAP[n] != null;
+        const active   = speaking === n;
+        return (
+            <button
+                onClick={() => hasAudio ? playNumber(n) : undefined}
+                disabled={!hasAudio}
+                style={{
+                    background: active ? '#eff6ff' : '#f8fafc',
+                    border: `2px solid ${active ? '#0891b2' : hasAudio ? '#e2e8f0' : '#f1f5f9'}`,
+                    borderRadius: '50%', width: '40px', height: '40px',
+                    cursor: hasAudio ? 'pointer' : 'default',
+                    fontSize: '1.2rem', display: 'flex', alignItems: 'center',
+                    justifyContent: 'center', flexShrink: 0,
+                    opacity: hasAudio ? 1 : 0.35,
+                }}
+            >
+                {active ? '🔊' : '🔈'}
+            </button>
+        );
+    };
 
     return (
         <div style={{ width: '100%', minHeight: '100vh', backgroundColor: '#f8fafc', display: 'flex', flexDirection: 'column', fontFamily: "'Outfit', system-ui, sans-serif" }}>
@@ -116,9 +209,7 @@ const CountingPage = ({ nativeLang, onBack }) => {
                                     <div style={{ fontSize: '1.05rem', fontWeight: '800', color: '#0891b2' }}>{num.medumba}</div>
                                     <div style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: '600' }}>{isFr ? num.frEn[0] : num.frEn[1]}</div>
                                 </div>
-                                <button onClick={() => speak(num.medumba)} style={{ background: speaking === num.medumba ? '#eff6ff' : '#f8fafc', border: `2px solid ${speaking === num.medumba ? '#0891b2' : '#e2e8f0'}`, borderRadius: '50%', width: '40px', height: '40px', cursor: 'pointer', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                                    {speaking === num.medumba ? '🔊' : '🔈'}
-                                </button>
+                                <SpeakerBtn n={num.n} />
                             </div>
                         ))}
                     </div>
@@ -126,14 +217,12 @@ const CountingPage = ({ nativeLang, onBack }) => {
 
                 {tab === 'quiz' && (
                     <div>
-                        {/* Score */}
                         <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
                             <div style={{ backgroundColor: '#eff6ff', borderRadius: '99px', padding: '0.3rem 0.9rem', fontSize: '0.82rem', fontWeight: '800', color: '#0891b2' }}>
                                 ⭐ {score} / {total}
                             </div>
                         </div>
 
-                        {/* Question card */}
                         <div style={{ backgroundColor: '#fff', borderRadius: '24px', border: '2px solid #bae6fd', padding: '2rem 1.5rem', textAlign: 'center', marginBottom: '1.25rem', boxShadow: '0 4px 16px rgba(8,145,178,0.1)' }}>
                             <div style={{ fontSize: '0.78rem', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: '0.5rem' }}>
                                 {isFr ? 'Que signifie ce mot Medumba ?' : 'What does this Medumba word mean?'}
@@ -141,12 +230,11 @@ const CountingPage = ({ nativeLang, onBack }) => {
                             <div style={{ fontSize: '2.8rem', fontWeight: '900', color: '#0891b2', marginBottom: '0.5rem' }}>
                                 {quiz.q.medumba}
                             </div>
-                            <button onClick={() => speak(quiz.q.medumba)} style={{ background: '#f0f9ff', border: '2px solid #bae6fd', borderRadius: '99px', padding: '0.4rem 1rem', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '700', color: '#0891b2', fontFamily: 'inherit' }}>
+                            <button onClick={() => playNumber(quiz.q.n)} disabled={!AUDIO_MAP[quiz.q.n]} style={{ background: '#f0f9ff', border: '2px solid #bae6fd', borderRadius: '99px', padding: '0.4rem 1rem', cursor: AUDIO_MAP[quiz.q.n] ? 'pointer' : 'default', fontSize: '0.85rem', fontWeight: '700', color: '#0891b2', fontFamily: 'inherit', opacity: AUDIO_MAP[quiz.q.n] ? 1 : 0.4 }}>
                                 🔈 {isFr ? 'Écouter' : 'Listen'}
                             </button>
                         </div>
 
-                        {/* Options */}
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.7rem', marginBottom: '1rem' }}>
                             {quiz.opts.map(opt => {
                                 const isCorrect = picked !== null && opt.n === quiz.q.n;
