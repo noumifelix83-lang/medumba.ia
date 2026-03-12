@@ -2,15 +2,15 @@ import { useState } from 'react';
 
 // Medumba month names (from the traditional Ncobnkùn calendar by METCHEZIN Franklin)
 const MONTHS_MEDUMBA = [
-    'Mbwognga', 'Nkagna',   'Njwi dcu', 'Nta Kmbw',
-    'Nsonə',    'Jwagnkun', 'Ntong',    'Ncôcu',
-    'Njagcu',   'Bynsw',    'Nsondm',   'Ntongodm',
+    'Mbwogngà',      'Nkàgnὰ',       'Njwìdcu',        'Ntàŋmbwə',
+    'Nsônὰ',         'Ŋwα̂gnkun',     'Ntôngə̀fələ',    'Ncôcu',
+    'Njâgcu',        "Mbə̂'nswə",     'Nsônα̌ndɔ',       'Ntòngǒdməsaŋə',
 ];
 const MONTHS_FR  = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
 const MONTHS_EN  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
 // Medumba 8-day week names
-const DAYS_MEDUMBA = ["Ntánla'", "Nsigha'", "Nbemnta'", 'Nga', "Ngátha'", 'Nzimyam', "Ntánbu'", "Ntánta'"];
+const DAYS_MEDUMBA = ["Ntα̂nla'", 'Nsigha', "Nsěmntə'", 'Nga', 'Nkɔ̂tʉ', 'Nzìnyam', "Ntα̂nbu'", "Ntα̂ntə'"];
 const DAYS_FR  = ['J1', 'J2', 'J3', 'J4', 'J5', 'J6', 'J7', 'J8'];
 const DAYS_EN  = ['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8'];
 
@@ -156,8 +156,8 @@ const CalendarPage = ({ nativeLang, onBack }) => {
                     {/* Day headers */}
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8,1fr)', marginBottom: '0.5rem' }}>
                         {[0,1,2,3,4,5,6,7].map(i => (
-                            <div key={i} style={{ textAlign: 'center', fontSize: '0.55rem', fontWeight: '800', color: i === 7 ? '#0891b2' : '#94a3b8', padding: '0.35rem 0', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
-                                {DAYS_MEDUMBA[i].slice(0, 3)}
+                            <div key={i} style={{ textAlign: 'center', fontSize: '0.5rem', fontWeight: '800', color: i === 7 ? '#0891b2' : '#94a3b8', padding: '0.35rem 0 0.2rem', lineHeight: 1.2 }}>
+                                {DAYS_MEDUMBA[i]}
                             </div>
                         ))}
                     </div>
