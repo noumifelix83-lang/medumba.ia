@@ -23,7 +23,7 @@ const NUMBERS = [
     { n: 17,   medumba: 'ncòbsὰmbα̂ gham',       frEn: ['Dix-sept',  'Seventeen']   },
     { n: 18,   medumba: 'ncòbfomə gham',         frEn: ['Dix-huit',  'Eighteen']    },
     { n: 19,   medumba: "ncòbbwə̀'ə gham",       frEn: ['Dix-neuf',  'Nineteen']    },
-    { n: 20,   medumba: 'bα̂ gham',               frEn: ['Vingt',     'Twenty']      },
+    { n: 20,   medumba: "ŋambα'",                  frEn: ['Vingt',     'Twenty']      },
     { n: 30,   medumba: 'tad gham',              frEn: ['Trente',    'Thirty']      },
     { n: 40,   medumba: 'kuὰ gham',              frEn: ['Quarante',  'Forty']       },
     { n: 50,   medumba: 'tὰn gham',              frEn: ['Cinquante', 'Fifty']       },
