@@ -18,6 +18,11 @@ import OTPVerificationPage      from './components/OTPVerificationPage';
 import NewPasswordPage          from './components/NewPasswordPage';
 import PasswordResetSuccessPage from './components/PasswordResetSuccessPage';
 import DashboardPage            from './components/DashboardPage';
+import HubPage                  from './components/HubPage';
+import CalendarPage             from './components/CalendarPage';
+import VideoPage                from './components/VideoPage';
+import CountingPage             from './components/CountingPage';
+import DictionaryPage           from './components/DictionaryPage';
 import ErrorBoundary            from './components/ErrorBoundary';
 
 // ─── Step map ───────────────────────────────────────────────────────────────
@@ -38,11 +43,13 @@ import ErrorBoundary            from './components/ErrorBoundary';
 // 20  Forgot Password  (→21)     ┐
 // 21  OTP Verification (→22)     │ Password reset
 // 22  New Password     (→23)     │
-// 23  Reset Success    (→15)     ┘
+// 23  Reset Success    (→14)     ┘
+// 14  Explore Hub      (→15)
 // 15  Gamified Dashboard
 
 function App() {
   const [step, setStep] = useState(0);
+  const [hubView, setHubView] = useState('hub'); // 'hub' | 'calendar' | 'video' | 'counting' | 'dictionary'
 
   // ── Language selection ───────────────────────────────────────────
   const [nativeLang,    setNativeLang]    = useState('');
@@ -86,7 +93,16 @@ function App() {
       {step === 0 && <SplashScreen onFinish={() => go(1)} />}
 
       {/* ── Welcome ── */}
-      {step === 1 && <WelcomePage onNext={() => go(2)} onLogin={() => go(13)} />}
+      {step === 1 && (
+        <WelcomePage
+          onNext={() => go(2)}
+          onLogin={() => go(13)}
+          onCalendar   ={() => { setHubView('calendar');   go(14); }}
+          onVideo      ={() => { setHubView('video');      go(14); }}
+          onCounting   ={() => { setHubView('counting');   go(14); }}
+          onDictionary ={() => { setHubView('dictionary'); go(14); }}
+        />
+      )}
 
       {/* ── Language selection ── */}
       {step === 2 && (
@@ -128,17 +144,17 @@ function App() {
       )}
 
       {/* ── Account creation ── */}
-      {step === 7  && <ProfileWelcomePage onNext={() => go(8)} onSkip={() => go(15)} nativeLang={nativeLang} />}
+      {step === 7  && <ProfileWelcomePage onNext={() => go(8)} onSkip={() => { setHubView('hub'); go(14); }} nativeLang={nativeLang} />}
       {step === 8  && <NamePage     onNext={(n) => { setUserName(n);  go(9);  }} onBack={back} nativeLang={nativeLang} />}
       {step === 9  && <AgePage      onNext={(a) => { setUserAge(a);   go(10); }} onBack={back} nativeLang={nativeLang} />}
       {step === 10 && <EmailPage    onNext={(e) => { setUserEmail(e); go(11); }} onBack={back} nativeLang={nativeLang} />}
       {step === 11 && <PasswordPage onNext={() => go(12)} onBack={back} nativeLang={nativeLang} />}
-      {step === 12 && <SuccessPage  onNext={() => go(15)}               nativeLang={nativeLang} />}
+      {step === 12 && <SuccessPage  onNext={() => { setHubView('hub'); go(14); }}               nativeLang={nativeLang} />}
 
       {/* ── Login ── */}
       {step === 13 && (
         <LoginPage
-          onLogin={() => go(15)} onBack={back}
+          onLogin={() => { setHubView('hub'); go(14); }} onBack={back}
           onForgotPassword={() => go(20)}
           nativeLang={nativeLang}
         />
@@ -148,7 +164,14 @@ function App() {
       {step === 20 && <ForgotPasswordPage      onNext={(e) => { setResetEmail(e); go(21); }} onBack={() => go(13)} nativeLang={nativeLang} />}
       {step === 21 && <OTPVerificationPage     onNext={() => go(22)} onBack={() => go(20)} email={resetEmail}       nativeLang={nativeLang} />}
       {step === 22 && <NewPasswordPage         onNext={() => go(23)} onBack={() => go(21)}                          nativeLang={nativeLang} />}
-      {step === 23 && <PasswordResetSuccessPage onNext={() => go(15)}                                               nativeLang={nativeLang} />}
+      {step === 23 && <PasswordResetSuccessPage onNext={() => { setHubView('hub'); go(14); }}                                               nativeLang={nativeLang} />}
+
+      {/* ── Hub ── */}
+      {step === 14 && hubView === 'hub'       && <HubPage        nativeLang={nativeLang} onBack={() => go(7)}               onCalendar={() => setHubView('calendar')} onVideo={() => setHubView('video')} onCounting={() => setHubView('counting')} onDictionary={() => setHubView('dictionary')} onCourses={() => go(15)} />}
+      {step === 14 && hubView === 'calendar'  && <CalendarPage   nativeLang={nativeLang} onBack={() => { setHubView('hub'); go(1); }} />}
+      {step === 14 && hubView === 'video'     && <VideoPage      nativeLang={nativeLang} onBack={() => { setHubView('hub'); go(1); }} />}
+      {step === 14 && hubView === 'counting'  && <CountingPage   nativeLang={nativeLang} onBack={() => { setHubView('hub'); go(1); }} />}
+      {step === 14 && hubView === 'dictionary'&& <DictionaryPage nativeLang={nativeLang} onBack={() => { setHubView('hub'); go(1); }} />}
 
       {/* ── Gamified Dashboard ── */}
       {step === 15 && (

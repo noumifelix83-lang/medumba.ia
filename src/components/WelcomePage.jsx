@@ -2,7 +2,7 @@ import logo from '../assets/logo.png';
 
 const B = '#1B4FD8';
 
-const WelcomePage = ({ onNext, onLogin }) => (
+const WelcomePage = ({ onNext, onLogin, onCalendar, onVideo, onCounting, onDictionary }) => (
     <div style={{
         width: '100%', minHeight: '100vh',
         display: 'flex', flexDirection: 'column',
@@ -49,14 +49,24 @@ const WelcomePage = ({ onNext, onLogin }) => (
                 Des milliers de locuteurs d'héritage reconnectent avec le Medumba — chaque jour, à leur propre rythme.
             </p>
 
-            {/* Trust pills */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                {['🏡 Famille', '🌍 Culture', '🎵 Tradition'].map(label => (
-                    <span key={label} style={{
-                        backgroundColor: '#f1f5f9', borderRadius: '99px',
-                        padding: '0.3rem 0.9rem', fontSize: '0.8rem',
-                        fontWeight: '700', color: '#475569',
-                    }}>{label}</span>
+            {/* Quick-access feature buttons */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem', marginTop: '0.5rem' }}>
+                {[
+                    { icon: '📅', label: 'Calendrier',   color: '#0056D2', bg: '#eff6ff',  border: '#bfdbfe', onClick: onCalendar },
+                    { icon: '🎥', label: 'Vidéos',       color: '#7c3aed', bg: '#f5f3ff',  border: '#ddd6fe', onClick: onVideo },
+                    { icon: '🔢', label: 'Numérotation', color: '#0891b2', bg: '#f0f9ff',  border: '#bae6fd', onClick: onCounting },
+                    { icon: '📖', label: 'Dictionnaire', color: '#16a34a', bg: '#f0fdf4',  border: '#bbf7d0', onClick: onDictionary },
+                ].map(({ icon, label, color, bg, border, onClick }) => (
+                    <button key={label} onClick={onClick} style={{
+                        display: 'flex', alignItems: 'center', gap: '0.5rem',
+                        backgroundColor: bg, border: `1.5px solid ${border}`,
+                        borderRadius: '14px', padding: '0.75rem 0.9rem',
+                        fontSize: '0.82rem', fontWeight: '700', color,
+                        cursor: 'pointer', textAlign: 'left',
+                    }}>
+                        <span style={{ fontSize: '1.2rem' }}>{icon}</span>
+                        {label}
+                    </button>
                 ))}
             </div>
         </div>
