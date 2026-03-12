@@ -155,11 +155,15 @@ const CalendarPage = ({ nativeLang, onBack }) => {
                 <div style={{ backgroundColor: '#fff', borderRadius: '24px', padding: '1.25rem', boxShadow: '0 4px 20px rgba(0,0,0,0.07)', border: '1.5px solid #e2e8f0', marginBottom: '1.25rem' }}>
                     {/* Day headers */}
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8,1fr)', marginBottom: '0.5rem' }}>
-                        {[0,1,2,3,4,5,6,7].map(i => (
-                            <div key={i} style={{ textAlign: 'center', fontSize: '0.5rem', fontWeight: '800', color: i === 7 ? '#0891b2' : '#94a3b8', padding: '0.35rem 0 0.2rem', lineHeight: 1.2 }}>
-                                {DAYS_MEDUMBA[i]}
-                            </div>
-                        ))}
+                        {[0,1,2,3,4,5,6,7].map(i => {
+                            const isHoliday = i === 0 || i === 3;
+                            return (
+                                <div key={i} style={{ textAlign: 'center', fontSize: '0.5rem', fontWeight: '800', color: isHoliday ? '#dc2626' : i === 7 ? '#0891b2' : '#94a3b8', padding: '0.35rem 0 0.2rem', lineHeight: 1.2 }}>
+                                    {DAYS_MEDUMBA[i]}
+                                    {isHoliday && <div style={{ fontSize: '0.45rem', color: '#dc2626', marginTop: '1px' }}>★</div>}
+                                </div>
+                            );
+                        })}
                     </div>
 
                     {/* Day cells */}
@@ -168,15 +172,15 @@ const CalendarPage = ({ nativeLang, onBack }) => {
                             const isT = cell.cur && isToday(cell.day);
                             const isSel = cell.cur && selected === cell.day;
                             const col = idx % 8;
-                            const isWeekend = col === 7;
+                            const isHoliday = col === 0 || col === 3;
                             return (
                                 <div key={idx} className={cell.cur ? 'cal-day' : ''} onClick={() => cell.cur && setSelected(cell.day)} style={{
                                     aspectRatio: '1', display: 'flex', flexDirection: 'column',
                                     alignItems: 'center', justifyContent: 'center',
                                     borderRadius: '10px', cursor: cell.cur ? 'pointer' : 'default',
-                                    backgroundColor: isT ? accentColor : isSel ? `${accentColor}18` : 'transparent',
-                                    border: isSel && !isT ? `2px solid ${accentColor}` : '2px solid transparent',
-                                    color: isT ? '#fff' : cell.cur ? (isWeekend ? accentColor : '#0f172a') : '#cbd5e1',
+                                    backgroundColor: isT ? accentColor : isSel ? `${accentColor}18` : isHoliday && cell.cur ? '#fff5f5' : 'transparent',
+                                    border: isSel && !isT ? `2px solid ${accentColor}` : isHoliday && cell.cur ? '1.5px solid #fecaca' : '2px solid transparent',
+                                    color: isT ? '#fff' : cell.cur ? (isHoliday ? '#dc2626' : '#0f172a') : '#cbd5e1',
                                     fontWeight: isT || isSel ? '900' : cell.cur ? '600' : '400',
                                     fontSize: '0.88rem', transition: 'all 0.15s',
                                 }}>
@@ -185,6 +189,14 @@ const CalendarPage = ({ nativeLang, onBack }) => {
                                 </div>
                             );
                         })}
+                    </div>
+
+                    {/* Holiday legend */}
+                    <div style={{ marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <span style={{ color: '#dc2626', fontSize: '0.65rem' }}>★</span>
+                        <span style={{ fontSize: '0.65rem', color: '#dc2626', fontWeight: '700' }}>
+                            {isFr ? 'Jours fériés : Ntα̂nla\' · Nga' : 'Public holidays: Ntα̂nla\' · Nga'}
+                        </span>
                     </div>
                 </div>
 
@@ -283,8 +295,8 @@ const CalendarPage = ({ nativeLang, onBack }) => {
                     <span style={{ fontSize: '1.4rem' }}>🇨🇲</span>
                     <p style={{ fontSize: '0.7rem', color: '#94a3b8', margin: 0, fontWeight: '600', lineHeight: 1.5 }}>
                         {isFr
-                            ? 'Nda le Njɔ Medumba — Calendrier traditionnel Medumba · METCHEZIN Franklin'
-                            : 'Nda le Njɔ Medumba — Traditional Medumba Calendar · METCHEZIN Franklin'}
+                            ? 'Ntàle\'njʉ Mə̀dʉ̂mbὰ — Calendrier traditionnel Medumba · METCHEZIN Franklin'
+                            : 'Ntàle\'njʉ Mə̀dʉ̂mbὰ — Traditional Medumba Calendar · METCHEZIN Franklin'}
                     </p>
                 </div>
             </div>

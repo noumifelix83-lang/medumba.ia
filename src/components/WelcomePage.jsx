@@ -53,9 +53,9 @@ const WelcomePage = ({ onNext, onLogin, onCalendar, onVideo, onCounting, onDicti
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem', marginTop: '0.5rem' }}>
                 {[
                     { icon: '📅', label: 'Calendrier',   color: '#0056D2', bg: '#eff6ff',  border: '#bfdbfe', onClick: onCalendar },
-                    { icon: '🎥', label: 'Vidéos',       color: '#7c3aed', bg: '#f5f3ff',  border: '#ddd6fe', onClick: onVideo },
-                    { icon: '🔢', label: 'Numérotation', color: '#0891b2', bg: '#f0f9ff',  border: '#bae6fd', onClick: onCounting },
                     { icon: '📖', label: 'Dictionnaire', color: '#16a34a', bg: '#f0fdf4',  border: '#bbf7d0', onClick: onDictionary },
+                    { icon: '🔢', label: 'Numérotation', color: '#0891b2', bg: '#f0f9ff',  border: '#bae6fd', onClick: onCounting },
+                    { icon: '🎥', label: 'Vidéos',       color: '#7c3aed', bg: '#f5f3ff',  border: '#ddd6fe', onClick: onVideo },
                 ].map(({ icon, label, color, bg, border, onClick }) => (
                     <button key={label} onClick={onClick} style={{
                         display: 'flex', alignItems: 'center', gap: '0.5rem',
