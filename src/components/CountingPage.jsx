@@ -36,42 +36,43 @@ const NUMBERS = [
 ];
 
 // Audio timestamps (seconds) from vocal-count-medumba.ogg
-// Structure: seg0=intro | seg1=MD(0) seg2=FR(0) | seg3=MD(1) seg4=FR(1) | ...
-// Counting starts at 0 (bαnbαn). Medumba = every odd-indexed segment.
+// 0 & 1 are in the continuous intro block — no isolated clip available.
+// Paired counting (Medumba then French) begins at seg1 for number 2.
+// Medumba = odd-indexed segments; shift: seg(2k-1) = MD(k+1) for k≥1
 const AUDIO_MAP = {
-    // 0–9  (odd segs 1,3,5,7,9,11,13,15,17,19)
-    0:    [7.90,  8.70],    // bαnbαn
-    1:    [10.90, 11.40],   // ncʉ'
-    2:    [13.45, 14.15],   // bα̂
-    3:    [16.60, 17.10],   // tad
-    4:    [18.75, 19.65],   // kuὰ
-    5:    [21.30, 22.35],   // tὰn
-    6:    [23.95, 24.70],   // ntogə
-    7:    [26.40, 27.30],   // sὰmbα̂
-    8:    [28.95, 29.55],   // fomə
-    9:    [31.40, 33.35],   // bwə̀'ə
-    // 10–20  (odd segs 21,23,25,27,29,31,33,35,37,39,41)
-    10:   [34.85, 37.00],   // gham
-    11:   [38.50, 40.35],   // ncòbncʉ' gham
-    12:   [44.05, 44.75],   // ncòbbα̂ gham
-    13:   [47.10, 47.90],   // ncòbtad gham
-    14:   [50.40, 51.00],   // ncòbkuὰ gham
-    15:   [54.70, 56.65],   // ncòbtὰn gham
-    16:   [57.95, 59.05],   // ncòbntogə gham
-    17:   [61.25, 62.70],   // ncòbsὰmbα̂ gham
-    18:   [64.35, 72.85],   // ncòbfomə gham
-    19:   [74.70, 76.45],   // ncòbbwə̀'ə gham
-    20:   [77.95, 79.80],   // ŋambα'
-    // tens 30–1000  (odd segs 43,45,47,49,51,53,55,57,59)
-    30:   [83.35, 84.15],   // ŋamntad
-    40:   [86.85, 87.65],   // ŋamkuὰ
-    50:   [90.20, 93.30],   // ŋamntὰn
-    60:   [94.65, 95.80],   // ŋamntogə
-    70:   [97.60, 99.20],   // ŋamsὰmbα̂
-    80:   [100.75, 102.55], // ŋamfomə
-    90:   [104.05, 105.75], // ŋambwə̀'ə
-    100:  [107.40, 108.95], // tû
-    1000: [110.50, 112.20], // ncaꞌ
+    // 0 & 1 — embedded in intro, cannot isolate
+    // 2–9  (odd segs 1,3,5,7,9,11,13,15)
+    2:    [7.90,  8.70],    // bα̂
+    3:    [10.90, 11.40],   // tad
+    4:    [13.45, 14.15],   // kuὰ
+    5:    [16.60, 17.10],   // tὰn
+    6:    [18.75, 19.65],   // ntogə
+    7:    [21.30, 22.35],   // sὰmbα̂
+    8:    [23.95, 24.70],   // fomə
+    9:    [26.40, 27.30],   // bwə̀'ə
+    // 10–19  (odd segs 17,19,21,23,25,27,29,31,33,35)
+    10:   [28.95, 29.55],   // gham
+    11:   [31.40, 33.35],   // ncòbncʉ' gham
+    12:   [34.85, 37.00],   // ncòbbα̂ gham
+    13:   [38.50, 40.35],   // ncòbtad gham
+    14:   [44.05, 44.75],   // ncòbkuὰ gham
+    15:   [47.10, 47.90],   // ncòbtὰn gham
+    16:   [50.40, 51.00],   // ncòbntogə gham
+    17:   [54.70, 56.65],   // ncòbsὰmbα̂ gham
+    18:   [57.95, 59.05],   // ncòbfomə gham
+    19:   [61.25, 62.70],   // ncòbbwə̀'ə gham
+    // 20 — after long explanation block (seg37 = 8.5s), word at seg38
+    20:   [73.25, 73.95],   // ŋambα'
+    // tens 30–1000
+    30:   [74.70, 76.45],   // ŋamntad
+    40:   [77.95, 79.80],   // ŋamkuὰ
+    50:   [80.10, 83.00],   // ŋamntὰn
+    60:   [83.35, 84.15],   // ŋamntogə
+    70:   [86.85, 87.65],   // ŋamsὰmbα̂
+    80:   [90.20, 93.30],   // ŋamfomə
+    90:   [94.65, 95.80],   // ŋambwə̀'ə
+    100:  [97.60, 99.20],   // tû
+    1000: [100.75, 102.55], // ncaꞌ
 };
 
 // Simple quiz pool
