@@ -70,7 +70,7 @@ const CalendarPage = ({ nativeLang, onBack }) => {
     const selectedDayOfWeek = selected ? medumbaDayIndex(viewYear, viewMonth, selected) : null;
 
     return (
-        <div style={{ width: '100%', minHeight: '100vh', backgroundColor: '#f1f5f9', display: 'flex', flexDirection: 'column', fontFamily: "'Outfit', system-ui, sans-serif" }}>
+        <div style={{ width: '100%', minHeight: '100vh', backgroundColor: '#f1f5f9', display: 'flex', flexDirection: 'column', fontFamily: "'Outfit', 'Noto Sans', system-ui, sans-serif" }}>
             <style>{`
                 @keyframes cal-in   { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
                 @keyframes cal-pop  { 0% { transform:scale(0.8); opacity:0; } 70% { transform:scale(1.05); } 100% { transform:scale(1); opacity:1; } }
