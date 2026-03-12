@@ -9,10 +9,10 @@ const MONTHS_MEDUMBA = [
 const MONTHS_FR  = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
 const MONTHS_EN  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-// Medumba day names (from the Ncobnkùn calendar)
-const DAYS_MEDUMBA = ['Lefète', 'Njam lefète', 'Mvenn tinkié', 'Lè tinkié', 'Njam tinkié', 'Venn tindib', 'Lè tindib'];
-const DAYS_FR  = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-const DAYS_EN  = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+// Medumba 8-day week names
+const DAYS_MEDUMBA = ["Ntánla'", "Nsigha'", "Nbemnta'", 'Nga', "Ngátha'", 'Nzimyam', "Ntánbu'", "Ntánta'"];
+const DAYS_FR  = ['J1', 'J2', 'J3', 'J4', 'J5', 'J6', 'J7', 'J8'];
+const DAYS_EN  = ['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8'];
 
 // Month colors for visual variety
 const MONTH_COLORS = [
@@ -24,9 +24,15 @@ const MONTH_COLORS = [
 function daysInMonth(year, month) {
     return new Date(year, month + 1, 0).getDate();
 }
+// Medumba week has 8 days.
+// Anchor: Thursday 12 March 2026 = Nga (index 3). Offset = 7.
+function medumbaDayIndex(year, month, day) {
+    const msPerDay = 86400000;
+    const d = new Date(year, month, day);
+    return (Math.floor(d.getTime() / msPerDay + 0.5) + 7) % 8; // 0–7
+}
 function firstDayOfMonth(year, month) {
-    const d = new Date(year, month, 1).getDay();
-    return (d + 6) % 7; // Mon=0
+    return medumbaDayIndex(year, month, 1);
 }
 
 const CalendarPage = ({ nativeLang, onBack }) => {
@@ -58,10 +64,10 @@ const CalendarPage = ({ nativeLang, onBack }) => {
     const cells = [];
     for (let i = 0; i < firstDay; i++) cells.push({ day: prevDays - firstDay + 1 + i, cur: false });
     for (let d = 1; d <= totalDays; d++) cells.push({ day: d, cur: true });
-    while (cells.length % 7 !== 0) cells.push({ day: cells.length - firstDay - totalDays + 1, cur: false });
+    while (cells.length % 8 !== 0) cells.push({ day: cells.length - firstDay - totalDays + 1, cur: false });
 
     const accentColor = MONTH_COLORS[viewMonth];
-    const selectedDayOfWeek = selected ? ((new Date(viewYear, viewMonth, selected).getDay() + 6) % 7) : null;
+    const selectedDayOfWeek = selected ? medumbaDayIndex(viewYear, viewMonth, selected) : null;
 
     return (
         <div style={{ width: '100%', minHeight: '100vh', backgroundColor: '#f1f5f9', display: 'flex', flexDirection: 'column', fontFamily: "'Outfit', system-ui, sans-serif" }}>
@@ -148,21 +154,21 @@ const CalendarPage = ({ nativeLang, onBack }) => {
                 {/* Calendar card */}
                 <div style={{ backgroundColor: '#fff', borderRadius: '24px', padding: '1.25rem', boxShadow: '0 4px 20px rgba(0,0,0,0.07)', border: '1.5px solid #e2e8f0', marginBottom: '1.25rem' }}>
                     {/* Day headers */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', marginBottom: '0.5rem' }}>
-                        {[0,1,2,3,4,5,6].map(i => (
-                            <div key={i} style={{ textAlign: 'center', fontSize: '0.62rem', fontWeight: '800', color: i >= 5 ? '#0891b2' : '#94a3b8', padding: '0.35rem 0', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
-                                {(isFr ? DAYS_FR : DAYS_EN)[i]}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8,1fr)', marginBottom: '0.5rem' }}>
+                        {[0,1,2,3,4,5,6,7].map(i => (
+                            <div key={i} style={{ textAlign: 'center', fontSize: '0.55rem', fontWeight: '800', color: i === 7 ? '#0891b2' : '#94a3b8', padding: '0.35rem 0', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
+                                {DAYS_MEDUMBA[i].slice(0, 3)}
                             </div>
                         ))}
                     </div>
 
                     {/* Day cells */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: '2px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8,1fr)', gap: '2px' }}>
                         {cells.map((cell, idx) => {
                             const isT = cell.cur && isToday(cell.day);
                             const isSel = cell.cur && selected === cell.day;
-                            const col = idx % 7;
-                            const isWeekend = col >= 5;
+                            const col = idx % 8;
+                            const isWeekend = col === 7;
                             return (
                                 <div key={idx} className={cell.cur ? 'cal-day' : ''} onClick={() => cell.cur && setSelected(cell.day)} style={{
                                     aspectRatio: '1', display: 'flex', flexDirection: 'column',
@@ -263,10 +269,10 @@ const CalendarPage = ({ nativeLang, onBack }) => {
                                 animation: `cal-in 0.3s ease-out ${i * 0.04}s both`,
                             }}>
                                 <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: `linear-gradient(135deg, ${accentColor}, #38bdf8)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                                    <span style={{ fontSize: '0.65rem', fontWeight: '900', color: '#fff', textTransform: 'uppercase' }}>{(isFr ? DAYS_FR : DAYS_EN)[i]}</span>
+                                    <span style={{ fontSize: '0.75rem', fontWeight: '900', color: '#fff' }}>{i + 1}</span>
                                 </div>
                                 <div style={{ fontSize: '0.9rem', fontWeight: '800', color: accentColor, flex: 1 }}>{d}</div>
-                                <div style={{ fontSize: '0.72rem', fontWeight: '600', color: '#94a3b8' }}>{i + 1}/7</div>
+                                <div style={{ fontSize: '0.72rem', fontWeight: '600', color: '#94a3b8' }}>J{i + 1}/8</div>
                             </div>
                         ))}
                     </div>
