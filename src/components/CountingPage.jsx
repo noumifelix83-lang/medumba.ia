@@ -1,38 +1,119 @@
 import { useState, useRef, useCallback } from 'react';
 import vocalSrc from '../assets/vocal-count-medumba.ogg';
 
-// Medumba numbers — source: medumba_counter.jar (2016)
+// Medumba numbers — fully extracted from medumba_counter.jar (2016)
+// Compound forms: 6→ntôg, 8→fôm, 9→bwə̀'ə̂ (after ncòb); 100=nkʉ, 1000=ncaꞌ
 const NUMBERS = [
-    { n: 0,    medumba: 'bαnbαn',               frEn: ['Zéro',      'Zero']        },
-    { n: 1,    medumba: "ncʉ'",                  frEn: ['Un',        'One']         },
-    { n: 2,    medumba: 'bα̂',                    frEn: ['Deux',      'Two']         },
-    { n: 3,    medumba: 'tad',                   frEn: ['Trois',     'Three']       },
-    { n: 4,    medumba: 'kuὰ',                   frEn: ['Quatre',    'Four']        },
-    { n: 5,    medumba: 'tὰn',                   frEn: ['Cinq',      'Five']        },
-    { n: 6,    medumba: 'ntogə',                 frEn: ['Six',       'Six']         },
-    { n: 7,    medumba: 'sὰmbα̂',                frEn: ['Sept',      'Seven']       },
-    { n: 8,    medumba: 'fomə',                  frEn: ['Huit',      'Eight']       },
-    { n: 9,    medumba: "bwə̀'ə",                frEn: ['Neuf',      'Nine']        },
-    { n: 10,   medumba: 'gham',                  frEn: ['Dix',       'Ten']         },
-    { n: 11,   medumba: "ncòbncʉ' gham",         frEn: ['Onze',      'Eleven']      },
-    { n: 12,   medumba: 'ncòbbα̂ gham',           frEn: ['Douze',     'Twelve']      },
-    { n: 13,   medumba: 'ncòbtad gham',          frEn: ['Treize',    'Thirteen']    },
-    { n: 14,   medumba: 'ncòbkuὰ gham',          frEn: ['Quatorze',  'Fourteen']    },
-    { n: 15,   medumba: 'ncòbtὰn gham',          frEn: ['Quinze',    'Fifteen']     },
-    { n: 16,   medumba: 'ncòbntogə gham',        frEn: ['Seize',     'Sixteen']     },
-    { n: 17,   medumba: 'ncòbsὰmbα̂ gham',       frEn: ['Dix-sept',  'Seventeen']   },
-    { n: 18,   medumba: 'ncòbfomə gham',         frEn: ['Dix-huit',  'Eighteen']    },
-    { n: 19,   medumba: "ncòbbwə̀'ə gham",       frEn: ['Dix-neuf',  'Nineteen']    },
-    { n: 20,   medumba: "ŋambα'",                frEn: ['Vingt',     'Twenty']      },
-    { n: 30,   medumba: 'ŋamntad',               frEn: ['Trente',    'Thirty']      },
-    { n: 40,   medumba: 'ŋamkuὰ',               frEn: ['Quarante',  'Forty']       },
-    { n: 50,   medumba: 'ŋamntὰn',               frEn: ['Cinquante', 'Fifty']       },
-    { n: 60,   medumba: 'ŋamntogə',              frEn: ['Soixante',  'Sixty']       },
-    { n: 70,   medumba: 'ŋamsὰmbα̂',             frEn: ['Soixante-dix','Seventy']   },
-    { n: 80,   medumba: 'ŋamfomə',               frEn: ['Quatre-vingts','Eighty']   },
-    { n: 90,   medumba: "ŋambwə̀'ə",             frEn: ['Quatre-vingt-dix','Ninety']},
-    { n: 100,  medumba: 'tû',                    frEn: ['Cent',      'Hundred']     },
-    { n: 1000, medumba: "ncaꞌ",                  frEn: ['Mille',     'Thousand']    },
+    { n:   0, medumba: 'bαnbαn',                      frEn: ['Zéro', 'Zero'] },
+    { n:   1, medumba: "ncʉ'",                         frEn: ['Un', 'One'] },
+    { n:   2, medumba: 'bα̂',                           frEn: ['Deux', 'Two'] },
+    { n:   3, medumba: 'tad',                          frEn: ['Trois', 'Three'] },
+    { n:   4, medumba: 'kuὰ',                          frEn: ['Quatre', 'Four'] },
+    { n:   5, medumba: 'tὰn',                          frEn: ['Cinq', 'Five'] },
+    { n:   6, medumba: 'ntogə',                        frEn: ['Six', 'Six'] },
+    { n:   7, medumba: 'sὰmbα̂',                       frEn: ['Sept', 'Seven'] },
+    { n:   8, medumba: 'fomə',                         frEn: ['Huit', 'Eight'] },
+    { n:   9, medumba: "bwə̀'ə",                       frEn: ['Neuf', 'Nine'] },
+    { n:  10, medumba: 'gham',                         frEn: ['Dix', 'Ten'] },
+    { n:  11, medumba: "ncòbncʉ' gham",                frEn: ['Onze', 'Eleven'] },
+    { n:  12, medumba: 'ncòbbα̂ gham',                  frEn: ['Douze', 'Twelve'] },
+    { n:  13, medumba: 'ncòbtad gham',                 frEn: ['Treize', 'Thirteen'] },
+    { n:  14, medumba: 'ncòbkuὰ gham',                 frEn: ['Quatorze', 'Fourteen'] },
+    { n:  15, medumba: 'ncòbtὰn gham',                 frEn: ['Quinze', 'Fifteen'] },
+    { n:  16, medumba: 'ncòbntôg gham',                frEn: ['Seize', 'Sixteen'] },
+    { n:  17, medumba: 'ncòbsὰmbα̂ gham',              frEn: ['Dix-sept', 'Seventeen'] },
+    { n:  18, medumba: 'ncòbfôm gham',                 frEn: ['Dix-huit', 'Eighteen'] },
+    { n:  19, medumba: "ncòbbwə̀'ə̂ gham",              frEn: ['Dix-neuf', 'Nineteen'] },
+    { n:  20, medumba: 'ŋambα̂',                        frEn: ['Vingt', 'Twenty'] },
+    { n:  21, medumba: "ncòbncʉ' ŋambα̂",              frEn: ['Vingt et un', 'Twenty-one'] },
+    { n:  22, medumba: 'ncòbbα̂ ŋambα̂',                frEn: ['Vingt-deux', 'Twenty-two'] },
+    { n:  23, medumba: 'ncòbtad ŋambα̂',               frEn: ['Vingt-trois', 'Twenty-three'] },
+    { n:  24, medumba: 'ncòbkuὰ ŋambα̂',               frEn: ['Vingt-quatre', 'Twenty-four'] },
+    { n:  25, medumba: 'ncòbtὰn ŋambα̂',               frEn: ['Vingt-cinq', 'Twenty-five'] },
+    { n:  26, medumba: 'ncòbntôg ŋambα̂',              frEn: ['Vingt-six', 'Twenty-six'] },
+    { n:  27, medumba: 'ncòbsὰmbα̂ ŋambα̂',            frEn: ['Vingt-sept', 'Twenty-seven'] },
+    { n:  28, medumba: 'ncòbfôm ŋambα̂',               frEn: ['Vingt-huit', 'Twenty-eight'] },
+    { n:  29, medumba: "ncòbbwə̀'ə̂ ŋambα̂",            frEn: ['Vingt-neuf', 'Twenty-nine'] },
+    { n:  30, medumba: 'ŋamntad',                      frEn: ['Trente', 'Thirty'] },
+    { n:  31, medumba: "ncòbncʉ' ŋamntad",             frEn: ['Trente et un', 'Thirty-one'] },
+    { n:  32, medumba: 'ncòbbα̂ ŋamntad',               frEn: ['Trente-deux', 'Thirty-two'] },
+    { n:  33, medumba: 'ncòbtad ŋamntad',              frEn: ['Trente-trois', 'Thirty-three'] },
+    { n:  34, medumba: 'ncòbkuὰ ŋamntad',              frEn: ['Trente-quatre', 'Thirty-four'] },
+    { n:  35, medumba: 'ncòbtὰn ŋamntad',              frEn: ['Trente-cinq', 'Thirty-five'] },
+    { n:  36, medumba: 'ncòbntôg ŋamntad',             frEn: ['Trente-six', 'Thirty-six'] },
+    { n:  37, medumba: 'ncòbsὰmbα̂ ŋamntad',           frEn: ['Trente-sept', 'Thirty-seven'] },
+    { n:  38, medumba: 'ncòbfôm ŋamntad',              frEn: ['Trente-huit', 'Thirty-eight'] },
+    { n:  39, medumba: "ncòbbwə̀'ə̂ ŋamntad",           frEn: ['Trente-neuf', 'Thirty-nine'] },
+    { n:  40, medumba: 'ŋamkuὰ',                       frEn: ['Quarante', 'Forty'] },
+    { n:  41, medumba: "ncòbncʉ' ŋamkuὰ",              frEn: ['Quarante et un', 'Forty-one'] },
+    { n:  42, medumba: 'ncòbbα̂ ŋamkuὰ',                frEn: ['Quarante-deux', 'Forty-two'] },
+    { n:  43, medumba: 'ncòbtad ŋamkuὰ',               frEn: ['Quarante-trois', 'Forty-three'] },
+    { n:  44, medumba: 'ncòbkuὰ ŋamkuὰ',               frEn: ['Quarante-quatre', 'Forty-four'] },
+    { n:  45, medumba: 'ncòbtὰn ŋamkuὰ',               frEn: ['Quarante-cinq', 'Forty-five'] },
+    { n:  46, medumba: 'ncòbntôg ŋamkuὰ',              frEn: ['Quarante-six', 'Forty-six'] },
+    { n:  47, medumba: 'ncòbsὰmbα̂ ŋamkuὰ',            frEn: ['Quarante-sept', 'Forty-seven'] },
+    { n:  48, medumba: 'ncòbfôm ŋamkuὰ',               frEn: ['Quarante-huit', 'Forty-eight'] },
+    { n:  49, medumba: "ncòbbwə̀'ə̂ ŋamkuὰ",            frEn: ['Quarante-neuf', 'Forty-nine'] },
+    { n:  50, medumba: 'ŋamntὰn',                      frEn: ['Cinquante', 'Fifty'] },
+    { n:  51, medumba: "ncòbncʉ' ŋamntὰn",             frEn: ['Cinquante et un', 'Fifty-one'] },
+    { n:  52, medumba: 'ncòbbα̂ ŋamntὰn',               frEn: ['Cinquante-deux', 'Fifty-two'] },
+    { n:  53, medumba: 'ncòbtad ŋamntὰn',              frEn: ['Cinquante-trois', 'Fifty-three'] },
+    { n:  54, medumba: 'ncòbkuὰ ŋamntὰn',              frEn: ['Cinquante-quatre', 'Fifty-four'] },
+    { n:  55, medumba: 'ncòbtὰn ŋamntὰn',              frEn: ['Cinquante-cinq', 'Fifty-five'] },
+    { n:  56, medumba: 'ncòbntôg ŋamntὰn',             frEn: ['Cinquante-six', 'Fifty-six'] },
+    { n:  57, medumba: 'ncòbsὰmbα̂ ŋamntὰn',           frEn: ['Cinquante-sept', 'Fifty-seven'] },
+    { n:  58, medumba: 'ncòbfôm ŋamntὰn',              frEn: ['Cinquante-huit', 'Fifty-eight'] },
+    { n:  59, medumba: "ncòbbwə̀'ə̂ ŋamntὰn",           frEn: ['Cinquante-neuf', 'Fifty-nine'] },
+    { n:  60, medumba: 'ŋamntogə',                     frEn: ['Soixante', 'Sixty'] },
+    { n:  61, medumba: "ncòbncʉ' ŋamntogə",            frEn: ['Soixante et un', 'Sixty-one'] },
+    { n:  62, medumba: 'ncòbbα̂ ŋamntogə',              frEn: ['Soixante-deux', 'Sixty-two'] },
+    { n:  63, medumba: 'ncòbtad ŋamntogə',             frEn: ['Soixante-trois', 'Sixty-three'] },
+    { n:  64, medumba: 'ncòbkuὰ ŋamntogə',             frEn: ['Soixante-quatre', 'Sixty-four'] },
+    { n:  65, medumba: 'ncòbtὰn ŋamntogə',             frEn: ['Soixante-cinq', 'Sixty-five'] },
+    { n:  66, medumba: 'ncòbntôg ŋamntogə',            frEn: ['Soixante-six', 'Sixty-six'] },
+    { n:  67, medumba: 'ncòbsὰmbα̂ ŋamntogə',          frEn: ['Soixante-sept', 'Sixty-seven'] },
+    { n:  68, medumba: 'ncòbfôm ŋamntogə',             frEn: ['Soixante-huit', 'Sixty-eight'] },
+    { n:  69, medumba: "ncòbbwə̀'ə̂ ŋamntogə",          frEn: ['Soixante-neuf', 'Sixty-nine'] },
+    { n:  70, medumba: 'ŋamsὰmbα̂',                    frEn: ['Soixante-dix', 'Seventy'] },
+    { n:  71, medumba: "ncòbncʉ' ŋamsὰmbα̂",           frEn: ['Soixante et onze', 'Seventy-one'] },
+    { n:  72, medumba: 'ncòbbα̂ ŋamsὰmbα̂',             frEn: ['Soixante-douze', 'Seventy-two'] },
+    { n:  73, medumba: 'ncòbtad ŋamsὰmbα̂',            frEn: ['Soixante-treize', 'Seventy-three'] },
+    { n:  74, medumba: 'ncòbkuὰ ŋamsὰmbα̂',            frEn: ['Soixante-quatorze', 'Seventy-four'] },
+    { n:  75, medumba: 'ncòbtὰn ŋamsὰmbα̂',            frEn: ['Soixante-quinze', 'Seventy-five'] },
+    { n:  76, medumba: 'ncòbntôg ŋamsὰmbα̂',           frEn: ['Soixante-seize', 'Seventy-six'] },
+    { n:  77, medumba: 'ncòbsὰmbα̂ ŋamsὰmbα̂',         frEn: ['Soixante-dix-sept', 'Seventy-seven'] },
+    { n:  78, medumba: 'ncòbfôm ŋamsὰmbα̂',            frEn: ['Soixante-dix-huit', 'Seventy-eight'] },
+    { n:  79, medumba: "ncòbbwə̀'ə̂ ŋamsὰmbα̂",         frEn: ['Soixante-dix-neuf', 'Seventy-nine'] },
+    { n:  80, medumba: 'ŋamfomə',                      frEn: ['Quatre-vingts', 'Eighty'] },
+    { n:  81, medumba: "ncòbncʉ' ŋamfomə",             frEn: ['Quatre-vingt-un', 'Eighty-one'] },
+    { n:  82, medumba: 'ncòbbα̂ ŋamfomə',               frEn: ['Quatre-vingt-deux', 'Eighty-two'] },
+    { n:  83, medumba: 'ncòbtad ŋamfomə',              frEn: ['Quatre-vingt-trois', 'Eighty-three'] },
+    { n:  84, medumba: 'ncòbkuὰ ŋamfomə',              frEn: ['Quatre-vingt-quatre', 'Eighty-four'] },
+    { n:  85, medumba: 'ncòbtὰn ŋamfomə',              frEn: ['Quatre-vingt-cinq', 'Eighty-five'] },
+    { n:  86, medumba: 'ncòbntôg ŋamfomə',             frEn: ['Quatre-vingt-six', 'Eighty-six'] },
+    { n:  87, medumba: 'ncòbsὰmbα̂ ŋamfomə',           frEn: ['Quatre-vingt-sept', 'Eighty-seven'] },
+    { n:  88, medumba: 'ncòbfôm ŋamfomə',              frEn: ['Quatre-vingt-huit', 'Eighty-eight'] },
+    { n:  89, medumba: "ncòbbwə̀'ə̂ ŋamfomə",           frEn: ['Quatre-vingt-neuf', 'Eighty-nine'] },
+    { n:  90, medumba: "ŋambwə̀'ə",                    frEn: ['Quatre-vingt-dix', 'Ninety'] },
+    { n:  91, medumba: "ncòbncʉ' ŋambwə̀'ə",           frEn: ['Quatre-vingt-onze', 'Ninety-one'] },
+    { n:  92, medumba: "ncòbbα̂ ŋambwə̀'ə",             frEn: ['Quatre-vingt-douze', 'Ninety-two'] },
+    { n:  93, medumba: "ncòbtad ŋambwə̀'ə",            frEn: ['Quatre-vingt-treize', 'Ninety-three'] },
+    { n:  94, medumba: "ncòbkuὰ ŋambwə̀'ə",            frEn: ['Quatre-vingt-quatorze', 'Ninety-four'] },
+    { n:  95, medumba: "ncòbtὰn ŋambwə̀'ə",            frEn: ['Quatre-vingt-quinze', 'Ninety-five'] },
+    { n:  96, medumba: "ncòbntôg ŋambwə̀'ə",           frEn: ['Quatre-vingt-seize', 'Ninety-six'] },
+    { n:  97, medumba: "ncòbsὰmbα̂ ŋambwə̀'ə",         frEn: ['Quatre-vingt-dix-sept', 'Ninety-seven'] },
+    { n:  98, medumba: "ncòbfôm ŋambwə̀'ə",            frEn: ['Quatre-vingt-dix-huit', 'Ninety-eight'] },
+    { n:  99, medumba: "ncòbbwə̀'ə̂ ŋambwə̀'ə",         frEn: ['Quatre-vingt-dix-neuf', 'Ninety-nine'] },
+    { n: 100, medumba: 'nkʉ',                          frEn: ['Cent', 'One hundred'] },
+    { n: 200, medumba: 'nkʉbα̂',                        frEn: ['Deux cents', 'Two hundred'] },
+    { n: 300, medumba: 'nkʉtad',                       frEn: ['Trois cents', 'Three hundred'] },
+    { n: 400, medumba: 'nkʉkuὰ',                       frEn: ['Quatre cents', 'Four hundred'] },
+    { n: 500, medumba: 'nkʉtὰn',                       frEn: ['Cinq cents', 'Five hundred'] },
+    { n: 600, medumba: 'nkʉntogə',                     frEn: ['Six cents', 'Six hundred'] },
+    { n: 700, medumba: 'nkʉsὰmbα̂',                    frEn: ['Sept cents', 'Seven hundred'] },
+    { n: 800, medumba: 'nkʉfomə',                      frEn: ['Huit cents', 'Eight hundred'] },
+    { n: 900, medumba: "nkʉbwə̀'ə",                    frEn: ['Neuf cents', 'Nine hundred'] },
+    { n: 1000, medumba: 'ncaꞌ',                        frEn: ['Mille', 'One thousand'] },
 ];
 
 // Audio timestamps (seconds) from vocal-count-medumba.ogg
@@ -73,13 +154,13 @@ const AUDIO_MAP = {
     70:   [86.85, 87.65],   // ŋamsὰmbα̂
     80:   [90.20, 93.30],   // ŋamfomə
     90:   [94.65, 95.80],   // ŋambwə̀'ə
-    100:  [97.60, 99.20],   // tû
+    100:  [97.60, 99.20],   // nkʉ
     1000: [100.75, 102.55], // ncaꞌ
 };
 
-// Simple quiz pool
+// Simple quiz pool (0–30 for manageable choices)
 const makeQuiz = () => {
-    const pool = NUMBERS.slice(0, 20);
+    const pool = NUMBERS.slice(0, 31);
     const q    = pool[Math.floor(Math.random() * pool.length)];
     const wrong = pool.filter(x => x.n !== q.n).sort(() => Math.random() - 0.5).slice(0, 3);
     const opts  = [q, ...wrong].sort(() => Math.random() - 0.5);
@@ -187,7 +268,7 @@ const CountingPage = ({ nativeLang, onBack }) => {
                     <button onClick={onBack} style={{ background: 'rgba(255,255,255,0.2)', border: 'none', borderRadius: '50%', width: '38px', height: '38px', cursor: 'pointer', fontSize: '1.2rem', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>←</button>
                     <div>
                         <div style={{ fontSize: '0.72rem', fontWeight: '700', opacity: 0.8, textTransform: 'uppercase', letterSpacing: '0.7px' }}>
-                            {isFr ? 'Les nombres en Medumba' : 'Numbers in Medumba'}
+                            {isFr ? '110 nombres · 0 – 1 000' : '110 numbers · 0 – 1,000'}
                         </div>
                         <div style={{ fontSize: '1.2rem', fontWeight: '900' }}>🔢 {isFr ? 'Compter' : 'Counting'}</div>
                     </div>

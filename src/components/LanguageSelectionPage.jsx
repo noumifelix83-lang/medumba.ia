@@ -36,20 +36,18 @@ const LanguageSelectionPage = ({ onNext, onBack, nativeLang, setNativeLang, lear
             </div>
 
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '500px', margin: '0 auto', padding: '0 1.5rem 2.5rem' }}>
-                {/* Tutor + speech bubble */}
-                <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center', marginTop: '1rem', marginBottom: '2rem' }}>
-                    <div style={{ position: 'relative', zIndex: 1, width: 'fit-content' }}>
-                        <img src={tutor} alt="Tutor" style={{ width: '220px', height: 'auto', display: 'block' }} />
-                        <div style={{
-                            position: 'absolute', top: '20px', right: '-75px',
-                            backgroundColor: 'white', padding: '1rem 1.25rem',
-                            borderRadius: '20px', borderBottomLeftRadius: '4px',
-                            boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', width: '190px', textAlign: 'left',
-                        }}>
-                            <p style={{ color: '#0f172a', fontSize: '0.95rem', fontWeight: '600', lineHeight: '1.4', margin: 0 }}>
-                                {isFr ? 'Choisissez vos langues !' : 'Choose your languages!'}
-                            </p>
-                        </div>
+                {/* Tutor + speech bubble — side by side so bubble never covers face */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', width: '100%', marginTop: '1rem', marginBottom: '2rem' }}>
+                    <img src={tutor} alt="Tutor" style={{ width: '140px', height: 'auto', flexShrink: 0 }} />
+                    <div style={{
+                        flex: 1,
+                        backgroundColor: '#fff', padding: '1rem 1.25rem',
+                        borderRadius: '20px', borderBottomLeftRadius: '4px',
+                        boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)',
+                    }}>
+                        <p style={{ color: '#0f172a', fontSize: '0.95rem', fontWeight: '600', lineHeight: '1.4', margin: 0 }}>
+                            {isFr ? 'Choisissez vos langues !' : 'Choose your languages!'}
+                        </p>
                     </div>
                 </div>
 

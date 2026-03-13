@@ -66,42 +66,40 @@ export function generateLessonQuestions(lessonId, profile = {}, allQuestions = {
     }
 
     /* ── Medumba course ─────────────────────────────────────────── */
-    const proficiency = profile.proficiency ?? 1;
-    const tileQs      = allQuestions[lessonId] ?? allQuestions.l1 ?? [];
-    const levelData   = LEVEL_QUESTIONS[lessonId] ?? {};
-    const meaningQs   = levelData.meaning ?? [];
-    const matchQs     = levelData.match   ?? [];
+    const proficiency    = profile.proficiency ?? 1;
+    const tileQs         = allQuestions[lessonId] ?? allQuestions.l1 ?? [];
+    const levelData      = LEVEL_QUESTIONS[lessonId] ?? {};
+    const meaningQs      = levelData.meaning ?? [];
+    const matchQs        = levelData.match   ?? [];
+    const imageVocabPool = VARIETY_QUESTIONS.filter(q => q.type === 'image_vocab');
 
     let result = [];
 
     if (proficiency === 1) {
         /*
-         * BEGINNER — only meaning exercises.
-         * Show a Medumba word, pick its translation from 4 options.
-         * No word banks, no sentence building — pure vocabulary recognition.
+         * BEGINNER — image-vocab first, then meaning exercises.
+         * Visual recognition before text-only meaning questions.
          */
-        result = [...meaningQs];
+        result = [...pickRandom(imageVocabPool, 2), ...meaningQs];
 
     } else if (proficiency === 2) {
         /*
-         * ELEMENTARY — meaning + simplified tile.
+         * ELEMENTARY — 1 image-vocab opener + meaning + simplified tile.
          * Tile questions use a trimmed bank (4 words) so there are fewer
          * distractors and sentence building is easier.
          */
         const simpleTiles = tileQs.map(q => ({ ...q, bank: q.bank.slice(0, 4) }));
-        result = interleave(meaningQs.slice(0, 3), simpleTiles);
+        result = [...pickRandom(imageVocabPool, 1), ...interleave(meaningQs.slice(0, 3), simpleTiles)];
 
     } else if (proficiency === 3) {
         /*
-         * INTERMEDIATE — full tile exercises + 1 lesson-specific match.
-         * Students now see the complete word bank and must also pair
-         * Medumba words with their translations.
+         * INTERMEDIATE — 1 image-vocab + full tile exercises + 1 lesson-specific match.
          */
-        result = [...tileQs, ...matchQs];
+        result = [...pickRandom(imageVocabPool, 1), ...tileQs, ...matchQs];
 
     } else {
         /*
-         * ADVANCED — everything: tile + meaning + audio + match,
+         * ADVANCED — everything: image-vocab + tile + meaning + audio + match,
          * weighted by the learner's stated goals.
          */
         const { meaning: mCount, audio: aCount, match: matchCount } = varietyMix(profile.goals ?? []);
@@ -114,6 +112,7 @@ export function generateLessonQuestions(lessonId, profile = {}, allQuestions = {
         ];
 
         const varietyItems = [
+            ...pickRandom(imageVocabPool, 1),
             ...pickRandom(meaningPool, mCount),
             ...pickRandom(audioPool,   aCount),
             ...pickRandom(matchPool,   matchCount),

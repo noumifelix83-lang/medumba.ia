@@ -257,8 +257,23 @@ const DashboardPage = ({
             subEn:   'Everyday expressions & phrases',
             subFr:   'Expressions pour tous les jours',
             lessons: [
-                { id: 'l9', titleEn: 'Time',    titleFr: 'Temps',      type: 'lesson', status: 'locked' },
-                { id: 'c2', titleEn: 'Chest',   titleFr: 'Coffre',     type: 'chest',  status: 'locked' },
+                { id: 'l9',  titleEn: 'Time',          titleFr: 'Temps',          type: 'lesson', status: 'locked' },
+                { id: 'l10', titleEn: 'Introductions',  titleFr: 'Présentations',  type: 'lesson', status: 'locked' },
+                { id: 'c2',  titleEn: 'Chest',          titleFr: 'Coffre',         type: 'chest',  status: 'locked' },
+            ],
+        },
+        {
+            id: 4, color: '#7c3aed', accent: '#6d28d9', emoji: '🏫',
+            titleEn: 'Society & Health', titleFr: 'Société & Santé',
+            subEn:   'From classroom to kitchen — real-world Medumba',
+            subFr:   'De la classe à la cuisine — Medumba du quotidien',
+            lessons: [
+                { id: 'l11', titleEn: 'Kitchen',      titleFr: 'Cuisine',       type: 'lesson', status: 'locked' },
+                { id: 'l12', titleEn: 'Illnesses',    titleFr: 'Maladies',      type: 'lesson', status: 'locked' },
+                { id: 'l13', titleEn: 'School',       titleFr: 'École',         type: 'lesson', status: 'locked' },
+                { id: 'b2',  titleEn: 'Boss Fight',   titleFr: 'Défi Boss',     type: 'boss',   status: 'locked' },
+                { id: 'l14', titleEn: 'Professions',  titleFr: 'Métiers',       type: 'lesson', status: 'locked' },
+                { id: 'c3',  titleEn: 'Chest',        titleFr: 'Coffre',        type: 'chest',  status: 'locked' },
             ],
         },
     ];

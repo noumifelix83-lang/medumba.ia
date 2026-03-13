@@ -102,6 +102,103 @@ export const VARIETY_QUESTIONS = [
             { medumba: 'Ngòn',   french: 'Fille',   english: 'Girl'  },
         ],
     },
+    /* ── image_vocab: see an emoji, choose the Medumba word ── */
+    {
+        type: 'image_vocab',
+        emoji: '🐕',
+        labelFr: 'Chien', labelEn: 'Dog',
+        options: ['Mbʉ', 'Bùsi', 'Saŋə', 'Nyαmnaꞌ'],
+        optionsFr: ['Mbʉ', 'Bùsi', 'Saŋə', 'Nyαmnaꞌ'],
+        answer: 'Mbʉ', answerFr: 'Mbʉ', audio: 'Mbʉ',
+    },
+    {
+        type: 'image_vocab',
+        emoji: '🐱',
+        labelFr: 'Chat', labelEn: 'Cat',
+        options: ['Mbʉ', 'Bùsi', 'Ngǒntsə', 'Saŋə'],
+        optionsFr: ['Mbʉ', 'Bùsi', 'Ngǒntsə', 'Saŋə'],
+        answer: 'Bùsi', answerFr: 'Bùsi', audio: 'Bùsi',
+    },
+    {
+        type: 'image_vocab',
+        emoji: '💧',
+        labelFr: 'Eau', labelEn: 'Water',
+        options: ['Ntsə', 'Bʉn', 'Dʉ̀mtə̀', 'Ngwa'],
+        optionsFr: ['Ntsə', 'Bʉn', 'Dʉ̀mtə̀', 'Ngwa'],
+        answer: 'Ntsə', answerFr: 'Ntsə', audio: 'Ntsə',
+    },
+    {
+        type: 'image_vocab',
+        emoji: '☀️',
+        labelFr: 'Soleil', labelEn: 'Sun',
+        options: ['Nyàm', 'Mαŋwʉ', 'Leꞌe', 'Mbwoge'],
+        optionsFr: ['Nyàm', 'Mαŋwʉ', 'Leꞌe', 'Mbwoge'],
+        answer: 'Nyàm', answerFr: 'Nyàm', audio: 'Nyàm',
+    },
+    {
+        type: 'image_vocab',
+        emoji: '🐟',
+        labelFr: 'Poisson', labelEn: 'Fish',
+        options: ['Ngǒntsə', 'Mbαb', 'Ngab', 'Saŋə'],
+        optionsFr: ['Ngǒntsə', 'Mbαb', 'Ngab', 'Saŋə'],
+        answer: 'Ngǒntsə', answerFr: 'Ngǒntsə', audio: 'Ngǒntsə',
+    },
+    {
+        type: 'image_vocab',
+        emoji: '🏠',
+        labelFr: 'Maison', labelEn: 'House',
+        options: ['Baꞌ', 'Buꞌŋwàꞌnì', 'Ngwa', 'Ntsə'],
+        optionsFr: ['Baꞌ', 'Buꞌŋwàꞌnì', 'Ngwa', 'Ntsə'],
+        answer: 'Baꞌ', answerFr: 'Baꞌ', audio: 'Baꞌ',
+    },
+    {
+        type: 'image_vocab',
+        emoji: '🍌',
+        labelFr: 'Banane', labelEn: 'Banana',
+        options: ['Kəlɔ̀ bàkə̀lɔ̀', 'Nkûnmèkale', 'Mbαb', 'Ngǒntsə'],
+        optionsFr: ['Kəlɔ̀ bàkə̀lɔ̀', 'Nkûnmèkale', 'Mbαb', 'Ngǒntsə'],
+        answer: 'Kəlɔ̀ bàkə̀lɔ̀', answerFr: 'Kəlɔ̀ bàkə̀lɔ̀', audio: 'Kəlɔ̀ bàkə̀lɔ̀',
+    },
+    {
+        type: 'image_vocab',
+        emoji: '🥛',
+        labelFr: 'Lait', labelEn: 'Milk',
+        options: ['Bʉn', 'Ntsə', 'Dʉ̀mtə̀', 'Ngwa'],
+        optionsFr: ['Bʉn', 'Ntsə', 'Dʉ̀mtə̀', 'Ngwa'],
+        answer: 'Bʉn', answerFr: 'Bʉn', audio: 'Bʉn',
+    },
+    {
+        type: 'image_vocab',
+        emoji: '🔥',
+        labelFr: 'Feu', labelEn: 'Fire',
+        options: ['Mbwoge', 'Nyàm', 'Mαŋwʉ', 'Ntsə'],
+        optionsFr: ['Mbwoge', 'Nyàm', 'Mαŋwʉ', 'Ntsə'],
+        answer: 'Mbwoge', answerFr: 'Mbwoge', audio: 'Mbwoge',
+    },
+    {
+        type: 'image_vocab',
+        emoji: '🌙',
+        labelFr: 'Nuit', labelEn: 'Night',
+        options: ['Tswəꞌ', 'Leꞌe', 'Mαŋwʉ', 'Nyàm'],
+        optionsFr: ['Tswəꞌ', 'Leꞌe', 'Mαŋwʉ', 'Nyàm'],
+        answer: 'Tswəꞌ', answerFr: 'Tswəꞌ', audio: 'Tswəꞌ',
+    },
+    {
+        type: 'image_vocab',
+        emoji: '🐦',
+        labelFr: 'Oiseau', labelEn: 'Bird',
+        options: ['Saŋə', 'Ngǒntsə', 'Mbʉ', 'Ngab'],
+        optionsFr: ['Saŋə', 'Ngǒntsə', 'Mbʉ', 'Ngab'],
+        answer: 'Saŋə', answerFr: 'Saŋə', audio: 'Saŋə',
+    },
+    {
+        type: 'image_vocab',
+        emoji: '🌧️',
+        labelFr: 'Pluie', labelEn: 'Rain',
+        options: ['Mbàŋ', 'Ntsə', 'Mαŋwʉ', 'Leꞌe'],
+        optionsFr: ['Mbàŋ', 'Ntsə', 'Mαŋwʉ', 'Leꞌe'],
+        answer: 'Mbàŋ', answerFr: 'Mbàŋ', audio: 'Mbàŋ',
+    },
 ];
 
 /* Lesson theme metadata */
@@ -141,6 +238,26 @@ export const THEMES_META = {
   "l9": {
     "titleFr": "Temps",
     "titleEn": "Time"
+  },
+  "l10": {
+    "titleFr": "Présentations",
+    "titleEn": "Introductions"
+  },
+  "l11": {
+    "titleFr": "Cuisine",
+    "titleEn": "Kitchen"
+  },
+  "l12": {
+    "titleFr": "Maladies",
+    "titleEn": "Illnesses"
+  },
+  "l13": {
+    "titleFr": "École",
+    "titleEn": "School"
+  },
+  "l14": {
+    "titleFr": "Métiers",
+    "titleEn": "Professions"
   }
 };
 
@@ -1219,6 +1336,106 @@ export const MEDUMBA_QUESTIONS = {
       ],
       "audio": "Ngə̀laŋ"
     }
+  ],
+
+  /* ── l10 : Introductions / Présentations (Jûzi' 4) ── */
+  "l10": [
+    { "sourceFr": "Homme", "sourceEn": "Man", "answer": ["Mαndùm"],
+      "bank": ["Mαndùm", "Mɛ̀nnzwi", "Mfɛd", "Mɛn", "Nshun", "Ncʉὰmbwə̀"], "audio": "Mαndùm" },
+    { "sourceFr": "Femme", "sourceEn": "Woman", "answer": ["Mɛ̀nnzwi"],
+      "bank": ["Mɛ̀nnzwi", "Mαndùm", "Mfɛd", "Mɛn", "Nshun", "Ntʉ'njàm"], "audio": "Mɛ̀nnzwi" },
+    { "sourceFr": "Frère / Cousin", "sourceEn": "Brother / Cousin", "answer": ["Mfɛd"],
+      "bank": ["Mfɛd", "Nshun", "Mɛn", "Ncʉὰmbwə̀", "Ntʉ'njàm", "Mαndùm"], "audio": "Mfɛd" },
+    { "sourceFr": "Ami(e)", "sourceEn": "Friend", "answer": ["Nshun"],
+      "bank": ["Nshun", "Mfɛd", "Mɛn", "Mαndùm", "Mɛ̀nnzwi", "Ncʉὰmbwə̀"], "audio": "Nshun" },
+    { "sourceFr": "Personne", "sourceEn": "Person", "answer": ["Mɛ̀nntʉ̀n"],
+      "bank": ["Mɛ̀nntʉ̀n", "Mɛn", "Nshun", "Mαndùm", "Mfɛd", "Ncʉὰmbwə̀"], "audio": "Mɛ̀nntʉ̀n" },
+    { "sourceFr": "Aîné(e)", "sourceEn": "Elder", "answer": ["Ncʉὰmbwə̀"],
+      "bank": ["Ncʉὰmbwə̀", "Ntʉ'njàm", "Nshun", "Mfɛd", "Mɛn", "Mαndùm"], "audio": "Ncʉὰmbwə̀" },
+    { "sourceFr": "Cadet(te)", "sourceEn": "Younger sibling", "answer": ["Ntʉ'njàm"],
+      "bank": ["Ntʉ'njàm", "Ncʉὰmbwə̀", "Mαndùm", "Mɛ̀nnzwi", "Nshun", "Mfɛd"], "audio": "Ntʉ'njàm" },
+    { "sourceFr": "Mon père", "sourceEn": "My father", "answer": ["Tα"],
+      "bank": ["Tα", "Mα", "Mfɛd", "Mɛn", "Nshun", "Ncʉὰmbwə̀"], "audio": "Tα" }
+  ],
+
+  /* ── l11 : Kitchen / Cuisine (Jûzi' 11-12) ── */
+  "l11": [
+    { "sourceFr": "Cuisine", "sourceEn": "Kitchen", "answer": ["Fə̌'mbwogə"],
+      "bank": ["Fə̌'mbwogə", "Nzə̂mbwogə", "Ntànywìn", "Mbwogə", "Ntàmfʉαg", "Kwe'"], "audio": "Fə̌'mbwogə" },
+    { "sourceFr": "Casserole / Marmite", "sourceEn": "Pot", "answer": ["Nzə̂mbwogə"],
+      "bank": ["Nzə̂mbwogə", "Fə̌'mbwogə", "Ntànywìn", "Mbwogə", "Kwe'", "Ntàmfʉαg"], "audio": "Nzə̂mbwogə" },
+    { "sourceFr": "Cuillère", "sourceEn": "Spoon", "answer": ["Ntànywìn"],
+      "bank": ["Ntànywìn", "Ntàmfʉαg", "Nzə̂mbwogə", "Fə̌'mbwogə", "Mbwogə", "Kwe'"], "audio": "Ntànywìn" },
+    { "sourceFr": "Feu / Foyer", "sourceEn": "Fire / Stove", "answer": ["Mbwogə"],
+      "bank": ["Mbwogə", "Fə̌'mbwogə", "Kwe'", "Nzə̂mbwogə", "Ntànywìn", "Ntàmfʉαg"], "audio": "Mbwogə" },
+    { "sourceFr": "Louche", "sourceEn": "Ladle", "answer": ["Ntàmfʉαg"],
+      "bank": ["Ntàmfʉαg", "Ntànywìn", "Nzə̂mbwogə", "Mbwogə", "Kwe'", "Fə̌'mbwogə"], "audio": "Ntàmfʉαg" },
+    { "sourceFr": "Sel", "sourceEn": "Salt", "answer": ["Kwe'"],
+      "bank": ["Kwe'", "Nzə̂mbwogə", "Ntànywìn", "Fə̌'mbwogə", "Mbwogə", "Ntàmfʉαg"], "audio": "Kwe'" },
+    { "sourceFr": "Couteau", "sourceEn": "Knife", "answer": ["Tə"],
+      "bank": ["Tə", "Kwe'", "Ntànywìn", "Fə̌'mbwogə", "Mbwogə", "Nzə̂mbwogə"], "audio": "Tə" },
+    { "sourceFr": "Fumée", "sourceEn": "Smoke", "answer": ["Kə̀kîmbwogə"],
+      "bank": ["Kə̀kîmbwogə", "Mbwogə", "Fə̌'mbwogə", "Nzə̂mbwogə", "Kwe'", "Ntànywìn"], "audio": "Kə̀kîmbwogə" }
+  ],
+
+  /* ── l12 : Illnesses / Maladies (Jûzi' 13) ── */
+  "l12": [
+    { "sourceFr": "Maladie", "sourceEn": "Illness", "answer": ["Ngòkɛd"],
+      "bank": ["Ngòkɛd", "Yâtu", "Bǎmmba", "Kwiag", "Saŋtə̀wud", "Bìkoŋə"], "audio": "Ngòkɛd" },
+    { "sourceFr": "Mal de tête", "sourceEn": "Headache", "answer": ["Yâtu"],
+      "bank": ["Yâtu", "Bǎmmba", "Kwiag", "Saŋtə̀wud", "Bìkoŋə", "Ngòkɛd"], "audio": "Yâtu" },
+    { "sourceFr": "Mal au ventre", "sourceEn": "Stomachache", "answer": ["Bǎmmba"],
+      "bank": ["Bǎmmba", "Yâtu", "Kwiag", "Saŋtə̀wud", "Ngòkɛd", "Mìntsi"], "audio": "Bǎmmba" },
+    { "sourceFr": "Toux", "sourceEn": "Cough", "answer": ["Kwiag"],
+      "bank": ["Kwiag", "Yâtu", "Bǎmmba", "Saŋtə̀wud", "Bìkoŋə", "Mìntsi"], "audio": "Kwiag" },
+    { "sourceFr": "Fièvre", "sourceEn": "Fever", "answer": ["Saŋtə̀wud"],
+      "bank": ["Saŋtə̀wud", "Kwiag", "Yâtu", "Bǎmmba", "Ngòkɛd", "Bìkoŋə"], "audio": "Saŋtə̀wud" },
+    { "sourceFr": "Rhume", "sourceEn": "Cold", "answer": ["Bìkoŋə"],
+      "bank": ["Bìkoŋə", "Saŋtə̀wud", "Kwiag", "Yâtu", "Mìntsi", "Ngòkɛd"], "audio": "Bìkoŋə" },
+    { "sourceFr": "Douleur", "sourceEn": "Pain", "answer": ["Mìntsi"],
+      "bank": ["Mìntsi", "Bìkoŋə", "Ngòkɛd", "Yâtu", "Kwiag", "Bǎmmba"], "audio": "Mìntsi" },
+    { "sourceFr": "Médecin", "sourceEn": "Doctor", "answer": ["Ngàngokɛd"],
+      "bank": ["Ngàngokɛd", "Ngòkɛd", "Saŋtə̀wud", "Mìntsi", "Bìkoŋə", "Yâtu"], "audio": "Ngàngokɛd" }
+  ],
+
+  /* ── l13 : School / École (Jûzi' 15) ── */
+  "l13": [
+    { "sourceFr": "École", "sourceEn": "School", "answer": ["ŋwà'nì"],
+      "bank": ["ŋwà'nì", "Bu'kì", "Kʉ̂dfi", "Cɛ̂dkì", "Bǎgcɛ̂dkì", "Bu'ŋwà'nì"], "audio": "ŋwà'nì" },
+    { "sourceFr": "Cahier", "sourceEn": "Notebook", "answer": ["Bu'kì"],
+      "bank": ["Bu'kì", "Bu'ŋwà'nì", "Kʉ̂dfi", "Cɛ̂dkì", "Bǎgcɛ̂dkì", "ŋwà'nì"], "audio": "Bu'kì" },
+    { "sourceFr": "Livre", "sourceEn": "Book", "answer": ["Bu'ŋwà'nì"],
+      "bank": ["Bu'ŋwà'nì", "Bu'kì", "Cɛ̂dkì", "Kʉ̂dfi", "Bǎgcɛ̂dkì", "ŋwà'nì"], "audio": "Bu'ŋwà'nì" },
+    { "sourceFr": "Table-banc", "sourceEn": "School desk", "answer": ["Kʉ̂dfi"],
+      "bank": ["Kʉ̂dfi", "Bu'kì", "Cɛ̂dkì", "Bu'ŋwà'nì", "Bǎgcɛ̂dkì", "ŋwà'nì"], "audio": "Kʉ̂dfi" },
+    { "sourceFr": "Stylo / Crayon", "sourceEn": "Pen / Pencil", "answer": ["Cɛ̂dkì"],
+      "bank": ["Cɛ̂dkì", "Bu'kì", "Kʉ̂dfi", "Bu'ŋwà'nì", "ŋwà'nì", "Bǎgcɛ̂dkì"], "audio": "Cɛ̂dkì" },
+    { "sourceFr": "Cartable / Sac", "sourceEn": "School bag", "answer": ["Bǎgcɛ̂dkì"],
+      "bank": ["Bǎgcɛ̂dkì", "Bu'kì", "Kʉ̂dfi", "Cɛ̂dkì", "Bu'ŋwà'nì", "ŋwà'nì"], "audio": "Bǎgcɛ̂dkì" },
+    { "sourceFr": "Tableau", "sourceEn": "Blackboard", "answer": ["Mbə̂mkì"],
+      "bank": ["Mbə̂mkì", "Bu'kì", "Kʉ̂dfi", "Cɛ̂dkì", "Bu'ŋwà'nì", "Bǎgcɛ̂dkì"], "audio": "Mbə̂mkì" },
+    { "sourceFr": "Règle", "sourceEn": "Ruler", "answer": ["Nkǒ'ŋwà'nì"],
+      "bank": ["Nkǒ'ŋwà'nì", "Bu'kì", "Cɛ̂dkì", "Kʉ̂dfi", "Bu'ŋwà'nì", "Mbə̂mkì"], "audio": "Nkǒ'ŋwà'nì" }
+  ],
+
+  /* ── l14 : Professions / Métiers (Jûzi' 16) ── */
+  "l14": [
+    { "sourceFr": "Enseignant", "sourceEn": "Teacher", "answer": ["Ngàtswìtə̀"],
+      "bank": ["Ngàtswìtə̀", "Ndʉ̂'nὰ", "Tα̂lὰm", "Ntântαnə", "Ndè'càm", "Nsòŋsaŋvə̀"], "audio": "Ngàtswìtə̀" },
+    { "sourceFr": "Cultivateur / Fermier", "sourceEn": "Farmer", "answer": ["Ndʉ̂'nὰ"],
+      "bank": ["Ndʉ̂'nὰ", "Ngàtswìtə̀", "Tα̂lὰm", "Ntântαnə", "Ndè'càm", "Nsòŋsaŋvə̀"], "audio": "Ndʉ̂'nὰ" },
+    { "sourceFr": "Couturier", "sourceEn": "Tailor", "answer": ["Tα̂lὰm"],
+      "bank": ["Tα̂lὰm", "Ndʉ̂'nὰ", "Ngàtswìtə̀", "Ntântαnə", "Nsòŋsaŋvə̀", "Ndè'càm"], "audio": "Tα̂lὰm" },
+    { "sourceFr": "Maçon / Entrepreneur", "sourceEn": "Builder", "answer": ["Ntântαnə"],
+      "bank": ["Ntântαnə", "Tα̂lὰm", "Ndʉ̂'nὰ", "Ngàtswìtə̀", "Ndè'càm", "Nsòŋsaŋvə̀"], "audio": "Ntântαnə" },
+    { "sourceFr": "Secrétaire", "sourceEn": "Secretary", "answer": ["Ndè'càm"],
+      "bank": ["Ndè'càm", "Ntântαnə", "Tα̂lὰm", "Ngàtswìtə̀", "Nsòŋsaŋvə̀", "Nswɛ̀nfu"], "audio": "Ndè'càm" },
+    { "sourceFr": "Pharmacien", "sourceEn": "Pharmacist", "answer": ["Nsòŋsaŋvə̀"],
+      "bank": ["Nsòŋsaŋvə̀", "Ndè'càm", "Ngàtswìtə̀", "Ndʉ̂'nὰ", "Nswɛ̀nfu", "Ntântαnə"], "audio": "Nsòŋsaŋvə̀" },
+    { "sourceFr": "Coiffeur", "sourceEn": "Hairdresser", "answer": ["Nswɛ̀nfu"],
+      "bank": ["Nswɛ̀nfu", "Nsòŋsaŋvə̀", "Ndè'càm", "Tα̂lὰm", "Ndʉ̂'nὰ", "Ngàtswìtə̀"], "audio": "Nswɛ̀nfu" },
+    { "sourceFr": "Banquier", "sourceEn": "Banker", "answer": ["Ndè'nkαb"],
+      "bank": ["Ndè'nkαb", "Ndè'càm", "Nsòŋsaŋvə̀", "Tα̂lὰm", "Ngàtswìtə̀", "Nswɛ̀nfu"], "audio": "Ndè'nkαb" }
   ]
 };
 
@@ -1543,6 +1760,171 @@ export const LEVEL_QUESTIONS = {
       { medumba: 'Nkə̂bnjʉ', french: 'Matin',    english: 'Morning' },
       { medumba: 'Ngὰbnjʉ', french: 'Semaine',  english: 'Week'    },
       { medumba: 'Mətsill', french: 'Mois',     english: 'Month'   },
+    ]}],
+  },
+
+  /* ── l10 : Introductions / Présentations ─────────────────────── */
+  l10: {
+    meaning: [
+      { type: 'meaning', sourceFr: 'Homme', sourceEn: 'Man', audio: 'Mαndùm',
+        options: ['Mαndùm', 'Mɛ̀nnzwi', 'Mɛn', 'Mfɛd'],
+        optionsFr: ['Mαndùm', 'Mɛ̀nnzwi', 'Mɛn', 'Mfɛd'],
+        answer: 'Mαndùm', answerFr: 'Mαndùm' },
+      { type: 'meaning', sourceFr: 'Femme', sourceEn: 'Woman', audio: 'Mɛ̀nnzwi',
+        options: ['Mɛ̀nnzwi', 'Mαndùm', 'Mɛn', 'Nshun'],
+        optionsFr: ['Mɛ̀nnzwi', 'Mαndùm', 'Mɛn', 'Nshun'],
+        answer: 'Mɛ̀nnzwi', answerFr: 'Mɛ̀nnzwi' },
+      { type: 'meaning', sourceFr: 'Frère', sourceEn: 'Brother', audio: 'Mfɛd',
+        options: ['Mfɛd', 'Nshun', 'Ncʉὰmbwə̀', 'Ntʉ\'njàm'],
+        optionsFr: ['Mfɛd', 'Nshun', 'Ncʉὰmbwə̀', 'Ntʉ\'njàm'],
+        answer: 'Mfɛd', answerFr: 'Mfɛd' },
+      { type: 'meaning', sourceFr: 'Ami(e)', sourceEn: 'Friend', audio: 'Nshun',
+        options: ['Nshun', 'Mfɛd', 'Ncʉὰmbwə̀', 'Mαndùm'],
+        optionsFr: ['Nshun', 'Mfɛd', 'Ncʉὰmbwə̀', 'Mαndùm'],
+        answer: 'Nshun', answerFr: 'Nshun' },
+      { type: 'meaning', sourceFr: 'Enfant', sourceEn: 'Child', audio: 'Mɛn',
+        options: ['Mɛn', 'Mɛ̀nntʉ̀n', 'Mαndùm', 'Ntʉ\'njàm'],
+        optionsFr: ['Mɛn', 'Mɛ̀nntʉ̀n', 'Mαndùm', 'Ntʉ\'njàm'],
+        answer: 'Mɛn', answerFr: 'Mɛn' },
+    ],
+    match: [{ type: 'match', pairs: [
+      { medumba: 'Mαndùm',    french: 'Homme',   english: 'Man'    },
+      { medumba: 'Mɛ̀nnzwi',   french: 'Femme',   english: 'Woman'  },
+      { medumba: 'Mfɛd',      french: 'Frère',   english: 'Brother'},
+      { medumba: 'Nshun',     french: 'Ami',     english: 'Friend' },
+      { medumba: 'Mɛn',       french: 'Enfant',  english: 'Child'  },
+    ]}],
+  },
+
+  /* ── l11 : Kitchen / Cuisine ──────────────────────────────────── */
+  l11: {
+    meaning: [
+      { type: 'meaning', sourceFr: 'Cuisine', sourceEn: 'Kitchen', audio: 'Fə̌\'mbwogə',
+        options: ['Fə̌\'mbwogə', 'Nzə̂mbwogə', 'Mbwogə', 'Ntànywìn'],
+        optionsFr: ['Fə̌\'mbwogə', 'Nzə̂mbwogə', 'Mbwogə', 'Ntànywìn'],
+        answer: 'Fə̌\'mbwogə', answerFr: 'Fə̌\'mbwogə' },
+      { type: 'meaning', sourceFr: 'Casserole', sourceEn: 'Pot', audio: 'Nzə̂mbwogə',
+        options: ['Nzə̂mbwogə', 'Fə̌\'mbwogə', 'Ntànywìn', 'Ntàmfʉαg'],
+        optionsFr: ['Nzə̂mbwogə', 'Fə̌\'mbwogə', 'Ntànywìn', 'Ntàmfʉαg'],
+        answer: 'Nzə̂mbwogə', answerFr: 'Nzə̂mbwogə' },
+      { type: 'meaning', sourceFr: 'Cuillère', sourceEn: 'Spoon', audio: 'Ntànywìn',
+        options: ['Ntànywìn', 'Ntàmfʉαg', 'Kwe\'', 'Nzə̂mbwogə'],
+        optionsFr: ['Ntànywìn', 'Ntàmfʉαg', 'Kwe\'', 'Nzə̂mbwogə'],
+        answer: 'Ntànywìn', answerFr: 'Ntànywìn' },
+      { type: 'meaning', sourceFr: 'Feu', sourceEn: 'Fire', audio: 'Mbwogə',
+        options: ['Mbwogə', 'Fə̌\'mbwogə', 'Kwe\'', 'Ntànywìn'],
+        optionsFr: ['Mbwogə', 'Fə̌\'mbwogə', 'Kwe\'', 'Ntànywìn'],
+        answer: 'Mbwogə', answerFr: 'Mbwogə' },
+      { type: 'meaning', sourceFr: 'Sel', sourceEn: 'Salt', audio: 'Kwe\'',
+        options: ['Kwe\'', 'Mbwogə', 'Ntànywìn', 'Nzə̂mbwogə'],
+        optionsFr: ['Kwe\'', 'Mbwogə', 'Ntànywìn', 'Nzə̂mbwogə'],
+        answer: 'Kwe\'', answerFr: 'Kwe\'' },
+    ],
+    match: [{ type: 'match', pairs: [
+      { medumba: 'Fə̌\'mbwogə', french: 'Cuisine',    english: 'Kitchen' },
+      { medumba: 'Nzə̂mbwogə',  french: 'Casserole',  english: 'Pot'     },
+      { medumba: 'Ntànywìn',   french: 'Cuillère',   english: 'Spoon'   },
+      { medumba: 'Mbwogə',     french: 'Feu',        english: 'Fire'    },
+      { medumba: 'Kwe\'',      french: 'Sel',        english: 'Salt'    },
+    ]}],
+  },
+
+  /* ── l12 : Illnesses / Maladies ───────────────────────────────── */
+  l12: {
+    meaning: [
+      { type: 'meaning', sourceFr: 'Mal de tête', sourceEn: 'Headache', audio: 'Yâtu',
+        options: ['Yâtu', 'Bǎmmba', 'Kwiag', 'Saŋtə̀wud'],
+        optionsFr: ['Yâtu', 'Bǎmmba', 'Kwiag', 'Saŋtə̀wud'],
+        answer: 'Yâtu', answerFr: 'Yâtu' },
+      { type: 'meaning', sourceFr: 'Mal au ventre', sourceEn: 'Stomachache', audio: 'Bǎmmba',
+        options: ['Bǎmmba', 'Yâtu', 'Kwiag', 'Mìntsi'],
+        optionsFr: ['Bǎmmba', 'Yâtu', 'Kwiag', 'Mìntsi'],
+        answer: 'Bǎmmba', answerFr: 'Bǎmmba' },
+      { type: 'meaning', sourceFr: 'Toux', sourceEn: 'Cough', audio: 'Kwiag',
+        options: ['Kwiag', 'Bǎmmba', 'Saŋtə̀wud', 'Bìkoŋə'],
+        optionsFr: ['Kwiag', 'Bǎmmba', 'Saŋtə̀wud', 'Bìkoŋə'],
+        answer: 'Kwiag', answerFr: 'Kwiag' },
+      { type: 'meaning', sourceFr: 'Fièvre', sourceEn: 'Fever', audio: 'Saŋtə̀wud',
+        options: ['Saŋtə̀wud', 'Kwiag', 'Bìkoŋə', 'Yâtu'],
+        optionsFr: ['Saŋtə̀wud', 'Kwiag', 'Bìkoŋə', 'Yâtu'],
+        answer: 'Saŋtə̀wud', answerFr: 'Saŋtə̀wud' },
+      { type: 'meaning', sourceFr: 'Rhume', sourceEn: 'Cold', audio: 'Bìkoŋə',
+        options: ['Bìkoŋə', 'Saŋtə̀wud', 'Kwiag', 'Mìntsi'],
+        optionsFr: ['Bìkoŋə', 'Saŋtə̀wud', 'Kwiag', 'Mìntsi'],
+        answer: 'Bìkoŋə', answerFr: 'Bìkoŋə' },
+    ],
+    match: [{ type: 'match', pairs: [
+      { medumba: 'Yâtu',       french: 'Mal de tête',  english: 'Headache'    },
+      { medumba: 'Bǎmmba',     french: 'Mal au ventre',english: 'Stomachache' },
+      { medumba: 'Kwiag',      french: 'Toux',         english: 'Cough'       },
+      { medumba: 'Saŋtə̀wud',  french: 'Fièvre',       english: 'Fever'       },
+      { medumba: 'Bìkoŋə',     french: 'Rhume',        english: 'Cold'        },
+    ]}],
+  },
+
+  /* ── l13 : School / École ─────────────────────────────────────── */
+  l13: {
+    meaning: [
+      { type: 'meaning', sourceFr: 'Cahier', sourceEn: 'Notebook', audio: 'Bu\'kì',
+        options: ['Bu\'kì', 'Bu\'ŋwà\'nì', 'Cɛ̂dkì', 'Kʉ̂dfi'],
+        optionsFr: ['Bu\'kì', 'Bu\'ŋwà\'nì', 'Cɛ̂dkì', 'Kʉ̂dfi'],
+        answer: 'Bu\'kì', answerFr: 'Bu\'kì' },
+      { type: 'meaning', sourceFr: 'Livre', sourceEn: 'Book', audio: 'Bu\'ŋwà\'nì',
+        options: ['Bu\'ŋwà\'nì', 'Bu\'kì', 'Mbə̂mkì', 'Bǎgcɛ̂dkì'],
+        optionsFr: ['Bu\'ŋwà\'nì', 'Bu\'kì', 'Mbə̂mkì', 'Bǎgcɛ̂dkì'],
+        answer: 'Bu\'ŋwà\'nì', answerFr: 'Bu\'ŋwà\'nì' },
+      { type: 'meaning', sourceFr: 'Table-banc', sourceEn: 'School desk', audio: 'Kʉ̂dfi',
+        options: ['Kʉ̂dfi', 'Bu\'kì', 'Cɛ̂dkì', 'Bǎgcɛ̂dkì'],
+        optionsFr: ['Kʉ̂dfi', 'Bu\'kì', 'Cɛ̂dkì', 'Bǎgcɛ̂dkì'],
+        answer: 'Kʉ̂dfi', answerFr: 'Kʉ̂dfi' },
+      { type: 'meaning', sourceFr: 'Stylo', sourceEn: 'Pen', audio: 'Cɛ̂dkì',
+        options: ['Cɛ̂dkì', 'Bu\'kì', 'Kʉ̂dfi', 'Mbə̂mkì'],
+        optionsFr: ['Cɛ̂dkì', 'Bu\'kì', 'Kʉ̂dfi', 'Mbə̂mkì'],
+        answer: 'Cɛ̂dkì', answerFr: 'Cɛ̂dkì' },
+      { type: 'meaning', sourceFr: 'Cartable', sourceEn: 'School bag', audio: 'Bǎgcɛ̂dkì',
+        options: ['Bǎgcɛ̂dkì', 'Bu\'kì', 'Cɛ̂dkì', 'Kʉ̂dfi'],
+        optionsFr: ['Bǎgcɛ̂dkì', 'Bu\'kì', 'Cɛ̂dkì', 'Kʉ̂dfi'],
+        answer: 'Bǎgcɛ̂dkì', answerFr: 'Bǎgcɛ̂dkì' },
+    ],
+    match: [{ type: 'match', pairs: [
+      { medumba: 'Bu\'kì',     french: 'Cahier',     english: 'Notebook'   },
+      { medumba: 'Bu\'ŋwà\'nì',french: 'Livre',      english: 'Book'       },
+      { medumba: 'Kʉ̂dfi',     french: 'Table-banc', english: 'School desk'},
+      { medumba: 'Cɛ̂dkì',     french: 'Stylo',      english: 'Pen'        },
+      { medumba: 'Bǎgcɛ̂dkì',  french: 'Cartable',   english: 'School bag' },
+    ]}],
+  },
+
+  /* ── l14 : Professions / Métiers ──────────────────────────────── */
+  l14: {
+    meaning: [
+      { type: 'meaning', sourceFr: 'Enseignant', sourceEn: 'Teacher', audio: 'Ngàtswìtə̀',
+        options: ['Ngàtswìtə̀', 'Ndʉ̂\'nὰ', 'Tα̂lὰm', 'Ndè\'càm'],
+        optionsFr: ['Ngàtswìtə̀', 'Ndʉ̂\'nὰ', 'Tα̂lὰm', 'Ndè\'càm'],
+        answer: 'Ngàtswìtə̀', answerFr: 'Ngàtswìtə̀' },
+      { type: 'meaning', sourceFr: 'Cultivateur', sourceEn: 'Farmer', audio: 'Ndʉ̂\'nὰ',
+        options: ['Ndʉ̂\'nὰ', 'Ngàtswìtə̀', 'Ntântαnə', 'Nsòŋsaŋvə̀'],
+        optionsFr: ['Ndʉ̂\'nὰ', 'Ngàtswìtə̀', 'Ntântαnə', 'Nsòŋsaŋvə̀'],
+        answer: 'Ndʉ̂\'nὰ', answerFr: 'Ndʉ̂\'nὰ' },
+      { type: 'meaning', sourceFr: 'Couturier', sourceEn: 'Tailor', audio: 'Tα̂lὰm',
+        options: ['Tα̂lὰm', 'Ndʉ̂\'nὰ', 'Ntântαnə', 'Nswɛ̀nfu'],
+        optionsFr: ['Tα̂lὰm', 'Ndʉ̂\'nὰ', 'Ntântαnə', 'Nswɛ̀nfu'],
+        answer: 'Tα̂lὰm', answerFr: 'Tα̂lὰm' },
+      { type: 'meaning', sourceFr: 'Secrétaire', sourceEn: 'Secretary', audio: 'Ndè\'càm',
+        options: ['Ndè\'càm', 'Tα̂lὰm', 'Nsòŋsaŋvə̀', 'Nswɛ̀nfu'],
+        optionsFr: ['Ndè\'càm', 'Tα̂lὰm', 'Nsòŋsaŋvə̀', 'Nswɛ̀nfu'],
+        answer: 'Ndè\'càm', answerFr: 'Ndè\'càm' },
+      { type: 'meaning', sourceFr: 'Pharmacien', sourceEn: 'Pharmacist', audio: 'Nsòŋsaŋvə̀',
+        options: ['Nsòŋsaŋvə̀', 'Ndè\'càm', 'Ngàtswìtə̀', 'Nswɛ̀nfu'],
+        optionsFr: ['Nsòŋsaŋvə̀', 'Ndè\'càm', 'Ngàtswìtə̀', 'Nswɛ̀nfu'],
+        answer: 'Nsòŋsaŋvə̀', answerFr: 'Nsòŋsaŋvə̀' },
+    ],
+    match: [{ type: 'match', pairs: [
+      { medumba: 'Ngàtswìtə̀',  french: 'Enseignant',  english: 'Teacher'    },
+      { medumba: 'Ndʉ̂\'nὰ',    french: 'Cultivateur', english: 'Farmer'     },
+      { medumba: 'Tα̂lὰm',      french: 'Couturier',   english: 'Tailor'     },
+      { medumba: 'Ndè\'càm',    french: 'Secrétaire',  english: 'Secretary'  },
+      { medumba: 'Nsòŋsaŋvə̀',  french: 'Pharmacien',  english: 'Pharmacist' },
     ]}],
   },
 };

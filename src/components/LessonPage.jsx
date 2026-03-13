@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { MEDUMBA_QUESTIONS } from '../data/medumbaDictionary';
 import { generateLessonQuestions } from '../utils/lessonGenerator';
+import { playMedumbaWord, stopMedumbaAudio } from '../utils/medumbaAudio';
 import frameImg from '../assets/Frame.png';
 import celebrationImg from '../assets/Auto Layout Vertical.png';
 
@@ -173,6 +174,8 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
             setWrongPair(null);
         }
         // Reset per-question state
+        stopMedumbaAudio();
+        setSpeaking(false);
         setPlaced([]);
         setSelectedOption(null);
         setStatus(null);
@@ -181,23 +184,32 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
     /* ── Audio auto-play for audio questions ── */
     useEffect(() => {
         if (type === 'audio' && q?.audio) {
-            setTimeout(() => playAudio(q.audio, 'fr-FR'), 400);
+            setTimeout(() => playAudio(q.audio), 400);
         }
     }, [currentQ, type]);
 
-    /* ── Web Speech ── */
-    const audioLang = learnLang === 'english' ? 'en-US' : 'fr-FR';
-
-    const playAudio = (text, lang) => {
-        if (!text || !window.speechSynthesis) return;
-        window.speechSynthesis.cancel();
-        const utt = new SpeechSynthesisUtterance(text);
-        utt.lang = lang ?? audioLang;
-        utt.rate = 0.82;
-        utt.onstart = () => setSpeaking(true);
-        utt.onend   = () => setSpeaking(false);
-        utt.onerror = () => setSpeaking(false);
-        window.speechSynthesis.speak(utt);
+    /* ── Audio playback ─────────────────────────────────────────── */
+    /* For Medumba: uses pre-recorded OGG clips where available,
+       falls back to fr-CM / fr-FR TTS for other vocabulary.
+       For English: always uses en-US TTS.                          */
+    const playAudio = (text, _lang) => {
+        if (!text) return;
+        if (learnLang === 'english') {
+            if (!window.speechSynthesis) return;
+            window.speechSynthesis.cancel();
+            const utt = new SpeechSynthesisUtterance(text);
+            utt.lang  = 'en-US';
+            utt.rate  = 0.85;
+            utt.onstart = () => setSpeaking(true);
+            utt.onend   = () => setSpeaking(false);
+            utt.onerror = () => setSpeaking(false);
+            window.speechSynthesis.speak(utt);
+        } else {
+            playMedumbaWord(text,
+                () => setSpeaking(true),
+                () => setSpeaking(false),
+            );
+        }
     };
 
     /* ── Tile word selection ── */
@@ -505,10 +517,11 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
                     fontSize: '0.78rem', fontWeight: '700', color: '#64748b',
                     textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '0.35rem',
                 }}>
-                    {type === 'tile'    && (isFr ? 'Traduisez cette phrase' : 'Translate this sentence')}
-                    {type === 'meaning' && (isFr ? 'Quel mot Medumba correspond ?' : 'Which Medumba word matches?')}
-                    {type === 'audio'   && (isFr ? "Qu'est-ce que dit l'audio ?" : 'What does the audio say?')}
-                    {type === 'match'   && (isFr ? 'Associez les mots' : 'Match the words')}
+                    {type === 'tile'        && (isFr ? 'Traduisez cette phrase' : 'Translate this sentence')}
+                    {type === 'meaning'     && (isFr ? 'Quel mot Medumba correspond ?' : 'Which Medumba word matches?')}
+                    {type === 'audio'       && (isFr ? "Qu'est-ce que dit l'audio ?" : 'What does the audio say?')}
+                    {type === 'match'       && (isFr ? 'Associez les mots' : 'Match the words')}
+                    {type === 'image_vocab' && (isFr ? 'Comment dit-on cela en Medumba ?' : 'How do you say this in Medumba?')}
                 </p>
 
                 {/* ════ TILE exercise ════ */}
@@ -521,7 +534,7 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
                         marginBottom: '1.5rem',
                         boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
                     }}>
-                        <button onClick={() => playAudio(q?.audio)} style={{
+                        <button type="button" onClick={(e) => { e.stopPropagation(); playAudio(q?.audio); }} style={{
                             width: '48px', height: '48px', borderRadius: '50%',
                             backgroundColor: speaking ? '#eff6ff' : '#f8fafc',
                             border: `2px solid ${speaking ? '#0056D2' : '#e2e8f0'}`,
@@ -632,7 +645,7 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
                 {/* ════ AUDIO exercise ════ */}
                 {type === 'audio' && (<>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1.75rem', gap: '0.75rem' }}>
-                        <button onClick={() => playAudio(q?.audio, 'fr-FR')} style={{
+                        <button type="button" onClick={(e) => { e.stopPropagation(); playAudio(q?.audio); }} style={{
                             width: '96px', height: '96px', borderRadius: '50%',
                             backgroundColor: '#eff6ff', border: '4px solid #0056D2',
                             cursor: 'pointer', fontSize: '2.5rem',
@@ -657,6 +670,63 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
                                     border: `2px solid ${isCorrect ? '#22c55e' : isWrong ? '#ef4444' : isSelected ? '#0056D2' : '#e2e8f0'}`,
                                     color: isCorrect ? '#16a34a' : isWrong ? '#dc2626' : isSelected ? '#0056D2' : '#0f172a',
                                     transition: 'all 0.15s',
+                                }}>{opt}</button>
+                            );
+                        })}
+                    </div>
+                </>)}
+
+                {/* ════ IMAGE VOCAB exercise ════ */}
+                {type === 'image_vocab' && (<>
+                    {/* Emoji image card */}
+                    <div style={{
+                        backgroundColor: '#fff', border: '2px solid #e2e8f0',
+                        borderRadius: '20px', padding: '1.5rem 1.5rem 1.25rem',
+                        marginBottom: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                        textAlign: 'center',
+                    }}>
+                        <div style={{
+                            fontSize: '6rem', lineHeight: 1, marginBottom: '0.85rem',
+                            filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.12))',
+                        }}>
+                            {q?.emoji}
+                        </div>
+                        <div style={{ fontSize: '0.68rem', fontWeight: '700', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: '0.25rem' }}>
+                            {isFr ? 'En français' : 'In English'}
+                        </div>
+                        <div style={{ fontSize: '1.6rem', fontWeight: '900', color: '#0f172a' }}>
+                            {isFr ? q?.labelFr : q?.labelEn}
+                        </div>
+                        {q?.audio && (
+                            <button type="button" onClick={(e) => { e.stopPropagation(); playAudio(q.audio); }} style={{
+                                marginTop: '0.75rem',
+                                width: '40px', height: '40px', borderRadius: '50%',
+                                backgroundColor: speaking ? '#eff6ff' : '#f8fafc',
+                                border: `2px solid ${speaking ? '#0056D2' : '#e2e8f0'}`,
+                                cursor: 'pointer', fontSize: '1.1rem',
+                                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                                transition: 'all 0.15s',
+                                animation: speaking ? 'speaker-wave 0.6s ease-in-out infinite' : 'none',
+                            }}>
+                                {speaking ? '🔊' : '🔈'}
+                            </button>
+                        )}
+                    </div>
+
+                    {/* 2×2 Medumba word options */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                        {(q?.options ?? []).map(opt => {
+                            const isSelected = selectedOption === opt;
+                            const isCorrect  = status !== null && opt === q?.answer;
+                            const isWrong    = status === 'wrong' && isSelected;
+                            return (
+                                <button key={opt} onClick={() => { if (status === null) setSelectedOption(opt); }} disabled={status !== null} style={{
+                                    padding: '1rem 0.75rem', borderRadius: '14px', fontFamily: 'inherit',
+                                    fontSize: '1rem', fontWeight: '700', cursor: status !== null ? 'default' : 'pointer',
+                                    backgroundColor: isCorrect ? '#dcfce7' : isWrong ? '#fee2e2' : isSelected ? '#eff6ff' : '#fff',
+                                    border: `2px solid ${isCorrect ? '#22c55e' : isWrong ? '#ef4444' : isSelected ? '#0056D2' : '#e2e8f0'}`,
+                                    color: isCorrect ? '#16a34a' : isWrong ? '#dc2626' : isSelected ? '#0056D2' : '#0f172a',
+                                    transition: 'all 0.15s', boxShadow: isSelected && status === null ? '0 4px 12px rgba(0,86,210,0.2)' : 'none',
                                 }}>{opt}</button>
                             );
                         })}
@@ -722,7 +792,7 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
                     padding: '1rem 1.5rem', borderTop: '2px solid #e5e7eb',
                     backgroundColor: '#fff', maxWidth: '640px', width: '100%', margin: '0 auto',
                 }}>
-                    <button onClick={checkAnswer} disabled={!canCheck} style={{
+                    <button type="button" onClick={checkAnswer} disabled={!canCheck} style={{
                         width: '100%',
                         backgroundColor: canCheck ? '#0056D2' : '#cbd5e1',
                         color: '#fff', padding: '1rem', borderRadius: '9999px',
@@ -763,7 +833,7 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
                             </strong>
                         </p>
                     )}
-                    <button onClick={handleContinue} style={{
+                    <button type="button" onClick={handleContinue} style={{
                         width: '100%',
                         backgroundColor: feedbackCorrect ? '#22c55e' : '#ef4444',
                         color: '#fff', padding: '0.9rem', borderRadius: '9999px',
