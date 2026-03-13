@@ -10,11 +10,19 @@ const DictionaryPage = ({ nativeLang, onBack }) => {
     const results = useMemo(() => {
         const q = query.trim().toLowerCase();
         if (!q) return [];
-        return DICTIONARY.filter(e =>
-            lang === 'medumba'
-                ? e.medumba.toLowerCase().includes(q)
-                : e.french.toLowerCase().includes(q)
-        ).slice(0, 80); // cap display at 80
+        const key = lang === 'medumba' ? 'medumba' : 'french';
+        const rank = (w) => {
+            const lw = w.toLowerCase();
+            if (lw === q)            return 0; // exact match
+            if (lw.startsWith(q))    return 1; // starts with
+            return 2;                           // contains elsewhere
+        };
+        return DICTIONARY.filter(e => e[key].toLowerCase().includes(q))
+            .sort((a, b) => {
+                const diff = rank(a[key]) - rank(b[key]);
+                return diff !== 0 ? diff : a[key].localeCompare(b[key]);
+            })
+            .slice(0, 80); // cap display at 80
     }, [query, lang]);
 
     const speak = (text) => {

@@ -57,12 +57,12 @@ const AUDIO_MAP = {
     11:   [31.40, 33.35],   // ncòbncʉ' gham
     12:   [34.85, 37.00],   // ncòbbα̂ gham
     13:   [38.50, 40.35],   // ncòbtad gham
-    14:   [44.05, 44.75],   // ncòbkuὰ gham
-    15:   [47.10, 47.90],   // ncòbtὰn gham
-    16:   [50.40, 51.00],   // ncòbntogə gham
-    17:   [54.70, 56.65],   // ncòbsὰmbα̂ gham
-    18:   [57.95, 59.05],   // ncòbfomə gham
-    19:   [61.25, 62.70],   // ncòbbwə̀'ə gham
+    14:   [41.85, 43.60],   // ncòbkuὰ gham
+    15:   [45.05, 46.75],   // ncòbtὰn gham
+    16:   [48.20, 50.05],   // ncòbntogə gham
+    17:   [51.35, 53.45],   // ncòbsὰmbα̂ gham
+    18:   [54.70, 56.70],   // ncòbfomə gham
+    19:   [57.95, 60.00],   // ncòbbwə̀'ə gham
     // 20 — after long explanation block (seg37 = 8.5s), word at seg38
     20:   [73.25, 73.95],   // ŋambα'
     // tens 30–1000
