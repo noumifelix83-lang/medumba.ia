@@ -1,6 +1,35 @@
 import { useState, useRef, useCallback } from 'react';
 import vocalSrc from '../assets/vocal-count-medumba.ogg';
 
+// ─── Medumba number translator (ported from medumba_counter.jar) ───────────
+const _U = ["bαnbαn","ncʉ'","bα̂","tad","kuὰ","tὰn","ntogə","sὰmbα̂","fomə","bwə̀'ə"];
+const _C = ["",      "ncʉ'","bα̂","tad","kuὰ","tὰn","ntôg", "sὰmbα̂","fôm", "bwə̀'ə̂"];
+const _T = ["","gham","ŋambα̂","ŋamntad","ŋamkuὰ","ŋamntὰn","ŋamntogə","ŋamsὰmbα̂","ŋamfomə","ŋambwə̀'ə"];
+const _B = ["","","bonbα̂","bontad","bonkuὰ","bontὰn","bonntôg","bonsὰmbα̂","bonfôm","bonbwə̀'ə"];
+const _H = ["","nkʉ","nkʉbα̂","nkʉtad","nkʉkuὰ","nkʉtὰn","nkʉntogə","nkʉsὰmbα̂","nkʉfomə","nkʉbwə̀'ə"];
+
+function toMedumba(n) {
+    if (n === 0)    return "bαnbαn";
+    if (n === 1000) return "ncaꞌ";
+    const h = Math.floor(n / 100);
+    const r = n % 100;
+    const d = Math.floor(r / 10);
+    const u = r % 10;
+    if (h > 0) {
+        const hun = _H[h];
+        if (r === 0)        return hun;
+        if (r <= 9)         return _C[r] + "tû " + hun;
+        if (r === 10)       return "mɛnmbʉ̂m " + hun;
+        if (r <= 19)        return "ncòb" + _C[u] + " mɛnmbʉ̂m " + hun;
+        const bt = _B[d];
+        return u === 0 ? bt + " " + hun : "ncòb" + _C[u] + " " + bt + " " + hun;
+    }
+    if (n <= 9)  return _U[n];
+    if (n === 10) return "gham";
+    if (n <= 19) return "ncòb" + _C[u] + " gham";
+    return u === 0 ? _T[d] : "ncòb" + _C[u] + " " + _T[d];
+}
+
 // Medumba numbers — fully extracted from medumba_counter.jar (2016)
 // Compound forms: 6→ntôg, 8→fôm, 9→bwə̀'ə̂ (after ncòb); 100=nkʉ, 1000=ncaꞌ
 const NUMBERS = [
@@ -151,7 +180,7 @@ const AUDIO_MAP = {
     40:   [77.95, 79.80],   // ŋamkuὰ
     50:   [80.10, 83.00],   // ŋamntὰn
     60:   [83.35, 84.15],   // ŋamntogə
-    70:   [86.85, 87.65],   // ŋamsὰmbα̂
+    70:   [86.85, 87.65],   // ŋamsὰmbα̂     
     80:   [90.20, 93.30],   // ŋamfomə
     90:   [94.65, 95.80],   // ŋambwə̀'ə
     100:  [97.60, 99.20],   // nkʉ
@@ -169,12 +198,16 @@ const makeQuiz = () => {
 
 const CountingPage = ({ nativeLang, onBack }) => {
     const isFr = nativeLang === 'french';
-    const [tab,      setTab]      = useState('list');
-    const [speaking, setSpeaking] = useState(null);
-    const [quiz,     setQuiz]     = useState(() => makeQuiz());
-    const [picked,   setPicked]   = useState(null);
-    const [score,    setScore]    = useState(0);
-    const [total,    setTotal]    = useState(0);
+    const QUIZ_TOTAL = 10;
+
+    const [tab,       setTab]      = useState('list');
+    const [speaking,  setSpeaking] = useState(null);
+    const [quiz,      setQuiz]     = useState(() => makeQuiz());
+    const [picked,    setPicked]   = useState(null);
+    const [score,     setScore]    = useState(0);
+    const [quizNum,   setQuizNum]  = useState(1);
+    const [quizDone,  setQuizDone] = useState(false);
+    const [convInput, setConvInput] = useState('');
 
     const audioCtxRef    = useRef(null);
     const audioBufferRef = useRef(null);
@@ -226,13 +259,29 @@ const CountingPage = ({ nativeLang, onBack }) => {
     }, [loadAudio]);
 
     const pick = (opt) => {
-        if (picked) return;
+        if (picked !== null) return;
+        const correct = opt.n === quiz.q.n;
         setPicked(opt.n);
-        setTotal(t => t + 1);
-        if (opt.n === quiz.q.n) setScore(s => s + 1);
+        if (correct) setScore(s => s + 1);
     };
 
-    const nextQuiz = () => { setPicked(null); setQuiz(makeQuiz()); };
+    const nextQuiz = () => {
+        if (quizNum >= QUIZ_TOTAL) {
+            setQuizDone(true);
+        } else {
+            setQuizNum(n => n + 1);
+            setPicked(null);
+            setQuiz(makeQuiz());
+        }
+    };
+
+    const restartQuiz = () => {
+        setScore(0);
+        setQuizNum(1);
+        setQuizDone(false);
+        setPicked(null);
+        setQuiz(makeQuiz());
+    };
 
     const SpeakerBtn = ({ n }) => {
         const hasAudio = AUDIO_MAP[n] != null;
@@ -275,12 +324,12 @@ const CountingPage = ({ nativeLang, onBack }) => {
                 </div>
                 {/* Tabs */}
                 <div style={{ display: 'flex', gap: '0.5rem', backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: '12px', padding: '0.3rem' }}>
-                    {[{ id: 'list', en: 'Numbers', fr: 'Liste' }, { id: 'quiz', en: 'Quiz', fr: 'Quiz' }].map(t => (
+                    {[{ id: 'list', en: 'Numbers', fr: 'Liste' }, { id: 'quiz', en: 'Quiz', fr: 'Quiz' }, { id: 'conv', en: 'Converter', fr: 'Convertir' }].map(t => (
                         <button key={t.id} onClick={() => { setTab(t.id); setPicked(null); setQuiz(makeQuiz()); }} style={{
                             flex: 1, padding: '0.5rem', borderRadius: '9px', border: 'none', cursor: 'pointer',
                             backgroundColor: tab === t.id ? '#fff' : 'transparent',
                             color: tab === t.id ? '#0891b2' : 'rgba(255,255,255,0.85)',
-                            fontWeight: '800', fontSize: '0.9rem', fontFamily: 'inherit', transition: 'all 0.15s',
+                            fontWeight: '800', fontSize: '0.85rem', fontFamily: 'inherit', transition: 'all 0.15s',
                         }}>{isFr ? t.fr : t.en}</button>
                     ))}
                 </div>
@@ -306,59 +355,179 @@ const CountingPage = ({ nativeLang, onBack }) => {
 
                 {tab === 'quiz' && (
                     <div>
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
-                            <div style={{ backgroundColor: '#eff6ff', borderRadius: '99px', padding: '0.3rem 0.9rem', fontSize: '0.82rem', fontWeight: '800', color: '#0891b2' }}>
-                                ⭐ {score} / {total}
-                            </div>
-                        </div>
-
-                        <div style={{ backgroundColor: '#fff', borderRadius: '24px', border: '2px solid #bae6fd', padding: '2rem 1.5rem', textAlign: 'center', marginBottom: '1.25rem', boxShadow: '0 4px 16px rgba(8,145,178,0.1)' }}>
-                            <div style={{ fontSize: '0.78rem', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: '0.5rem' }}>
-                                {isFr ? 'Que signifie ce mot Medumba ?' : 'What does this Medumba word mean?'}
-                            </div>
-                            <div style={{ fontSize: '2.8rem', fontWeight: '900', color: '#0891b2', marginBottom: '0.5rem' }}>
-                                {quiz.q.medumba}
-                            </div>
-                            <button onClick={() => playNumber(quiz.q.n)} disabled={!AUDIO_MAP[quiz.q.n]} style={{ background: '#f0f9ff', border: '2px solid #bae6fd', borderRadius: '99px', padding: '0.4rem 1rem', cursor: AUDIO_MAP[quiz.q.n] ? 'pointer' : 'default', fontSize: '0.85rem', fontWeight: '700', color: '#0891b2', fontFamily: 'inherit', opacity: AUDIO_MAP[quiz.q.n] ? 1 : 0.4 }}>
-                                🔈 {isFr ? 'Écouter' : 'Listen'}
-                            </button>
-                        </div>
-
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.7rem', marginBottom: '1rem' }}>
-                            {quiz.opts.map(opt => {
-                                const isCorrect = picked !== null && opt.n === quiz.q.n;
-                                const isWrong   = picked === opt.n && opt.n !== quiz.q.n;
-                                return (
-                                    <button key={opt.n} onClick={() => pick(opt)} style={{
-                                        padding: '1rem', borderRadius: '16px', border: `2px solid ${isCorrect ? '#22c55e' : isWrong ? '#ef4444' : picked ? '#e2e8f0' : '#bae6fd'}`,
-                                        backgroundColor: isCorrect ? '#dcfce7' : isWrong ? '#fee2e2' : picked ? '#f8fafc' : '#fff',
-                                        color: isCorrect ? '#16a34a' : isWrong ? '#dc2626' : '#0f172a',
-                                        fontWeight: '800', fontSize: '1rem', cursor: picked ? 'default' : 'pointer',
-                                        fontFamily: 'inherit', transition: 'all 0.15s',
-                                    }}>
-                                        <div style={{ fontSize: '1.4rem', marginBottom: '0.25rem' }}>{opt.n}</div>
-                                        <div style={{ fontSize: '0.78rem', fontWeight: '700', color: 'inherit', opacity: 0.8 }}>
-                                            {isFr ? opt.frEn[0] : opt.frEn[1]}
-                                        </div>
-                                    </button>
-                                );
-                            })}
-                        </div>
-
-                        {picked !== null && (
+                        {quizDone ? (
+                            /* ── Results screen ── */
                             <div style={{ textAlign: 'center' }}>
-                                <div style={{ marginBottom: '0.75rem', fontWeight: '800', fontSize: '1rem', color: picked === quiz.q.n ? '#16a34a' : '#dc2626' }}>
-                                    {picked === quiz.q.n
-                                        ? (isFr ? '✅ Correct !' : '✅ Correct!')
-                                        : (isFr ? `❌ C'était : ${quiz.q.n} (${quiz.q.medumba})` : `❌ It was: ${quiz.q.n} (${quiz.q.medumba})`)}
+                                <div style={{ fontSize: '4rem', marginBottom: '0.5rem' }}>
+                                    {score / QUIZ_TOTAL >= 0.6 ? '🎉' : '😓'}
                                 </div>
-                                <button onClick={nextQuiz} style={{ backgroundColor: '#0891b2', color: '#fff', border: 'none', borderRadius: '9999px', padding: '0.9rem 2.5rem', fontWeight: '800', fontSize: '1rem', cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 6px 16px rgba(8,145,178,0.35)' }}>
-                                    {isFr ? 'Suivant →' : 'Next →'}
-                                </button>
+                                <div style={{ fontSize: '1.5rem', fontWeight: '900', color: '#0f172a', marginBottom: '0.25rem' }}>
+                                    {score} / {QUIZ_TOTAL}
+                                </div>
+                                <div style={{ fontSize: '0.9rem', fontWeight: '700', color: '#64748b', marginBottom: '1.5rem' }}>
+                                    {Math.round(score / QUIZ_TOTAL * 100)}%
+                                </div>
+
+                                {score / QUIZ_TOTAL >= 0.6 ? (
+                                    <div>
+                                        <div style={{ backgroundColor: '#dcfce7', border: '2px solid #86efac', borderRadius: '16px', padding: '1rem 1.25rem', marginBottom: '1.25rem', color: '#15803d', fontWeight: '700' }}>
+                                            {isFr ? '✅ Bravo ! Vous avez réussi.' : '✅ Well done! You passed.'}
+                                        </div>
+                                        <button onClick={restartQuiz} style={{ backgroundColor: '#0891b2', color: '#fff', border: 'none', borderRadius: '9999px', padding: '0.9rem 2.5rem', fontWeight: '800', fontSize: '1rem', cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 6px 16px rgba(8,145,178,0.35)' }}>
+                                            {isFr ? '🔄 Rejouer' : '🔄 Play again'}
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <div style={{ backgroundColor: '#fee2e2', border: '2px solid #fca5a5', borderRadius: '16px', padding: '1rem 1.25rem', marginBottom: '1.25rem', color: '#dc2626', fontWeight: '700' }}>
+                                            {isFr
+                                                ? `❌ Score insuffisant (minimum 60%). Recommencez !`
+                                                : `❌ Score too low (minimum 60%). Please restart!`}
+                                        </div>
+                                        <button onClick={restartQuiz} style={{ backgroundColor: '#ef4444', color: '#fff', border: 'none', borderRadius: '9999px', padding: '0.9rem 2.5rem', fontWeight: '800', fontSize: '1rem', cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 6px 16px rgba(239,68,68,0.35)' }}>
+                                            {isFr ? '🔄 Recommencer' : '🔄 Restart'}
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            /* ── Active quiz ── */
+                            <div>
+                                {/* Progress bar */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                                    <div style={{ flex: 1, height: '8px', backgroundColor: '#e2e8f0', borderRadius: '99px', overflow: 'hidden' }}>
+                                        <div style={{ height: '100%', width: `${((quizNum - 1) / QUIZ_TOTAL) * 100}%`, background: 'linear-gradient(90deg,#0891b2,#67e8f9)', borderRadius: '99px', transition: 'width 0.3s' }} />
+                                    </div>
+                                    <div style={{ fontSize: '0.82rem', fontWeight: '800', color: '#0891b2', whiteSpace: 'nowrap' }}>
+                                        {quizNum} / {QUIZ_TOTAL}
+                                    </div>
+                                    <div style={{ backgroundColor: '#eff6ff', borderRadius: '99px', padding: '0.2rem 0.7rem', fontSize: '0.82rem', fontWeight: '800', color: '#0891b2' }}>
+                                        ⭐ {score}
+                                    </div>
+                                </div>
+
+                                {/* Question card */}
+                                <div style={{ backgroundColor: '#fff', borderRadius: '24px', border: '2px solid #bae6fd', padding: '2rem 1.5rem', textAlign: 'center', marginBottom: '1.25rem', boxShadow: '0 4px 16px rgba(8,145,178,0.1)' }}>
+                                    <div style={{ fontSize: '0.78rem', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: '0.5rem' }}>
+                                        {isFr ? 'Que signifie ce mot Medumba ?' : 'What does this Medumba word mean?'}
+                                    </div>
+                                    <div style={{ fontSize: '2.8rem', fontWeight: '900', color: '#0891b2', marginBottom: '0.5rem' }}>
+                                        {quiz.q.medumba}
+                                    </div>
+                                    <button onClick={() => playNumber(quiz.q.n)} disabled={!AUDIO_MAP[quiz.q.n]} style={{ background: '#f0f9ff', border: '2px solid #bae6fd', borderRadius: '99px', padding: '0.4rem 1rem', cursor: AUDIO_MAP[quiz.q.n] ? 'pointer' : 'default', fontSize: '0.85rem', fontWeight: '700', color: '#0891b2', fontFamily: 'inherit', opacity: AUDIO_MAP[quiz.q.n] ? 1 : 0.4 }}>
+                                        🔈 {isFr ? 'Écouter' : 'Listen'}
+                                    </button>
+                                </div>
+
+                                {/* Answer options — pointer-events off after pick */}
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.7rem', marginBottom: '1rem', pointerEvents: picked !== null ? 'none' : 'auto' }}>
+                                    {quiz.opts.map(opt => {
+                                        const isCorrect = picked !== null && opt.n === quiz.q.n;
+                                        const isWrong   = picked === opt.n && opt.n !== quiz.q.n;
+                                        return (
+                                            <button key={opt.n} onClick={() => pick(opt)} style={{
+                                                padding: '1rem', borderRadius: '16px',
+                                                border: `2px solid ${isCorrect ? '#22c55e' : isWrong ? '#ef4444' : picked !== null ? '#e2e8f0' : '#bae6fd'}`,
+                                                backgroundColor: isCorrect ? '#dcfce7' : isWrong ? '#fee2e2' : picked !== null ? '#f8fafc' : '#fff',
+                                                color: isCorrect ? '#16a34a' : isWrong ? '#dc2626' : '#0f172a',
+                                                fontWeight: '800', fontSize: '1rem', cursor: 'pointer',
+                                                fontFamily: 'inherit', transition: 'all 0.2s',
+                                            }}>
+                                                <div style={{ fontSize: '1.4rem', marginBottom: '0.25rem' }}>{opt.n}</div>
+                                                <div style={{ fontSize: '0.78rem', fontWeight: '700', opacity: 0.8 }}>
+                                                    {isFr ? opt.frEn[0] : opt.frEn[1]}
+                                                </div>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* Feedback + Next — only shown after picking */}
+                                {picked !== null && (
+                                    <div style={{ textAlign: 'center', marginTop: '0.5rem' }}>
+                                        <div style={{ marginBottom: '1rem', fontWeight: '800', fontSize: '1rem', color: picked === quiz.q.n ? '#16a34a' : '#dc2626' }}>
+                                            {picked === quiz.q.n
+                                                ? (isFr ? '✅ Correct !' : '✅ Correct!')
+                                                : (isFr ? `❌ C'était : ${quiz.q.n} — ${quiz.q.medumba}` : `❌ It was: ${quiz.q.n} — ${quiz.q.medumba}`)}
+                                        </div>
+                                        <button onClick={nextQuiz} style={{ backgroundColor: '#0891b2', color: '#fff', border: 'none', borderRadius: '9999px', padding: '0.9rem 2.5rem', fontWeight: '800', fontSize: '1rem', cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 6px 16px rgba(8,145,178,0.35)' }}>
+                                            {quizNum >= QUIZ_TOTAL
+                                                ? (isFr ? 'Voir les résultats →' : 'See results →')
+                                                : (isFr ? 'Suivant →' : 'Next →')}
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
                 )}
+
+                {tab === 'conv' && (() => {
+                    const raw = convInput.trim();
+                    const num = raw === '' ? null : parseInt(raw, 10);
+                    const valid = num !== null && !isNaN(num) && num >= 0 && num <= 1000;
+                    const medumba = valid ? toMedumba(num) : null;
+                    const hasAudio = valid && AUDIO_MAP[num] != null;
+                    return (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                            <div style={{ backgroundColor: '#fff', borderRadius: '20px', border: '2px solid #e2e8f0', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                                <div style={{ fontSize: '0.78rem', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: '0.75rem' }}>
+                                    {isFr ? 'Entrez un nombre (0 – 1000)' : 'Enter a number (0 – 1,000)'}
+                                </div>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    max="1000"
+                                    value={convInput}
+                                    onChange={e => setConvInput(e.target.value)}
+                                    placeholder="ex: 347"
+                                    style={{
+                                        width: '100%', boxSizing: 'border-box',
+                                        fontSize: '2rem', fontWeight: '900', fontFamily: 'inherit',
+                                        color: '#0f172a', textAlign: 'center',
+                                        border: '2px solid #bae6fd', borderRadius: '14px',
+                                        padding: '0.75rem 1rem', outline: 'none',
+                                        background: '#f0f9ff',
+                                    }}
+                                />
+                                {raw !== '' && !valid && (
+                                    <div style={{ marginTop: '0.5rem', fontSize: '0.82rem', color: '#ef4444', fontWeight: '700', textAlign: 'center' }}>
+                                        {isFr ? 'Nombre invalide (0 – 1000)' : 'Invalid number (0 – 1,000)'}
+                                    </div>
+                                )}
+                            </div>
+
+                            {medumba && (
+                                <div style={{ backgroundColor: '#fff', borderRadius: '24px', border: '2px solid #bae6fd', padding: '2rem 1.5rem', textAlign: 'center', boxShadow: '0 4px 16px rgba(8,145,178,0.1)' }}>
+                                    <div style={{ fontSize: '0.78rem', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: '0.5rem' }}>
+                                        {isFr ? 'En Medumba' : 'In Medumba'}
+                                    </div>
+                                    <div style={{ fontSize: '2.4rem', fontWeight: '900', color: '#0891b2', lineHeight: 1.25, marginBottom: '0.75rem', fontFamily: "'Noto Sans', sans-serif" }}>
+                                        {medumba}
+                                    </div>
+                                    <div style={{ fontSize: '1rem', fontWeight: '700', color: '#475569', marginBottom: '1rem' }}>
+                                        = {num}
+                                    </div>
+                                    {hasAudio && (
+                                        <button onClick={() => playNumber(num)} style={{
+                                            background: '#f0f9ff', border: '2px solid #bae6fd', borderRadius: '99px',
+                                            padding: '0.5rem 1.25rem', cursor: 'pointer', fontSize: '0.9rem',
+                                            fontWeight: '700', color: '#0891b2', fontFamily: 'inherit',
+                                        }}>
+                                            {speaking === num ? '🔊' : '🔈'} {isFr ? 'Écouter' : 'Listen'}
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+
+                            {!medumba && raw === '' && (
+                                <div style={{ textAlign: 'center', color: '#94a3b8', fontWeight: '600', fontSize: '0.95rem', paddingTop: '1rem' }}>
+                                    {isFr ? 'Tapez un nombre pour voir sa traduction Medumba' : 'Type a number to see its Medumba translation'}
+                                </div>
+                            )}
+                        </div>
+                    );
+                })()}
             </div>
         </div>
     );

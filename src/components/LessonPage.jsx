@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { MEDUMBA_QUESTIONS } from '../data/medumbaDictionary';
+import { MEDUMBA_EXPRESSIONS } from '../data/medumbaExpressions';
 import { generateLessonQuestions } from '../utils/lessonGenerator';
 import { playMedumbaWord, stopMedumbaAudio } from '../utils/medumbaAudio';
 import frameImg from '../assets/Frame.png';
@@ -122,6 +123,35 @@ const FALLBACK_MD = QUESTIONS.l1;
 
 const DIAMONDS_PER_Q = 5;
 const XP_PER_Q       = 10;
+const FLASHCARD_COUNT = 5;  // expressions shown before exercises
+
+/* Pick N random items from an array without mutation */
+function pickRandom(pool, n) {
+    return [...pool].sort(() => Math.random() - 0.5).slice(0, n);
+}
+
+/* Build expression MCQ questions from the global pool.
+   Each question shows the French expression; learner picks the Medumba. */
+function buildExpressionQuestions(pool, count = 3) {
+    const picked = pickRandom(pool, count);
+    return picked.map(expr => {
+        const distractors = pool
+            .filter(e => e.medumba !== expr.medumba)
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 3)
+            .map(e => e.medumba);
+        const opts = [...distractors, expr.medumba].sort(() => Math.random() - 0.5);
+        return {
+            type: 'meaning',
+            sourceFr: expr.fr,
+            sourceEn: expr.fr,          // no English available — show French
+            options:   opts,
+            optionsFr: opts,
+            answer:    expr.medumba,
+            answerFr:  expr.medumba,
+        };
+    });
+}
 
 /* format seconds as M:SS */
 function formatTime(seconds) {
@@ -134,7 +164,28 @@ function formatTime(seconds) {
    COMPONENT
 ════════════════════════════════════════════════════════════════════ */
 const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClose }) => {
-    const questions = generateLessonQuestions(lesson?.id, profile ?? {}, QUESTIONS, learnLang);
+    /* flashcards shown once before exercises */
+    const flashcards = useMemo(() => pickRandom(MEDUMBA_EXPRESSIONS, FLASHCARD_COUNT), [lesson?.id]);
+
+    /* expression MCQ questions injected at the end of each session */
+    const exprQuestions = useMemo(
+        () => learnLang === 'medumba' ? buildExpressionQuestions(MEDUMBA_EXPRESSIONS, 3) : [],
+        [lesson?.id, learnLang],
+    );
+
+    const questions = useMemo(
+        () => {
+            const base = generateLessonQuestions(lesson?.id, profile ?? {}, QUESTIONS, learnLang);
+            return [...base, ...exprQuestions];
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [lesson?.id, learnLang],
+    );
+
+    /* phase: 'flashcards' → show study cards, 'exercise' → show questions */
+    const [phase, setPhase] = useState('flashcards');
+    const [cardIdx, setCardIdx] = useState(0);   // which flashcard is showing
+    const [flipped, setFlipped] = useState(false); // show Medumba side
 
     const startTimeRef = useRef(Date.now());
 
@@ -152,9 +203,12 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
     const [diamondsEarned, setDiamondsEarned] = useState(0);
     const [xpEarned,       setXpEarned]       = useState(0);
     const [correctCount,   setCorrectCount]   = useState(0);
-    const [completed,      setCompleted]      = useState(false);
-    const [speaking,       setSpeaking]       = useState(false);
-    const [showExitModal,  setShowExitModal]  = useState(false);
+    const [completed,       setCompleted]      = useState(false);
+    const [failed,          setFailed]         = useState(false);
+    const [continueEnabled, setContinueEnabled] = useState(false);
+    const [checkReady,      setCheckReady]      = useState(false);
+    const [speaking,        setSpeaking]       = useState(false);
+    const [showExitModal,   setShowExitModal]  = useState(false);
 
     const q    = questions[currentQ];
     const type = q?.type ?? 'tile';
@@ -179,7 +233,31 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
         setPlaced([]);
         setSelectedOption(null);
         setStatus(null);
+        setContinueEnabled(false);
+        setCheckReady(false);
     }, [currentQ]);
+
+    /* ── Delay Continue button to prevent accidental double-tap ── */
+    useEffect(() => {
+        if (status === null) { setContinueEnabled(false); return; }
+        const t = setTimeout(() => setContinueEnabled(true), 350);
+        return () => clearTimeout(t);
+    }, [status]);
+
+    /* ── Delay Check button so user must make a deliberate second tap ── */
+    useEffect(() => {
+        setCheckReady(false);
+        if (selectedOption === null) return;
+        const t = setTimeout(() => setCheckReady(true), 300);
+        return () => clearTimeout(t);
+    }, [selectedOption]);
+
+    useEffect(() => {
+        setCheckReady(false);
+        if (placed.length === 0) return;
+        const t = setTimeout(() => setCheckReady(true), 300);
+        return () => clearTimeout(t);
+    }, [placed.length]);
 
     /* ── Audio auto-play for audio questions ── */
     useEffect(() => {
@@ -266,10 +344,37 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
     /* ── Continue ── */
     const handleContinue = () => {
         if (currentQ >= questions.length - 1) {
-            setCompleted(true);
+            const finalCorrect = correctCount + (status === 'correct' ? 0 : 0); // already counted in checkAnswer
+            const pct = questions.length > 0 ? correctCount / questions.length : 0;
+            if (pct >= 0.6) {
+                setCompleted(true);
+            } else {
+                setFailed(true);
+            }
         } else {
             setCurrentQ(q => q + 1);
         }
+    };
+
+    const restartLesson = () => {
+        startTimeRef.current = Date.now();
+        setPhase('flashcards');
+        setCardIdx(0);
+        setFlipped(false);
+        setCurrentQ(0);
+        setPlaced([]);
+        setSelectedOption(null);
+        setLeftSel(null);
+        setMatched(new Set());
+        setWrongPair(null);
+        setStatus(null);
+        setContinueEnabled(false);
+        setCheckReady(false);
+        setDiamondsEarned(0);
+        setXpEarned(0);
+        setCorrectCount(0);
+        setCompleted(false);
+        setFailed(false);
     };
 
     const canCheck = type === 'tile'
@@ -279,6 +384,186 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
     const progress = questions.length > 0
         ? Math.round((currentQ / questions.length) * 100)
         : 0;
+
+    /* ════════════════════════════════════════════════════
+       FLASHCARD PHASE — study expressions before exercises
+    ════════════════════════════════════════════════════ */
+    if (phase === 'flashcards' && learnLang === 'medumba') {
+        const card = flashcards[cardIdx];
+        const isLast = cardIdx === flashcards.length - 1;
+        return (
+            <div style={{
+                width: '100%', height: '100vh',
+                backgroundColor: '#f0f7ff',
+                display: 'flex', flexDirection: 'column',
+                fontFamily: "'Outfit', system-ui, sans-serif",
+                overflow: 'hidden',
+            }}>
+                {/* Top bar */}
+                <div style={{
+                    backgroundColor: '#fff', borderBottom: '2px solid #e5e7eb',
+                    padding: '0.85rem 1.5rem',
+                    display: 'flex', alignItems: 'center', gap: '1rem',
+                }}>
+                    <button onClick={() => onClose?.()} style={{
+                        width: '36px', height: '36px', borderRadius: '50%',
+                        border: '2px solid #e2e8f0', backgroundColor: 'transparent',
+                        cursor: 'pointer', fontSize: '1rem', color: '#64748b',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontFamily: 'inherit',
+                    }}>✕</button>
+                    <div style={{ flex: 1, height: '10px', backgroundColor: '#e2e8f0', borderRadius: '99px', overflow: 'hidden' }}>
+                        <div style={{
+                            height: '100%',
+                            width: `${((cardIdx + 1) / flashcards.length) * 100}%`,
+                            background: 'linear-gradient(90deg, #7c3aed, #a78bfa)',
+                            borderRadius: '99px', transition: 'width 0.4s ease',
+                        }} />
+                    </div>
+                    <span style={{ fontSize: '0.78rem', fontWeight: '700', color: '#7c3aed', whiteSpace: 'nowrap' }}>
+                        {cardIdx + 1} / {flashcards.length}
+                    </span>
+                </div>
+
+                {/* Header */}
+                <div style={{ textAlign: 'center', padding: '1.25rem 1.5rem 0.5rem' }}>
+                    <div style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>📖</div>
+                    <p style={{ fontSize: '0.75rem', fontWeight: '700', color: '#7c3aed', textTransform: 'uppercase', letterSpacing: '0.8px', margin: 0 }}>
+                        {isFr ? 'Expressions à retenir' : 'Expressions to learn'}
+                    </p>
+                    <p style={{ fontSize: '0.78rem', color: '#64748b', margin: '0.25rem 0 0' }}>
+                        {isFr ? 'Étudiez ces expressions avant de commencer.' : 'Study these expressions before starting.'}
+                    </p>
+                </div>
+
+                {/* Flashcard */}
+                <div style={{
+                    flex: 1, display: 'flex', flexDirection: 'column',
+                    alignItems: 'center', justifyContent: 'center',
+                    padding: '1rem 1.5rem',
+                }}>
+                    <div
+                        onClick={() => setFlipped(f => !f)}
+                        style={{
+                            width: '100%', maxWidth: '400px',
+                            backgroundColor: flipped ? '#7c3aed' : '#fff',
+                            border: `2px solid ${flipped ? '#6d28d9' : '#e2e8f0'}`,
+                            borderRadius: '24px',
+                            padding: '2.5rem 2rem',
+                            boxShadow: '0 8px 32px rgba(0,0,0,0.10)',
+                            cursor: 'pointer',
+                            transition: 'background-color 0.3s, border-color 0.3s',
+                            minHeight: '200px',
+                            display: 'flex', flexDirection: 'column',
+                            alignItems: 'center', justifyContent: 'center',
+                            textAlign: 'center', gap: '0.75rem',
+                        }}
+                    >
+                        <div style={{
+                            fontSize: '0.68rem', fontWeight: '700', textTransform: 'uppercase',
+                            letterSpacing: '0.8px',
+                            color: flipped ? 'rgba(255,255,255,0.7)' : '#94a3b8',
+                        }}>
+                            {flipped ? 'Medumba' : (isFr ? 'Français' : 'French')}
+                        </div>
+                        <div style={{
+                            fontSize: '1.2rem', fontWeight: '800', lineHeight: 1.4,
+                            color: flipped ? '#fff' : '#0f172a',
+                        }}>
+                            {flipped ? card.medumba : card.fr}
+                        </div>
+                        {!flipped && (
+                            <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '0.5rem' }}>
+                                {isFr ? '👆 Appuyez pour voir la traduction' : '👆 Tap to see translation'}
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Navigation */}
+                <div style={{ padding: '1rem 1.5rem', display: 'flex', gap: '0.75rem', maxWidth: '400px', width: '100%', margin: '0 auto' }}>
+                    {cardIdx > 0 && (
+                        <button onClick={() => { setCardIdx(i => i - 1); setFlipped(false); }} style={{
+                            flex: 1, padding: '0.9rem', borderRadius: '9999px',
+                            backgroundColor: '#eff6ff', color: '#0056D2',
+                            border: '2px solid #bfdbfe', fontWeight: '700', fontSize: '0.95rem',
+                            cursor: 'pointer', fontFamily: 'inherit',
+                        }}>← {isFr ? 'Précédent' : 'Previous'}</button>
+                    )}
+                    {!isLast ? (
+                        <button onClick={() => { setCardIdx(i => i + 1); setFlipped(false); }} style={{
+                            flex: 2, padding: '0.9rem', borderRadius: '9999px',
+                            backgroundColor: '#7c3aed', color: '#fff',
+                            border: 'none', fontWeight: '700', fontSize: '0.95rem',
+                            cursor: 'pointer', fontFamily: 'inherit',
+                            boxShadow: '0 6px 16px rgba(124,58,237,0.35)',
+                        }}>
+                            {isFr ? 'Suivant →' : 'Next →'}
+                        </button>
+                    ) : (
+                        <button onClick={() => setPhase('exercise')} style={{
+                            flex: 2, padding: '0.9rem', borderRadius: '9999px',
+                            backgroundColor: '#0056D2', color: '#fff',
+                            border: 'none', fontWeight: '700', fontSize: '0.95rem',
+                            cursor: 'pointer', fontFamily: 'inherit',
+                            boxShadow: '0 6px 16px rgba(0,86,210,0.35)',
+                        }}>
+                            {isFr ? '🚀 Commencer l\'exercice' : '🚀 Start exercises'}
+                        </button>
+                    )}
+                </div>
+            </div>
+        );
+    }
+
+    /* ════════════════════════════════════════════════════
+       FAILED SCREEN — score < 60%
+    ════════════════════════════════════════════════════ */
+    if (failed) {
+        const accuracy = questions.length > 0 ? Math.round((correctCount / questions.length) * 100) : 0;
+        return (
+            <div style={{
+                width: '100%', height: '100vh',
+                backgroundColor: '#fef2f2',
+                display: 'flex', flexDirection: 'column',
+                alignItems: 'center', justifyContent: 'center',
+                padding: '2rem 1.5rem', textAlign: 'center',
+                fontFamily: "'Outfit', system-ui, sans-serif",
+                gap: '1.25rem',
+            }}>
+                <div style={{ fontSize: '5rem', lineHeight: 1 }}>😓</div>
+                <h1 style={{ fontSize: '1.8rem', fontWeight: '900', color: '#dc2626', margin: 0 }}>
+                    {isFr ? 'Score insuffisant' : 'Score too low'}
+                </h1>
+                <div style={{ fontSize: '2.5rem', fontWeight: '900', color: '#0f172a' }}>
+                    {correctCount} / {questions.length}
+                    <span style={{ fontSize: '1.1rem', color: '#64748b', marginLeft: '0.5rem' }}>({accuracy}%)</span>
+                </div>
+                <div style={{
+                    backgroundColor: '#fee2e2', border: '2px solid #fca5a5',
+                    borderRadius: '16px', padding: '1rem 1.25rem',
+                    color: '#dc2626', fontWeight: '700', fontSize: '0.95rem',
+                    maxWidth: '320px', width: '100%',
+                }}>
+                    {isFr
+                        ? 'Vous devez obtenir au moins 60% pour réussir. Recommencez !'
+                        : 'You need at least 60% to pass. Please try again!'}
+                </div>
+                <button
+                    onClick={restartLesson}
+                    style={{
+                        backgroundColor: '#ef4444', color: '#fff',
+                        border: 'none', borderRadius: '9999px',
+                        padding: '1rem 2.5rem', fontWeight: '800',
+                        fontSize: '1rem', cursor: 'pointer', fontFamily: 'inherit',
+                        boxShadow: '0 6px 16px rgba(239,68,68,0.35)',
+                    }}
+                >
+                    {isFr ? '🔄 Recommencer' : '🔄 Restart lesson'}
+                </button>
+            </div>
+        );
+    }
 
     /* ════════════════════════════════════════════════════
        COMPLETION SCREEN — Auto Layout Vertical design
@@ -792,13 +1077,13 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
                     padding: '1rem 1.5rem', borderTop: '2px solid #e5e7eb',
                     backgroundColor: '#fff', maxWidth: '640px', width: '100%', margin: '0 auto',
                 }}>
-                    <button type="button" onClick={checkAnswer} disabled={!canCheck} style={{
+                    <button type="button" onClick={checkAnswer} disabled={!canCheck || !checkReady} style={{
                         width: '100%',
-                        backgroundColor: canCheck ? '#0056D2' : '#cbd5e1',
+                        backgroundColor: (canCheck && checkReady) ? '#0056D2' : '#cbd5e1',
                         color: '#fff', padding: '1rem', borderRadius: '9999px',
                         fontSize: '1rem', fontWeight: '700', border: 'none',
-                        cursor: canCheck ? 'pointer' : 'not-allowed', fontFamily: 'inherit',
-                        boxShadow: canCheck ? '0 8px 20px rgba(0,86,210,0.3)' : 'none',
+                        cursor: (canCheck && checkReady) ? 'pointer' : 'not-allowed', fontFamily: 'inherit',
+                        boxShadow: (canCheck && checkReady) ? '0 8px 20px rgba(0,86,210,0.3)' : 'none',
                         letterSpacing: '0.4px', transition: 'all 0.15s',
                     }}>
                         {isFr ? 'Vérifier →' : 'Check →'}
@@ -833,13 +1118,14 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
                             </strong>
                         </p>
                     )}
-                    <button type="button" onClick={handleContinue} style={{
+                    <button type="button" onClick={handleContinue} disabled={!continueEnabled} style={{
                         width: '100%',
-                        backgroundColor: feedbackCorrect ? '#22c55e' : '#ef4444',
+                        backgroundColor: continueEnabled ? (feedbackCorrect ? '#22c55e' : '#ef4444') : '#cbd5e1',
                         color: '#fff', padding: '0.9rem', borderRadius: '9999px',
                         fontSize: '1rem', fontWeight: '700', border: 'none',
-                        cursor: 'pointer', fontFamily: 'inherit', letterSpacing: '0.4px',
-                        boxShadow: `0 6px 16px ${feedbackCorrect ? 'rgba(34,197,94,0.35)' : 'rgba(239,68,68,0.35)'}`,
+                        cursor: continueEnabled ? 'pointer' : 'not-allowed', fontFamily: 'inherit', letterSpacing: '0.4px',
+                        boxShadow: continueEnabled ? `0 6px 16px ${feedbackCorrect ? 'rgba(34,197,94,0.35)' : 'rgba(239,68,68,0.35)'}` : 'none',
+                        transition: 'all 0.2s',
                     }}>
                         {isFr ? 'Continuer →' : 'Continue →'}
                     </button>
