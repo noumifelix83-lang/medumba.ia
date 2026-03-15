@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 
 /* ══════════════════════════════════════════════════════════════════
    Video catalogue — served from /public/videos/
@@ -71,7 +71,7 @@ const CATEGORIES = [
 
 /* ── Inline video player modal ─────────────────────────────── */
 const VideoPlayer = ({ video, cat, isFr, onClose }) => {
-    const [videoError, setVideoError] = React.useState(false);
+    const [videoError, setVideoError] = useState(false);
     return (
     <div
         onClick={onClose}
