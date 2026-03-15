@@ -1,0 +1,79 @@
+/**
+ * expressionsByLesson.js
+ *
+ * Returns a pool of MEDUMBA_EXPRESSIONS relevant to a given lesson theme.
+ * Also scales difficulty: early lessons prefer shorter expressions,
+ * later lessons allow longer/more complex ones.
+ */
+import { MEDUMBA_EXPRESSIONS } from './medumbaExpressions';
+
+/* ── Keyword sets per lesson theme ──────────────────────────────────────── */
+const LESSON_KEYWORDS = {
+  l1:  ['merci', 'excus', 'bientôt', 'bientot', 'aurevoir', 'bienvenue', 'prie',
+         'instant', 'vœux', 'salu', 'bonjour', 'bonsoir', 'pardon'],
+  l2:  ['corps', 'taille', 'grand de', 'petit de', 'sang', 'gardes', 'mal au',
+         'courir', 'bras', 'pied'],
+  l3:  ['manger', 'boire', 'eau', 'restaurant', 'cafet', 'tapioca', 'viande',
+         'beignet', 'faim', 'nourriture', 'nager'],
+  l4:  ['orange', 'robe', 'tissu', 'vêt', 'élégant', 'parfum', 'top ', 'couleur'],
+  l5:  ['francs', 'argent', 'monnaie', 'heure', 'quatre jours', 'chaque fois',
+         'midi', 'mille', 'cent', 'combien'],
+  l6:  ['porc', 'truie', 'chèvre', 'maïs', 'animal', 'oiseau', 'viande'],
+  l7:  ['mère', 'père', 'femme', 'mari', 'fils', 'enfant', 'famille', 'frère',
+         'sœur', 'papa', 'fille'],
+  l8:  ['pluie', 'arbre', 'maïs', 'sciure', 'lumière', 'parapluie'],
+  l9:  ['heure', 'aujourd', 'quantième', 'finalement', 'tardé', 'sieste',
+         'chaque fois', 'tous les', 'temps'],
+  l10: ['bienvenue', 'ami', 'novel', 'situation actuelle', 'né ', 'connais',
+        'présente', 'rencontre'],
+  l11: ['manger', 'cuisin', 'réfrigér', 'beignet', 'viande', 'restaurant',
+        'cafet', 'au réfrig', 'boire', 'eau au'],
+  l12: ['malade', 'fatigué', 'fatigue', 'mal au', 'sang', 'injection',
+        'contaminé', 'courir', 'pied', 'douleur'],
+  l13: ['livre', 'école', 'examen', 'note', 'page', 'professeur', 'cours',
+        'cahier', 'dessin', 'lire', 'diplôm', 'absent'],
+  l14: ['travail', 'travaill', 'policier', 'bureau', 'diplôm', 'surveillant',
+        'situation'],
+};
+
+/**
+ * Max word count (French text) allowed per lesson level.
+ * Lessons 1-3 → short phrases only; 4-7 → medium; 8+ → no cap.
+ * This ensures beginner lessons use simple, digestible expressions.
+ */
+const DIFFICULTY_WORD_CAP = {
+  l1: 6, l2: 6, l3: 6,
+  l4: 9, l5: 9, l6: 9, l7: 9,
+  // l8-l14: no cap (allow complex expressions)
+};
+
+const MIN_POOL = 5;
+
+function frWordCount(expr) {
+  return expr.fr.trim().split(/\s+/).length;
+}
+
+/**
+ * Returns expressions thematically relevant to `lessonId`.
+ * Falls back to full MEDUMBA_EXPRESSIONS if the filtered pool is too small.
+ */
+export function getExpressionsByLesson(lessonId) {
+  const keywords = LESSON_KEYWORDS[lessonId];
+  if (!keywords) return MEDUMBA_EXPRESSIONS;
+
+  const maxWords = DIFFICULTY_WORD_CAP[lessonId]; // undefined = no cap
+
+  /* Step 1 – keyword filter */
+  let pool = MEDUMBA_EXPRESSIONS.filter(e => {
+    const lower = e.fr.toLowerCase();
+    return keywords.some(kw => lower.includes(kw.toLowerCase()));
+  });
+
+  /* Step 2 – difficulty cap (early lessons only) */
+  if (maxWords !== undefined) {
+    const easy = pool.filter(e => frWordCount(e) <= maxWords);
+    if (easy.length >= MIN_POOL) pool = easy;
+  }
+
+  return pool.length >= MIN_POOL ? pool : MEDUMBA_EXPRESSIONS;
+}

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { MEDUMBA_QUESTIONS } from '../data/medumbaDictionary';
 import { MEDUMBA_EXPRESSIONS } from '../data/medumbaExpressions';
+import { getExpressionsByLesson } from '../data/expressionsByLesson';
 import { generateLessonQuestions } from '../utils/lessonGenerator';
 import { playMedumbaWord, stopMedumbaAudio } from '../utils/medumbaAudio';
 import frameImg from '../assets/Frame.png';
@@ -130,27 +131,85 @@ function pickRandom(pool, n) {
     return [...pool].sort(() => Math.random() - 0.5).slice(0, n);
 }
 
-/* Build expression MCQ questions from the global pool.
-   Each question shows the French expression; learner picks the Medumba. */
-function buildExpressionQuestions(pool, count = 3) {
-    const picked = pickRandom(pool, count);
-    return picked.map(expr => {
-        const distractors = pool
-            .filter(e => e.medumba !== expr.medumba)
-            .sort(() => Math.random() - 0.5)
-            .slice(0, 3)
-            .map(e => e.medumba);
-        const opts = [...distractors, expr.medumba].sort(() => Math.random() - 0.5);
-        return {
+/* Build varied exercises from the STUDIED flashcards (not random pool).
+   Types generated:
+   1. MCQ  Fr → Medumba  (for each studied expression)
+   2. MCQ  Medumba → Fr  (for each studied expression)
+   3. Tile — reconstruct Medumba from words (multi-word expressions)
+   4. Match — pair studied expressions
+*/
+function buildExpressionQuestions(studied, pool) {
+    if (!studied || studied.length === 0) return [];
+    const qs = [];
+
+    /* helpers */
+    const medDistractors = (exclude) =>
+        pool.filter(e => e.medumba !== exclude)
+            .sort(() => Math.random() - 0.5).slice(0, 3).map(e => e.medumba);
+    const frDistractors = (exclude) =>
+        pool.filter(e => e.fr !== exclude)
+            .sort(() => Math.random() - 0.5).slice(0, 3).map(e => e.fr);
+    const trunc = (s, n) => s.length > n ? s.slice(0, n) + '…' : s;
+
+    /* 1 & 2 — MCQ both directions for each card */
+    studied.forEach(expr => {
+        /* Fr → Medumba */
+        const optsA = [...medDistractors(expr.medumba), expr.medumba].sort(() => Math.random() - 0.5);
+        qs.push({
             type: 'meaning',
-            sourceFr: expr.fr,
-            sourceEn: expr.fr,          // no English available — show French
-            options:   opts,
-            optionsFr: opts,
-            answer:    expr.medumba,
-            answerFr:  expr.medumba,
-        };
+            _exprDir: 'fr2med',
+            sourceFr: expr.fr, sourceEn: expr.fr,
+            options: optsA, optionsFr: optsA,
+            answer: expr.medumba, answerFr: expr.medumba,
+        });
+
+        /* Medumba → Fr */
+        const optsB = [...frDistractors(expr.fr), expr.fr].sort(() => Math.random() - 0.5);
+        qs.push({
+            type: 'meaning',
+            _exprDir: 'med2fr',
+            sourceFr: expr.medumba, sourceEn: expr.medumba,
+            options: optsB, optionsFr: optsB,
+            answer: expr.fr, answerFr: expr.fr,
+        });
     });
+
+    /* 3 — Tile: reconstruct multi-word Medumba expressions */
+    studied
+        .filter(e => {
+            const w = e.medumba.trim().split(/\s+/);
+            return w.length >= 2 && w.length <= 7;
+        })
+        .slice(0, 3)
+        .forEach(expr => {
+            const words = expr.medumba.trim().split(/\s+/);
+            const allPoolWords = pool
+                .filter(e => e.medumba !== expr.medumba)
+                .flatMap(e => e.medumba.trim().split(/\s+/));
+            const distractorWords = [...new Set(allPoolWords)]
+                .filter(w => !words.includes(w))
+                .sort(() => Math.random() - 0.5)
+                .slice(0, Math.max(2, 8 - words.length));
+            const bank = [...words, ...distractorWords].sort(() => Math.random() - 0.5);
+            qs.push({
+                type: 'tile',
+                _exprDir: 'tile',
+                sourceFr: expr.fr, sourceEn: expr.fr,
+                answer: words, bank,
+                audio: expr.medumba,
+            });
+        });
+
+    /* 4 — Match: pair all 5 studied cards */
+    const matchPairs = studied.map(e => ({
+        medumba: trunc(e.medumba, 30),
+        french:  trunc(e.fr, 32),
+        english: trunc(e.fr, 32),
+    }));
+    qs.push({ type: 'match', _exprDir: 'match', pairs: matchPairs });
+
+    /* shuffle and return */
+    return qs.sort(() => Math.random() - 0.5);
 }
 
 /* format seconds as M:SS */
@@ -164,13 +223,20 @@ function formatTime(seconds) {
    COMPONENT
 ════════════════════════════════════════════════════════════════════ */
 const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClose }) => {
-    /* flashcards shown once before exercises */
-    const flashcards = useMemo(() => pickRandom(MEDUMBA_EXPRESSIONS, FLASHCARD_COUNT), [lesson?.id]);
+    /* themed expression pool for this lesson */
+    const exprPool = useMemo(
+        () => getExpressionsByLesson(lesson?.id),
+        [lesson?.id],
+    );
 
-    /* expression MCQ questions injected at the end of each session */
+    /* flashcards shown once before exercises — drawn from themed pool */
+    const flashcards = useMemo(() => pickRandom(exprPool, FLASHCARD_COUNT), [exprPool]);
+
+    /* expression questions built from the 5 studied flashcards */
     const exprQuestions = useMemo(
-        () => learnLang === 'medumba' ? buildExpressionQuestions(MEDUMBA_EXPRESSIONS, 3) : [],
-        [lesson?.id, learnLang],
+        () => learnLang === 'medumba' ? buildExpressionQuestions(flashcards, exprPool) : [],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [flashcards, learnLang],
     );
 
     const questions = useMemo(
@@ -432,7 +498,9 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
                         {isFr ? 'Expressions à retenir' : 'Expressions to learn'}
                     </p>
                     <p style={{ fontSize: '0.78rem', color: '#64748b', margin: '0.25rem 0 0' }}>
-                        {isFr ? 'Étudiez ces expressions avant de commencer.' : 'Study these expressions before starting.'}
+                        {isFr
+                            ? `Expressions liées à : ${lesson?.titleFr ?? 'cette leçon'} — étudiez-les avant de commencer.`
+                            : `Expressions for: ${lesson?.titleEn ?? 'this lesson'} — study them before starting.`}
                     </p>
                 </div>
 
@@ -802,8 +870,12 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
                     fontSize: '0.78rem', fontWeight: '700', color: '#64748b',
                     textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '0.35rem',
                 }}>
-                    {type === 'tile'        && (isFr ? 'Traduisez cette phrase' : 'Translate this sentence')}
-                    {type === 'meaning'     && (isFr ? 'Quel mot Medumba correspond ?' : 'Which Medumba word matches?')}
+                    {type === 'tile'        && (q?._exprDir === 'tile'
+                        ? (isFr ? 'Reconstruisez l\'expression' : 'Reconstruct the expression')
+                        : (isFr ? 'Traduisez cette phrase' : 'Translate this sentence'))}
+                    {type === 'meaning'     && (q?._exprDir === 'med2fr'
+                        ? (isFr ? 'Quelle est la traduction française ?' : 'What is the French translation?')
+                        : (isFr ? 'Quel mot Medumba correspond ?' : 'Which Medumba word matches?'))}
                     {type === 'audio'       && (isFr ? "Qu'est-ce que dit l'audio ?" : 'What does the audio say?')}
                     {type === 'match'       && (isFr ? 'Associez les mots' : 'Match the words')}
                     {type === 'image_vocab' && (isFr ? 'Comment dit-on cela en Medumba ?' : 'How do you say this in Medumba?')}
@@ -901,14 +973,16 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
                         textAlign: 'center',
                     }}>
                         <div style={{ fontSize: '0.7rem', fontWeight: '700', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: '0.5rem' }}>
-                            {isFr ? 'Mot en français' : 'Word in English'}
+                            {q?._exprDir === 'med2fr'
+                                ? (isFr ? 'Expression Medumba' : 'Medumba expression')
+                                : (isFr ? 'Mot en français' : 'Word in English')}
                         </div>
-                        <span style={{ fontSize: '2rem', fontWeight: '900', color: '#0f172a', lineHeight: 1.2 }}>
+                        <span style={{ fontSize: q?._exprDir ? '1.3rem' : '2rem', fontWeight: '900', color: '#0f172a', lineHeight: 1.3 }}>
                             {isFr ? q?.sourceFr : q?.sourceEn}
                         </span>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: q?._exprDir === 'med2fr' ? '1fr' : '1fr 1fr', gap: '0.75rem', marginBottom: '1.5rem' }}>
                         {options.map(opt => {
                             const isSelected = selectedOption === opt;
                             const isCorrect  = status !== null && opt === correctAns;
@@ -916,7 +990,8 @@ const LessonPage = ({ lesson, learnLang, isFr, profile, onFinish, onShare, onClo
                             return (
                                 <button key={opt} onClick={() => { if (status === null) setSelectedOption(opt); }} disabled={status !== null} style={{
                                     padding: '1rem 0.75rem', borderRadius: '14px', fontFamily: 'inherit',
-                                    fontSize: '1rem', fontWeight: '700', cursor: status !== null ? 'default' : 'pointer',
+                                    fontSize: q?._exprDir === 'med2fr' ? '0.9rem' : '1rem', fontWeight: '700', cursor: status !== null ? 'default' : 'pointer',
+                                    textAlign: 'left',
                                     backgroundColor: isCorrect ? '#dcfce7' : isWrong ? '#fee2e2' : isSelected ? '#eff6ff' : '#fff',
                                     border: `2px solid ${isCorrect ? '#22c55e' : isWrong ? '#ef4444' : isSelected ? '#0056D2' : '#e2e8f0'}`,
                                     color: isCorrect ? '#16a34a' : isWrong ? '#dc2626' : isSelected ? '#0056D2' : '#0f172a',

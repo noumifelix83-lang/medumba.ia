@@ -106,7 +106,7 @@ const ReasonPage = ({ onNext, onBack, nativeLang, learningLang }) => {
                     </div>
 
                     <button
-                        onClick={onNext}
+                        onClick={() => selectedReason && onNext(selectedReason)}
                         disabled={!selectedReason}
                         style={{
                             width: '100%',
