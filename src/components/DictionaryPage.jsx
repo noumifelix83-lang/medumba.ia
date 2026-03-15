@@ -232,9 +232,6 @@ const DictionaryPage = ({ nativeLang, onBack }) => {
                                         {isFr ? 'Traducteur IA Medumba' : 'Medumba AI Translator'}
                                     </span>
                                 </div>
-                                <span style={{ fontSize: '0.68rem', backgroundColor: 'rgba(255,255,255,0.25)', color: '#fff', borderRadius: '99px', padding: '0.15rem 0.55rem', fontWeight: '700' }}>
-                                    Gemini 2.5
-                                </span>
                             </div>
 
                             {/* Direction toggle */}
