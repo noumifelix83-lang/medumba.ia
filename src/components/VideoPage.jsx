@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 
 /* ══════════════════════════════════════════════════════════════════
    Video catalogue — served from /public/videos/
@@ -70,7 +70,9 @@ const CATEGORIES = [
 ];
 
 /* ── Inline video player modal ─────────────────────────────── */
-const VideoPlayer = ({ video, cat, isFr, onClose }) => (
+const VideoPlayer = ({ video, cat, isFr, onClose }) => {
+    const [videoError, setVideoError] = React.useState(false);
+    return (
     <div
         onClick={onClose}
         style={{
@@ -110,13 +112,27 @@ const VideoPlayer = ({ video, cat, isFr, onClose }) => (
                     display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                 }}>✕</button>
             </div>
-            <video
-                src={video.src} controls autoPlay
-                style={{ width: '100%', display: 'block', backgroundColor: '#000', maxHeight: '65vh' }}
-            />
+            {videoError ? (
+                <div style={{ padding: '3rem 2rem', textAlign: 'center', backgroundColor: '#0f172a' }}>
+                    <div style={{ fontSize: '3rem', marginBottom: '0.75rem' }}>🎬</div>
+                    <div style={{ color: '#94a3b8', fontWeight: '700', fontSize: '0.95rem' }}>
+                        {isFr ? 'Vidéo non disponible' : 'Video not available'}
+                    </div>
+                    <div style={{ color: '#475569', fontSize: '0.8rem', marginTop: '0.4rem' }}>
+                        {isFr ? 'Le fichier sera bientôt disponible.' : 'This file will be available soon.'}
+                    </div>
+                </div>
+            ) : (
+                <video
+                    src={video.src} controls autoPlay
+                    onError={() => setVideoError(true)}
+                    style={{ width: '100%', display: 'block', backgroundColor: '#000', maxHeight: '65vh' }}
+                />
+            )}
         </div>
     </div>
-);
+    );
+};
 
 /* ── Horizontal row card ───────────────────────────────────── */
 const VideoCard = ({ video, index, onPlay }) => (

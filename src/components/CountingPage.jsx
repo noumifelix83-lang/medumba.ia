@@ -290,6 +290,7 @@ const CountingPage = ({ nativeLang, onBack }) => {
             <button
                 onClick={() => hasAudio ? playNumber(n) : undefined}
                 disabled={!hasAudio}
+                title={hasAudio ? (isFr ? 'Écouter' : 'Listen') : (isFr ? 'Audio non disponible' : 'Audio not available')}
                 style={{
                     background: active ? '#eff6ff' : '#f8fafc',
                     border: `2px solid ${active ? '#0891b2' : hasAudio ? '#e2e8f0' : '#f1f5f9'}`,
@@ -414,7 +415,7 @@ const CountingPage = ({ nativeLang, onBack }) => {
                                     <div style={{ fontSize: '2.8rem', fontWeight: '900', color: '#0891b2', marginBottom: '0.5rem' }}>
                                         {quiz.q.medumba}
                                     </div>
-                                    <button onClick={() => playNumber(quiz.q.n)} disabled={!AUDIO_MAP[quiz.q.n]} style={{ background: '#f0f9ff', border: '2px solid #bae6fd', borderRadius: '99px', padding: '0.4rem 1rem', cursor: AUDIO_MAP[quiz.q.n] ? 'pointer' : 'default', fontSize: '0.85rem', fontWeight: '700', color: '#0891b2', fontFamily: 'inherit', opacity: AUDIO_MAP[quiz.q.n] ? 1 : 0.4 }}>
+                                    <button onClick={() => playNumber(quiz.q.n)} disabled={!AUDIO_MAP[quiz.q.n]} title={AUDIO_MAP[quiz.q.n] ? (isFr ? 'Écouter' : 'Listen') : (isFr ? 'Audio non disponible' : 'Audio not available')} style={{ background: '#f0f9ff', border: '2px solid #bae6fd', borderRadius: '99px', padding: '0.4rem 1rem', cursor: AUDIO_MAP[quiz.q.n] ? 'pointer' : 'default', fontSize: '0.85rem', fontWeight: '700', color: '#0891b2', fontFamily: 'inherit', opacity: AUDIO_MAP[quiz.q.n] ? 1 : 0.4 }}>
                                         🔈 {isFr ? 'Écouter' : 'Listen'}
                                     </button>
                                 </div>

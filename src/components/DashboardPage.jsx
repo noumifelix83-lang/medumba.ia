@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import logo from '../assets/logo.png';
 import profileWelcomeVector from '../assets/profile_welcome_vector.png';
 import celebrationImg from '../assets/Auto Layout Vertical.png';
@@ -144,7 +144,8 @@ const DashboardPage = ({
     });
 
     /* ── session-completed lessons (unlocks next in path) ── */
-    const [completedLessons, setCompletedLessons] = useState(() => new Set());
+    const [completedLessons, setCompletedLessons] = useState(() => { try { const v = localStorage.getItem('med_completed'); return v ? new Set(JSON.parse(v)) : new Set(); } catch { return new Set(); } });
+    useEffect(() => { localStorage.setItem('med_completed', JSON.stringify([...completedLessons])); }, [completedLessons]);
 
     const applySessionProgress = (units) => {
         if (completedLessons.size === 0) return units;
@@ -189,8 +190,23 @@ const DashboardPage = ({
     /* ── leaderboard tab ── */
     const [lbTab, setLbTab]         = useState('weekly');
 
-    /* ── gems count (grows after purchase) ── */
-    const [gems, setGems]           = useState(userStats.gems);
+    /* ── live stats (persisted in localStorage) ── */
+    const [gems,   setGems]   = useState(() => { const v = localStorage.getItem('med_gems');   return v !== null ? parseInt(v) : userStats.gems; });
+    const [xp,     setXp]     = useState(() => { const v = localStorage.getItem('med_xp');     return v !== null ? parseInt(v) : userStats.xp; });
+    const [streak, setStreak] = useState(() => { const v = localStorage.getItem('med_streak'); return v !== null ? parseInt(v) : userStats.streak; });
+    const [hearts, setHearts] = useState(() => { const v = localStorage.getItem('med_hearts'); return v !== null ? parseInt(v) : userStats.hearts; });
+
+    useEffect(() => { localStorage.setItem('med_gems',   gems);   }, [gems]);
+    useEffect(() => { localStorage.setItem('med_xp',     xp);     }, [xp]);
+    useEffect(() => { localStorage.setItem('med_streak', streak); }, [streak]);
+    useEffect(() => { localStorage.setItem('med_hearts', hearts); }, [hearts]);
+
+    /* ── chest mechanic ── */
+    const [openedChests,  setOpenedChests]  = useState(() => { try { const v = localStorage.getItem('med_chests'); return v ? new Set(JSON.parse(v)) : new Set(); } catch { return new Set(); } });
+    const [chestModal,    setChestModal]    = useState(null);
+    const [chestCollected, setChestCollected] = useState(false);
+
+    useEffect(() => { localStorage.setItem('med_chests', JSON.stringify([...openedChests])); }, [openedChests]);
 
     /* ── purchase flow ──
        null | 'packages' | 'payment' | 'summary' | 'success'
@@ -204,7 +220,7 @@ const DashboardPage = ({
     const [cardCvv,       setCardCvv]       = useState('');
 
     const XP_TO_NEXT = 500;
-    const xpProgress = Math.min((userStats.xp / XP_TO_NEXT) * 100, 100);
+    const xpProgress = Math.min((xp / XP_TO_NEXT) * 100, 100);
 
     /* ── mobile breakpoint ── */
     const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
@@ -320,7 +336,19 @@ const DashboardPage = ({
         },
     ];
 
-    const units = applySessionProgress(applyProgress(learnLang === 'english' ? unitsEnglish : unitsMedumba));
+    /* ── unlock chest when all preceding regular lessons in unit are done ── */
+    const applyChestUnlocks = (rawUnits) => rawUnits.map(unit => ({
+        ...unit,
+        lessons: unit.lessons.map((lesson, idx) => {
+            if (lesson.type !== 'chest') return lesson;
+            if (openedChests.has(lesson.id)) return { ...lesson, status: 'completed' };
+            const preceding = unit.lessons.slice(0, idx).filter(l => l.type === 'lesson');
+            const allDone = preceding.length > 0 && preceding.every(l => l.status === 'completed');
+            return allDone ? { ...lesson, status: 'active' } : lesson;
+        }),
+    }));
+
+    const units = applyChestUnlocks(applySessionProgress(applyProgress(learnLang === 'english' ? unitsEnglish : unitsMedumba)));
 
     const zigzagFull   = [0, 56, 90, 56, 0, -56, -90, -56, 0, 56, 90];
     const zigzagMobile = [0, 36, 56, 36, 0, -36, -56, -36, 0, 36, 56];
@@ -578,6 +606,51 @@ const DashboardPage = ({
        TAB CONTENT
     ════════════════════════════════════════════════════════════════ */
 
+    /* ── CHEST MODAL ── */
+    const renderChestModal = () => {
+        if (!chestModal) return null;
+        const CHEST_GEMS = 15;
+        return (
+            <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.65)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '1rem' }}>
+                <style>{`@keyframes chest-pop { from { transform:scale(0.5); opacity:0; } to { transform:scale(1); opacity:1; } } @keyframes chest-bounce { 0%,100%{transform:scale(1) rotate(0deg);} 25%{transform:scale(1.2) rotate(-6deg);} 75%{transform:scale(1.2) rotate(6deg);} }`}</style>
+                <div style={{ backgroundColor:'#fff', borderRadius:'28px', padding:'2.5rem 2rem', textAlign:'center', width:'min(340px,90vw)', boxShadow:'0 24px 60px rgba(0,0,0,0.3)', animation:'chest-pop 0.4s cubic-bezier(0.175,0.885,0.32,1.275)' }}>
+                    <div style={{ fontSize:'5rem', display:'inline-block', animation: chestCollected ? 'none' : 'chest-bounce 0.9s ease infinite' }}>
+                        {chestCollected ? '✨' : '💰'}
+                    </div>
+                    <h2 style={{ fontSize:'1.4rem', fontWeight:'900', color:'#0f172a', margin:'1rem 0 0.5rem' }}>
+                        {chestCollected ? (isFr ? 'Récompense collectée !' : 'Reward collected!') : (isFr ? 'Coffre débloqué !' : 'Chest unlocked!')}
+                    </h2>
+                    <p style={{ fontSize:'0.9rem', color:'#64748b', marginBottom:'1.5rem', lineHeight:1.5 }}>
+                        {chestCollected
+                            ? (isFr ? 'Continuez votre progression !' : 'Keep up the great work!')
+                            : (isFr ? 'Vous avez terminé cette section. Voici votre récompense !' : 'You completed this section. Here\'s your reward!')}
+                    </p>
+                    {!chestCollected && (
+                        <div style={{ display:'flex', justifyContent:'center', marginBottom:'1.5rem' }}>
+                            <div style={{ backgroundColor:'#fef3c7', borderRadius:'16px', padding:'0.8rem 2rem', fontWeight:'900', fontSize:'1.4rem', color:'#92400e', boxShadow:'0 4px 12px rgba(251,191,36,0.3)' }}>
+                                💎 +{CHEST_GEMS}
+                            </div>
+                        </div>
+                    )}
+                    <button
+                        onClick={() => {
+                            if (!chestCollected) {
+                                setGems(g => g + CHEST_GEMS);
+                                setOpenedChests(s => new Set([...s, chestModal.id]));
+                                setChestCollected(true);
+                            } else {
+                                setChestModal(null);
+                            }
+                        }}
+                        style={{ width:'100%', backgroundColor: chestCollected ? '#22c55e' : '#0056D2', color:'#fff', padding:'1rem', borderRadius:'9999px', fontSize:'1rem', fontWeight:'700', border:'none', cursor:'pointer', fontFamily:'inherit', boxShadow: chestCollected ? '0 6px 16px rgba(34,197,94,0.35)' : '0 6px 16px rgba(0,86,210,0.35)' }}
+                    >
+                        {chestCollected ? (isFr ? 'Continuer →' : 'Continue →') : (isFr ? 'Collecter 💎' : 'Collect 💎')}
+                    </button>
+                </div>
+            </div>
+        );
+    };
+
     /* ── HOME: Learning Path ── */
     const renderHome = () => (
         <div style={{ flex: 1, overflowY: 'auto', paddingBottom: '2rem' }}>
@@ -609,11 +682,11 @@ const DashboardPage = ({
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '3px', backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: '99px', padding: '0.2rem 0.7rem' }}>
                                 <span style={{ fontSize: '0.9rem' }}>🔥</span>
-                                <span style={{ fontSize: '0.78rem', fontWeight: '800', color: '#fff' }}>{userStats.streak} {isFr ? 'j.' : 'day streak'}</span>
+                                <span style={{ fontSize: '0.78rem', fontWeight: '800', color: '#fff' }}>{streak} {isFr ? 'j.' : 'day streak'}</span>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '3px', backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: '99px', padding: '0.2rem 0.7rem' }}>
                                 <span style={{ fontSize: '0.9rem' }}>⚡</span>
-                                <span style={{ fontSize: '0.78rem', fontWeight: '800', color: '#fff' }}>{userStats.xp} XP</span>
+                                <span style={{ fontSize: '0.78rem', fontWeight: '800', color: '#fff' }}>{xp} XP</span>
                             </div>
                         </div>
                     </div>
@@ -729,7 +802,10 @@ const DashboardPage = ({
                                         )}
                                         <div
                                             onClick={() => {
-                                                if (!locked && !isChest && !isBoss) {
+                                                if (locked || isBoss) return;
+                                                if (isChest) {
+                                                    if (!locked) { setChestModal({ ...lesson, unitColor: unit.color }); setChestCollected(false); }
+                                                } else {
                                                     setActiveLesson({ ...lesson, unitColor: unit.color, unitAccent: unit.accent });
                                                     setLessonFlow('loading');
                                                 }
@@ -740,11 +816,11 @@ const DashboardPage = ({
                                                 boxShadow: `0 6px 0 ${sh}`,
                                                 display: 'flex', flexDirection: 'column',
                                                 justifyContent: 'center', alignItems: 'center',
-                                                cursor: locked || isChest || isBoss ? 'default' : 'pointer',
+                                                cursor: locked || isBoss ? 'default' : 'pointer',
                                                 opacity: locked ? 0.55 : 1, gap: '2px',
                                                 animation: active ? 'pulse-ring 2s ease-out infinite' : 'none',
                                             }}
-                                            onMouseDown={(e) => { if (!locked && !isChest && !isBoss) e.currentTarget.style.transform = 'translateY(5px)'; }}
+                                            onMouseDown={(e) => { if (!locked && !isBoss) e.currentTarget.style.transform = 'translateY(5px)'; }}
                                             onMouseUp={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                                             onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                                         >
@@ -1248,10 +1324,10 @@ const DashboardPage = ({
                 </h3>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1.5rem' }}>
                     {[
-                        { icon: '🔥', valEn: `${userStats.streak} days`, valFr: `${userStats.streak} jours`, labelEn: 'Streak', labelFr: 'Série' },
-                        { icon: '⚡', valEn: `${userStats.xp} XP`,      valFr: `${userStats.xp} XP`,        labelEn: 'Total XP', labelFr: 'XP Total' },
+                        { icon: '🔥', valEn: `${streak} days`, valFr: `${streak} jours`, labelEn: 'Streak', labelFr: 'Série' },
+                        { icon: '⚡', valEn: `${xp} XP`,      valFr: `${xp} XP`,        labelEn: 'Total XP', labelFr: 'XP Total' },
                         { icon: '💎', valEn: `${gems}`,                  valFr: `${gems}`,                    labelEn: 'Diamonds', labelFr: 'Diamants' },
-                        { icon: '❤️', valEn: `${userStats.hearts}/5`,   valFr: `${userStats.hearts}/5`,      labelEn: 'Hearts',   labelFr: 'Cœurs' },
+                        { icon: '❤️', valEn: `${hearts}/5`,   valFr: `${hearts}/5`,      labelEn: 'Hearts',   labelFr: 'Cœurs' },
                     ].map((stat, i) => (
                         <div key={i} style={{
                             padding: '1rem', borderRadius: '14px',
@@ -1342,7 +1418,7 @@ const DashboardPage = ({
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     {(isFr ? ['L','M','M','J','V','S','D'] : ['M','T','W','T','F','S','S']).map((day, i) => {
-                        const on = i < userStats.streak;
+                        const on = i < streak;
                         return (
                             <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
                                 <div style={{
@@ -1445,6 +1521,8 @@ const DashboardPage = ({
                     if (activeLesson?.id) {
                         setCompletedLessons(prev => new Set([...prev, activeLesson.id]));
                     }
+                    setXp(prev => prev + (result.xp || 0));
+                    setGems(prev => prev + (result.diamonds || 0));
                     setLessonResult(result);
                     setLessonFlow('lesson_complete');
                 }}
@@ -1505,7 +1583,7 @@ const DashboardPage = ({
         const res = lessonResult ?? { xp: 0, diamonds: 0, accuracy: 0 };
         const missions = [
             { icon: '💎', labelEn: 'Get 25 Diamonds',        labelFr: 'Obtenir 25 Diamants',      current: Math.min(res.diamonds, 25),        total: 25,  color: '#0056D2' },
-            { icon: '⚡', labelEn: 'Get 40 XP',              labelFr: 'Obtenir 40 XP',             current: Math.min(userStats.xp + res.xp, 40), total: 40,  color: '#f59e0b' },
+            { icon: '⚡', labelEn: 'Get 40 XP',              labelFr: 'Obtenir 40 XP',             current: Math.min(xp, 40), total: 40,  color: '#f59e0b' },
             { icon: '🎯', labelEn: 'Get 2 perfect lessons',  labelFr: '2 leçons parfaites',        current: res.accuracy === 100 ? 1 : 0,       total: 2,   color: '#ef4444' },
             { icon: '🔥', labelEn: 'Complete 1 challenge',   labelFr: 'Terminer 1 défi',           current: 1,                                  total: 1,   color: '#f97316' },
         ];
@@ -1556,7 +1634,6 @@ const DashboardPage = ({
 
     /* ── Congrats / streak screen ── */
     if (lessonFlow === 'congrats') {
-        const streak   = userStats.streak;
         const today    = new Date().getDay(); // 0=Sun
         const days     = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
         // map JS day (0=Sun) → Monday-first index
@@ -1621,7 +1698,6 @@ const DashboardPage = ({
 
     /* ── Share screen ── */
     if (lessonFlow === 'share') {
-        const streak = userStats.streak;
         const shareText = `🔥 ${streak} ${isFr ? 'jours de suite sur Medumba.ia !' : 'days straight on Medumba.ia!'}`;
         const doShare = async () => {
             if (navigator.share) {
@@ -1700,6 +1776,7 @@ const DashboardPage = ({
        RENDER
     ════════════════════════════════════════════════════════════════ */
     return (
+        <>
         <div style={{
             display: 'flex', width: '100%', height: '100vh',
             backgroundColor: '#f8fafc',
@@ -1796,7 +1873,7 @@ const DashboardPage = ({
                     <span style={{ fontSize: '1.9rem' }}>🔥</span>
                     <div>
                         <div style={{ fontWeight: '800', fontSize: '1.2rem', color: '#d97706', lineHeight: 1 }}>
-                            {userStats.streak}
+                            {streak}
                         </div>
                         <div style={{ fontSize: '0.72rem', color: '#92400e', fontWeight: '600', marginTop: '2px' }}>
                             {isFr ? 'jours de suite' : 'day streak'}
@@ -1832,7 +1909,7 @@ const DashboardPage = ({
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                                     <span style={{ fontSize: '1rem' }}>⚡</span>
                                     <span style={{ fontWeight: '800', color: '#0056D2', fontSize: '0.9rem' }}>
-                                        {userStats.xp} XP
+                                        {xp} XP
                                     </span>
                                 </div>
                                 <div style={{ width: '72px', height: '5px', backgroundColor: '#dbeafe', borderRadius: '99px', overflow: 'hidden' }}>
@@ -1850,8 +1927,8 @@ const DashboardPage = ({
                             {[...Array(5)].map((_, i) => (
                                 <span key={i} style={{
                                     fontSize: isMobile ? '0.75rem' : '0.95rem',
-                                    filter: i < userStats.hearts ? 'none' : 'grayscale(1)',
-                                    opacity: i < userStats.hearts ? 1 : 0.3,
+                                    filter: i < hearts ? 'none' : 'grayscale(1)',
+                                    opacity: i < hearts ? 1 : 0.3,
                                 }}>❤️</span>
                             ))}
                         </div>
@@ -1859,7 +1936,7 @@ const DashboardPage = ({
                         {isMobile && (
                             <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
                                 <span style={{ fontSize: '1rem' }}>🔥</span>
-                                <span style={{ fontWeight: '800', color: '#d97706', fontSize: '0.88rem' }}>{userStats.streak}</span>
+                                <span style={{ fontWeight: '800', color: '#d97706', fontSize: '0.88rem' }}>{streak}</span>
                             </div>
                         )}
                     </div>
@@ -1913,6 +1990,8 @@ const DashboardPage = ({
                 )}
             </div>
         </div>
+        {renderChestModal()}
+        </>
     );
 };
 

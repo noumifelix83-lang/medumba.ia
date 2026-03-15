@@ -75,5 +75,19 @@ export function getExpressionsByLesson(lessonId) {
     if (easy.length >= MIN_POOL) pool = easy;
   }
 
-  return pool.length >= MIN_POOL ? pool : MEDUMBA_EXPRESSIONS;
+  if (pool.length >= MIN_POOL) return pool;
+
+  /* Fallback: return a random sample of 15 expressions with the difficulty cap applied,
+     instead of dumping all 261 on the learner */
+  const fallbackPool = maxWords !== undefined
+    ? MEDUMBA_EXPRESSIONS.filter(e => frWordCount(e) <= maxWords)
+    : MEDUMBA_EXPRESSIONS;
+
+  // Fisher-Yates shuffle then take 15
+  const shuffled = [...fallbackPool];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled.slice(0, 15);
 }
