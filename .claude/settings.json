@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl:*)",
+      "Bash(npx vite build:*)",
+      "Read(//c/Users/ndjan/OneDrive/Documents/medumba dico/calender/js/**)",
+      "WebFetch(domain:www.figma.com)",
+      "Bash(npm list puppeteer)",
+      "Bash(unzip -p medumba_counter.jar medumba_counter/conte_med.class)",
+      "Bash(grep -v \"^.$\")",
+      "Bash(grep -E \"^[a-zA-ZÀ-ÿ''''\\\\-]{2,}\")",
+      "Bash(grep -v \"$\")",
+      "Bash(xxd)"
+    ]
+  }
+}

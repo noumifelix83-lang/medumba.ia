@@ -1,0 +1,1001 @@
+0	bαnbαn
+1	ncʉ'
+2	bα̂
+3	tad
+4	kuὰ
+5	tὰn
+6	ntogə
+7	sὰmbα̂
+8	fomə
+9	bwə̀'ə
+10	gham
+11	ncòbncʉ' gham
+12	ncòbbα̂ gham
+13	ncòbtad gham
+14	ncòbkuὰ gham
+15	ncòbtὰn gham
+16	ncòbntôg gham
+17	ncòbsὰmbα̂ gham
+18	ncòbfôm gham
+19	ncòbbwə̀'ə̂ gham
+20	ŋambα̂
+21	ncòbncʉ' ŋambα̂
+22	ncòbbα̂ ŋambα̂
+23	ncòbtad ŋambα̂
+24	ncòbkuὰ ŋambα̂
+25	ncòbtὰn ŋambα̂
+26	ncòbntôg ŋambα̂
+27	ncòbsὰmbα̂ ŋambα̂
+28	ncòbfôm ŋambα̂
+29	ncòbbwə̀'ə̂ ŋambα̂
+30	ŋamntad
+31	ncòbncʉ' ŋamntad
+32	ncòbbα̂ ŋamntad
+33	ncòbtad ŋamntad
+34	ncòbkuὰ ŋamntad
+35	ncòbtὰn ŋamntad
+36	ncòbntôg ŋamntad
+37	ncòbsὰmbα̂ ŋamntad
+38	ncòbfôm ŋamntad
+39	ncòbbwə̀'ə̂ ŋamntad
+40	ŋamkuὰ
+41	ncòbncʉ' ŋamkuὰ
+42	ncòbbα̂ ŋamkuὰ
+43	ncòbtad ŋamkuὰ
+44	ncòbkuὰ ŋamkuὰ
+45	ncòbtὰn ŋamkuὰ
+46	ncòbntôg ŋamkuὰ
+47	ncòbsὰmbα̂ ŋamkuὰ
+48	ncòbfôm ŋamkuὰ
+49	ncòbbwə̀'ə̂ ŋamkuὰ
+50	ŋamntὰn
+51	ncòbncʉ' ŋamntὰn
+52	ncòbbα̂ ŋamntὰn
+53	ncòbtad ŋamntὰn
+54	ncòbkuὰ ŋamntὰn
+55	ncòbtὰn ŋamntὰn
+56	ncòbntôg ŋamntὰn
+57	ncòbsὰmbα̂ ŋamntὰn
+58	ncòbfôm ŋamntὰn
+59	ncòbbwə̀'ə̂ ŋamntὰn
+60	ŋamntogə
+61	ncòbncʉ' ŋamntogə
+62	ncòbbα̂ ŋamntogə
+63	ncòbtad ŋamntogə
+64	ncòbkuὰ ŋamntogə
+65	ncòbtὰn ŋamntogə
+66	ncòbntôg ŋamntogə
+67	ncòbsὰmbα̂ ŋamntogə
+68	ncòbfôm ŋamntogə
+69	ncòbbwə̀'ə̂ ŋamntogə
+70	ŋamsὰmbα̂
+71	ncòbncʉ' ŋamsὰmbα̂
+72	ncòbbα̂ ŋamsὰmbα̂
+73	ncòbtad ŋamsὰmbα̂
+74	ncòbkuὰ ŋamsὰmbα̂
+75	ncòbtὰn ŋamsὰmbα̂
+76	ncòbntôg ŋamsὰmbα̂
+77	ncòbsὰmbα̂ ŋamsὰmbα̂
+78	ncòbfôm ŋamsὰmbα̂
+79	ncòbbwə̀'ə̂ ŋamsὰmbα̂
+80	ŋamfomə
+81	ncòbncʉ' ŋamfomə
+82	ncòbbα̂ ŋamfomə
+83	ncòbtad ŋamfomə
+84	ncòbkuὰ ŋamfomə
+85	ncòbtὰn ŋamfomə
+86	ncòbntôg ŋamfomə
+87	ncòbsὰmbα̂ ŋamfomə
+88	ncòbfôm ŋamfomə
+89	ncòbbwə̀'ə̂ ŋamfomə
+90	ŋambwə̀'ə
+91	ncòbncʉ' ŋambwə̀'ə
+92	ncòbbα̂ ŋambwə̀'ə
+93	ncòbtad ŋambwə̀'ə
+94	ncòbkuὰ ŋambwə̀'ə
+95	ncòbtὰn ŋambwə̀'ə
+96	ncòbntôg ŋambwə̀'ə
+97	ncòbsὰmbα̂ ŋambwə̀'ə
+98	ncòbfôm ŋambwə̀'ə
+99	ncòbbwə̀'ə̂ ŋambwə̀'ə
+100	nkʉ
+101	ncʉ'tû nkʉ
+102	bα̂tû nkʉ
+103	tadtû nkʉ
+104	kuὰtû nkʉ
+105	tὰntû nkʉ
+106	ntôgtû nkʉ
+107	sὰmbα̂tû nkʉ
+108	fômtû nkʉ
+109	bwə̀'ə̂tû nkʉ
+110	mɛnmbʉ̂m nkʉ
+111	ncòbncʉ' mɛnmbʉ̂m nkʉ
+112	ncòbbα̂ mɛnmbʉ̂m nkʉ
+113	ncòbtad mɛnmbʉ̂m nkʉ
+114	ncòbkuὰ mɛnmbʉ̂m nkʉ
+115	ncòbtὰn mɛnmbʉ̂m nkʉ
+116	ncòbntôg mɛnmbʉ̂m nkʉ
+117	ncòbsὰmbα̂ mɛnmbʉ̂m nkʉ
+118	ncòbfôm mɛnmbʉ̂m nkʉ
+119	ncòbfôm mɛnmbʉ̂m nkʉ
+120	bonbα̂ nkʉ
+121	ncòbncʉ' bonbα̂ nkʉ
+122	ncòbbα̂ bonbα̂ nkʉ
+123	ncòbtad bonbα̂ nkʉ
+124	ncòbkuὰ bonbα̂ nkʉ
+125	ncòbtὰn bonbα̂ nkʉ
+126	ncòbntôg bonbα̂ nkʉ
+127	ncòbsὰmbα̂ bonbα̂ nkʉ
+128	ncòbfôm bonbα̂ nkʉ
+129	ncòbbwə̀'ə̂ bonbα̂ nkʉ
+130	bontad nkʉ
+131	ncòbncʉ' bontad nkʉ
+132	ncòbbα̂ bontad nkʉ
+133	ncòbtad bontad nkʉ
+134	ncòbkuὰ bontad nkʉ
+135	ncòbtὰn bontad nkʉ
+136	ncòbntôg bontad nkʉ
+137	ncòbsὰmbα̂ bontad nkʉ
+138	ncòbfôm bontad nkʉ
+139	ncòbbwə̀'ə̂ bontad nkʉ
+140	bonkuὰ nkʉ
+141	ncòbncʉ' bonkuὰ nkʉ
+142	ncòbbα̂ bonkuὰ nkʉ
+143	ncòbtad bonkuὰ nkʉ
+144	ncòbkuὰ bonkuὰ nkʉ
+145	ncòbtὰn bonkuὰ nkʉ
+146	ncòbntôg bonkuὰ nkʉ
+147	ncòbsὰmbα̂ bonkuὰ nkʉ
+148	ncòbfôm bonkuὰ nkʉ
+149	ncòbbwə̀'ə̂ bonkuὰ nkʉ
+150	bontὰn nkʉ
+151	ncòbncʉ' bontὰn nkʉ
+152	ncòbbα̂ bontὰn nkʉ
+153	ncòbtad bontὰn nkʉ
+154	ncòbkuὰ bontὰn nkʉ
+155	ncòbtὰn bontὰn nkʉ
+156	ncòbntôg bontὰn nkʉ
+157	ncòbsὰmbα̂ bontὰn nkʉ
+158	ncòbfôm bontὰn nkʉ
+159	ncòbbwə̀'ə̂ bontὰn nkʉ
+160	bonntôg nkʉ
+161	ncòbncʉ' bonfôm nkʉ
+162	ncòbbα̂ bonfôm nkʉ
+163	ncòbtad bonfôm nkʉ
+164	ncòbkuὰ bonfôm nkʉ
+165	ncòbtὰn bonfôm nkʉ
+166	ncòbntôg bonntôg nkʉ
+167	ncòbsὰmbα̂ bonfôm nkʉ
+168	ncòbfôm bonntôg nkʉ
+169	ncòbbwə̀'ə̂ bonntôg nkʉ
+170	bonsὰmbα̂ nkʉ
+171	ncòbncʉ' bonsὰmbα̂ nkʉ
+172	ncòbbα̂ bonsὰmbα̂ nkʉ
+173	ncòbtad bonsὰmbα̂ nkʉ
+174	ncòbkuὰ bonsὰmbα̂ nkʉ
+175	ncòbtὰn bonsὰmbα̂ nkʉ
+176	ncòbntôg bonsὰmbα̂ nkʉ
+177	ncòbsὰmbα̂ bonsὰmbα̂ nkʉ
+178	ncòbfôm bonsὰmbα̂ nkʉ
+179	ncòbbwə̀'ə̂ bonsὰmbα̂ nkʉ
+180	bonntôg nkʉ
+181	ncòbncʉ' bonfôm nkʉ
+182	ncòbbα̂ bonfôm nkʉ
+183	ncòbtad bonfôm nkʉ
+184	ncòbkuὰ bonfôm nkʉ
+185	ncòbtὰn bonfôm nkʉ
+186	ncòbntôg bonntôg nkʉ
+187	ncòbsὰmbα̂ bonfôm nkʉ
+188	ncòbfôm bonfôm nkʉ
+189	ncòbfôm bonfôm nkʉ
+190	bonbwə̀'ə nkʉ
+191	ncòbncʉ' bonbwə̀'ə nkʉ
+192	ncòbbα̂ bonbwə̀'ə nkʉ
+193	ncòbtad bonbwə̀'ə nkʉ
+194	ncòbkuὰ bonbwə̀'ə nkʉ
+195	ncòbtὰn bonbwə̀'ə nkʉ
+196	ncòbntôg bonbwə̀'ə nkʉ
+197	ncòbsὰmbα̂ bonbwə̀'ə nkʉ
+198	ncòbfôm bonbwə̀'ə nkʉ
+199	ncòbbwə̀'ə̂ bonbwə̀'ə nkʉ
+200	nkʉbα̂
+201	ncʉ'tû nkʉbα̂
+202	bα̂tû nkʉbα̂
+203	tadtû nkʉbα̂
+204	kuὰtû nkʉbα̂
+205	tὰntû nkʉbα̂
+206	ntôgtû nkʉbα̂
+207	sὰmbα̂tû nkʉbα̂
+208	fômtû nkʉbα̂
+209	bwə̀'ə̂tû nkʉbα̂
+210	mɛnmbʉ̂m nkʉbα̂
+211	ncòbncʉ' mɛnmbʉ̂m nkʉbα̂
+212	ncòbbα̂ mɛnmbʉ̂m nkʉbα̂
+213	ncòbtad mɛnmbʉ̂m nkʉbα̂
+214	ncòbkuὰ mɛnmbʉ̂m nkʉbα̂
+215	ncòbtὰn mɛnmbʉ̂m nkʉbα̂
+216	ncòbntôg mɛnmbʉ̂m nkʉbα̂
+217	ncòbsὰmbα̂ mɛnmbʉ̂m nkʉbα̂
+218	ncòbfôm mɛnmbʉ̂m nkʉbα̂
+219	ncòbbwə̀'ə̂ mɛnmbʉ̂m nkʉbα̂
+220	bonbα̂ ncaꞆbα̂
+221	ncòbncʉ' bonbα̂ nkʉbα̂
+222	ncòbbα̂ bonbα̂ nkʉbα̂
+223	ncòbtad bonbα̂ nkʉbα̂
+224	ncòbkuὰ bonbα̂ nkʉbα̂
+225	ncòbtὰn bonbα̂ nkʉbα̂
+226	ncòbntôg bonbα̂ nkʉbα̂
+227	ncòbsὰmbα̂ bonbα̂ nkʉbα̂
+228	ncòbfôm bonbα̂ nkʉbα̂
+229	ncòbbwə̀'ə̂ bonbα̂ nkʉbα̂
+230	bontad ncaꞆbα̂
+231	ncòbncʉ' bontad nkʉbα̂
+232	ncòbbα̂ bontad nkʉbα̂
+233	ncòbtad bontad nkʉbα̂
+234	ncòbkuὰ bontad nkʉbα̂
+235	ncòbtὰn bontad nkʉbα̂
+236	ncòbntôg bontad nkʉbα̂
+237	ncòbsὰmbα̂ bontad nkʉbα̂
+238	ncòbfôm bontad nkʉbα̂
+239	ncòbbwə̀'ə̂ bontad nkʉbα̂
+240	bonkuὰ ncaꞆbα̂
+241	ncòbncʉ' bonkuὰ nkʉbα̂
+242	ncòbbα̂ bonkuὰ nkʉbα̂
+243	ncòbtad bonkuὰ nkʉbα̂
+244	ncòbkuὰ bonkuὰ nkʉbα̂
+245	ncòbtὰn bonkuὰ nkʉbα̂
+246	ncòbntôg bonkuὰ nkʉbα̂
+247	ncòbsὰmbα̂ bonkuὰ nkʉbα̂
+248	ncòbfôm bonkuὰ nkʉbα̂
+249	ncòbbwə̀'ə̂ bonkuὰ nkʉbα̂
+250	bontὰn ncaꞆbα̂
+251	ncòbncʉ' bontὰn nkʉbα̂
+252	ncòbbα̂ bontὰn nkʉbα̂
+253	ncòbtad bontὰn nkʉbα̂
+254	ncòbkuὰ bontὰn nkʉbα̂
+255	ncòbtὰn bontὰn nkʉbα̂
+256	ncòbntôg bontὰn nkʉbα̂
+257	ncòbsὰmbα̂ bontὰn nkʉbα̂
+258	ncòbfôm bontὰn nkʉbα̂
+259	ncòbbwə̀'ə̂ bontὰn nkʉbα̂
+260	bonntôg nkʉbα̂
+261	ncòbncʉ' bonntôg nkʉbα̂
+262	ncòbbα̂ bonntôg nkʉbα̂
+263	ncòbtad bonntôg nkʉbα̂
+264	ncòbkuὰ bonntôg nkʉbα̂
+265	ncòbtὰn bonntôg nkʉbα̂
+266	ncòbntôg bonntôg nkʉbα̂
+267	ncòbsὰmbα̂ bonntôg nkʉbα̂
+268	ncòbfôm bonntôg nkʉbα̂
+269	ncòbbwə̀'ə̂ bonntôg nkʉbα̂
+270	bonsὰmbα̂ ncaꞆbα̂
+271	ncòbncʉ' bonsὰmbα̂ nkʉbα̂
+272	ncòbbα̂ bonsὰmbα̂ nkʉbα̂
+273	ncòbtad bonsὰmbα̂ nkʉbα̂
+274	ncòbkuὰ bonsὰmbα̂ nkʉbα̂
+275	ncòbtὰn bonsὰmbα̂ nkʉbα̂
+276	ncòbntôg bonsὰmbα̂ nkʉbα̂
+277	ncòbsὰmbα̂ bonsὰmbα̂ nkʉbα̂
+278	ncòbfôm bonsὰmbα̂ nkʉbα̂
+279	ncòbbwə̀'ə̂ bonsὰmbα̂ nkʉbα̂
+280	bonnkʉ nkʉbα̂
+281	ncòbncʉ' bonfôm nkʉbα̂
+282	ncòbbα̂ bonfôm nkʉbα̂
+283	ncòbtad bonfôm nkʉbα̂
+284	ncòbkuὰ bonfôm nkʉbα̂
+285	ncòbtὰn bonfôm nkʉbα̂
+286	ncòbntôg bonfôm nkʉbα̂
+287	ncòbsὰmbα̂ bonfôm nkʉbα̂
+288	ncòbfôm bonfôm nkʉbα̂
+289	ncòbbwə̀'ə̂ bonfôm nkʉbα̂
+290	bonnkʉ nkʉbα̂
+291	ncòbncʉ' bonbwə̀'ə̂ nkʉbα̂
+292	ncòbbα̂ bonbwə̀'ə̂ nkʉbα̂
+293	ncòbtad bonbwə̀'ə̂ nkʉbα̂
+294	ncòbkuὰ bonbwə̀'ə̂ nkʉbα̂
+295	ncòbtὰn bonbwə̀'ə̂ nkʉbα̂
+296	ncòbntôg bonbwə̀'ə̂ nkʉbα̂
+297	ncòbsὰmbα̂ bonbwə̀'ə̂ nkʉbα̂
+298	ncòbfôm bonbwə̀'ə̂ nkʉbα̂
+299	ncòbbwə̀'ə̂ bonbwə̀'ə̂ nkʉbα̂
+300	nkʉtad
+301	ncʉ'tû nkʉtad
+302	bα̂tû nkʉtad
+303	tadtû nkʉtad
+304	kuὰtû nkʉtad
+305	tὰntû nkʉtad
+306	ntôgtû nkʉtad
+307	sὰmbα̂tû nkʉtad
+308	fômtû nkʉtad
+309	bwə̀'ə̂tû nkʉtad
+310	mɛnmbʉ̂m nkʉtad
+311	ncòbncʉ' mɛnmbʉ̂m nkʉtad
+312	ncòbbα̂ mɛnmbʉ̂m nkʉtad
+313	ncòbtad mɛnmbʉ̂m nkʉtad
+314	ncòbkuὰ mɛnmbʉ̂m nkʉtad
+315	ncòbtὰn mɛnmbʉ̂m nkʉtad
+316	ncòbntôg mɛnmbʉ̂m nkʉtad
+317	ncòbsὰmbα̂ mɛnmbʉ̂m nkʉtad
+318	ncòbfôm mɛnmbʉ̂m nkʉtad
+319	ncòbbwə̀'ə̂ mɛnmbʉ̂m nkʉtad
+320	bonbα̂ ncaꞆtad
+321	ncòbncʉ' bonbα̂ nkʉtad
+322	ncòbbα̂ bonbα̂ nkʉtad
+323	ncòbtad bonbα̂ nkʉtad
+324	ncòbkuὰ bonbα̂ nkʉtad
+325	ncòbtὰn bonbα̂ nkʉtad
+326	ncòbntôg bonbα̂ nkʉtad
+327	ncòbsὰmbα̂ bonbα̂ nkʉtad
+328	ncòbfôm bonbα̂ nkʉtad
+329	ncòbbwə̀'ə̂ bonbα̂ nkʉtad
+330	bontad ncaꞆtad
+331	ncòbncʉ' bontad nkʉtad
+332	ncòbbα̂ bontad nkʉtad
+333	ncòbtad bontad nkʉtad
+334	ncòbkuὰ bontad nkʉtad
+335	ncòbtὰn bontad nkʉtad
+336	ncòbntôg bontad nkʉtad
+337	ncòbsὰmbα̂ bontad nkʉtad
+338	ncòbfôm bontad nkʉtad
+339	ncòbbwə̀'ə̂ bontad nkʉtad
+340	bonkuὰ ncaꞆtad
+341	ncòbncʉ' bonkuὰ nkʉtad
+342	ncòbbα̂ bonkuὰ nkʉtad
+343	ncòbtad bonkuὰ nkʉtad
+344	ncòbkuὰ bonkuὰ nkʉtad
+345	ncòbtὰn bonkuὰ nkʉtad
+346	ncòbntôg bonkuὰ nkʉtad
+347	ncòbsὰmbα̂ bonkuὰ nkʉtad
+348	ncòbfôm bonkuὰ nkʉtad
+349	ncòbbwə̀'ə̂ bonkuὰ nkʉtad
+350	bontὰn ncaꞆtad
+351	ncòbncʉ' bontὰn nkʉtad
+352	ncòbbα̂ bontὰn nkʉtad
+353	ncòbtad bontὰn nkʉtad
+354	ncòbkuὰ bontὰn nkʉtad
+355	ncòbtὰn bontὰn nkʉtad
+356	ncòbntôg bontὰn nkʉtad
+357	ncòbsὰmbα̂ bontὰn nkʉtad
+358	ncòbfôm bontὰn nkʉtad
+359	ncòbbwə̀'ə̂ bontὰn nkʉtad
+360	bonntôg nkʉtad
+361	ncòbncʉ' bonntôg nkʉtad
+362	ncòbbα̂ bonntôg nkʉtad
+363	ncòbtad bonntôg nkʉtad
+364	ncòbkuὰ bonntôg nkʉtad
+365	ncòbtὰn bonntôg nkʉtad
+366	ncòbntôg bonntôg nkʉtad
+367	ncòbsὰmbα̂ bonntôg nkʉtad
+368	ncòbfôm bonntôg nkʉtad
+369	ncòbbwə̀'ə̂ bonntôg nkʉtad
+370	bonsὰmbα̂ ncaꞆtad
+371	ncòbncʉ' bonsὰmbα̂ nkʉtad
+372	ncòbbα̂ bonsὰmbα̂ nkʉtad
+373	ncòbtad bonsὰmbα̂ nkʉtad
+374	ncòbkuὰ bonsὰmbα̂ nkʉtad
+375	ncòbtὰn bonsὰmbα̂ nkʉtad
+376	ncòbntôg bonsὰmbα̂ nkʉtad
+377	ncòbsὰmbα̂ bonsὰmbα̂ nkʉtad
+378	ncòbfôm bonsὰmbα̂ nkʉtad
+379	ncòbbwə̀'ə̂ bonsὰmbα̂ nkʉtad
+380	bonnkʉ nkʉtad
+381	ncòbncʉ' bonfôm nkʉtad
+382	ncòbbα̂ bonfôm nkʉtad
+383	ncòbtad bonfôm nkʉtad
+384	ncòbkuὰ bonfôm nkʉtad
+385	ncòbtὰn bonfôm nkʉtad
+386	ncòbntôg bonfôm nkʉtad
+387	ncòbsὰmbα̂ bonfôm nkʉtad
+388	ncòbfôm bonfôm nkʉtad
+389	ncòbbwə̀'ə̂ bonfôm nkʉtad
+390	bonnkʉ nkʉtad
+391	ncòbncʉ' bonbwə̀'ə̂ nkʉtad
+392	ncòbbα̂ bonbwə̀'ə̂ nkʉtad
+393	ncòbtad bonbwə̀'ə̂ nkʉtad
+394	ncòbkuὰ bonbwə̀'ə̂ nkʉtad
+395	ncòbtὰn bonbwə̀'ə̂ nkʉtad
+396	ncòbntôg bonbwə̀'ə̂ nkʉtad
+397	ncòbsὰmbα̂ bonbwə̀'ə̂ nkʉtad
+398	ncòbfôm bonbwə̀'ə̂ nkʉtad
+399	ncòbbwə̀'ə̂ bonbwə̀'ə̂ nkʉtad
+400	nkʉkuὰ
+401	ncʉ'tû nkʉkuὰ
+402	bα̂tû nkʉkuὰ
+403	tadtû nkʉkuὰ
+404	kuὰtû nkʉkuὰ
+405	tὰntû nkʉkuὰ
+406	ntôgtû nkʉkuὰ
+407	sὰmbα̂tû nkʉkuὰ
+408	fômtû nkʉkuὰ
+409	bwə̀'ə̂tû nkʉkuὰ
+410	mɛnmbʉ̂m nkʉkuὰ
+411	ncòbncʉ' mɛnmbʉ̂m nkʉkuὰ
+412	ncòbbα̂ mɛnmbʉ̂m nkʉkuὰ
+413	ncòbtad mɛnmbʉ̂m nkʉkuὰ
+414	ncòbkuὰ mɛnmbʉ̂m nkʉkuὰ
+415	ncòbtὰn mɛnmbʉ̂m nkʉkuὰ
+416	ncòbntôg mɛnmbʉ̂m nkʉkuὰ
+417	ncòbsὰmbα̂ mɛnmbʉ̂m nkʉkuὰ
+418	ncòbfôm mɛnmbʉ̂m nkʉkuὰ
+419	ncòbbwə̀'ə̂ mɛnmbʉ̂m nkʉkuὰ
+420	bonbα̂ ncaꞆkuὰ
+421	ncòbncʉ' bonbα̂ nkʉkuὰ
+422	ncòbbα̂ bonbα̂ nkʉkuὰ
+423	ncòbtad bonbα̂ nkʉkuὰ
+424	ncòbkuὰ bonbα̂ nkʉkuὰ
+425	ncòbtὰn bonbα̂ nkʉkuὰ
+426	ncòbntôg bonbα̂ nkʉkuὰ
+427	ncòbsὰmbα̂ bonbα̂ nkʉkuὰ
+428	ncòbfôm bonbα̂ nkʉkuὰ
+429	ncòbbwə̀'ə̂ bonbα̂ nkʉkuὰ
+430	bontad ncaꞆkuὰ
+431	ncòbncʉ' bontad nkʉkuὰ
+432	ncòbbα̂ bontad nkʉkuὰ
+433	ncòbtad bontad nkʉkuὰ
+434	ncòbkuὰ bontad nkʉkuὰ
+435	ncòbtὰn bontad nkʉkuὰ
+436	ncòbntôg bontad nkʉkuὰ
+437	ncòbsὰmbα̂ bontad nkʉkuὰ
+438	ncòbfôm bontad nkʉkuὰ
+439	ncòbbwə̀'ə̂ bontad nkʉkuὰ
+440	bonkuὰ ncaꞆkuὰ
+441	ncòbncʉ' bonkuὰ nkʉkuὰ
+442	ncòbbα̂ bonkuὰ nkʉkuὰ
+443	ncòbtad bonkuὰ nkʉkuὰ
+444	ncòbkuὰ bonkuὰ nkʉkuὰ
+445	ncòbtὰn bonkuὰ nkʉkuὰ
+446	ncòbntôg bonkuὰ nkʉkuὰ
+447	ncòbsὰmbα̂ bonkuὰ nkʉkuὰ
+448	ncòbfôm bonkuὰ nkʉkuὰ
+449	ncòbbwə̀'ə̂ bonkuὰ nkʉkuὰ
+450	bontὰn ncaꞆkuὰ
+451	ncòbncʉ' bontὰn nkʉkuὰ
+452	ncòbbα̂ bontὰn nkʉkuὰ
+453	ncòbtad bontὰn nkʉkuὰ
+454	ncòbkuὰ bontὰn nkʉkuὰ
+455	ncòbtὰn bontὰn nkʉkuὰ
+456	ncòbntôg bontὰn nkʉkuὰ
+457	ncòbsὰmbα̂ bontὰn nkʉkuὰ
+458	ncòbfôm bontὰn nkʉkuὰ
+459	ncòbbwə̀'ə̂ bontὰn nkʉkuὰ
+460	bonntôg nkʉkuὰ
+461	ncòbncʉ' bonntôg nkʉkuὰ
+462	ncòbbα̂ bonntôg nkʉkuὰ
+463	ncòbtad bonntôg nkʉkuὰ
+464	ncòbkuὰ bonntôg nkʉkuὰ
+465	ncòbtὰn bonntôg nkʉkuὰ
+466	ncòbntôg bonntôg nkʉkuὰ
+467	ncòbsὰmbα̂ bonntôg nkʉkuὰ
+468	ncòbfôm bonntôg nkʉkuὰ
+469	ncòbbwə̀'ə̂ bonntôg nkʉkuὰ
+470	bonsὰmbα̂ ncaꞆkuὰ
+471	ncòbncʉ' bonsὰmbα̂ nkʉkuὰ
+472	ncòbbα̂ bonsὰmbα̂ nkʉkuὰ
+473	ncòbtad bonsὰmbα̂ nkʉkuὰ
+474	ncòbkuὰ bonsὰmbα̂ nkʉkuὰ
+475	ncòbtὰn bonsὰmbα̂ nkʉkuὰ
+476	ncòbntôg bonsὰmbα̂ nkʉkuὰ
+477	ncòbsὰmbα̂ bonsὰmbα̂ nkʉkuὰ
+478	ncòbfôm bonsὰmbα̂ nkʉkuὰ
+479	ncòbbwə̀'ə̂ bonsὰmbα̂ nkʉkuὰ
+480	bonnkʉ nkʉkuὰ
+481	ncòbncʉ' bonfôm nkʉkuὰ
+482	ncòbbα̂ bonfôm nkʉkuὰ
+483	ncòbtad bonfôm nkʉkuὰ
+484	ncòbkuὰ bonfôm nkʉkuὰ
+485	ncòbtὰn bonfôm nkʉkuὰ
+486	ncòbntôg bonfôm nkʉkuὰ
+487	ncòbsὰmbα̂ bonfôm nkʉkuὰ
+488	ncòbfôm bonfôm nkʉkuὰ
+489	ncòbbwə̀'ə̂ bonfôm nkʉkuὰ
+490	bonnkʉ nkʉkuὰ
+491	ncòbncʉ' bonbwə̀'ə̂ nkʉkuὰ
+492	ncòbbα̂ bonbwə̀'ə̂ nkʉkuὰ
+493	ncòbtad bonbwə̀'ə̂ nkʉkuὰ
+494	ncòbkuὰ bonbwə̀'ə̂ nkʉkuὰ
+495	ncòbtὰn bonbwə̀'ə̂ nkʉkuὰ
+496	ncòbntôg bonbwə̀'ə̂ nkʉkuὰ
+497	ncòbsὰmbα̂ bonbwə̀'ə̂ nkʉkuὰ
+498	ncòbfôm bonbwə̀'ə̂ nkʉkuὰ
+499	ncòbbwə̀'ə̂ bonbwə̀'ə̂ nkʉkuὰ
+500	nkʉtὰn
+501	ncʉ'tû nkʉtὰn
+502	bα̂tû nkʉtὰn
+503	tadtû nkʉtὰn
+504	kuὰtû nkʉtὰn
+505	tὰntû nkʉtὰn
+506	ntôgtû nkʉtὰn
+507	sὰmbα̂tû nkʉtὰn
+508	fômtû nkʉtὰn
+509	bwə̀'ə̂tû nkʉtὰn
+510	mɛnmbʉ̂m nkʉtὰn
+511	ncòbncʉ' mɛnmbʉ̂m nkʉtὰn
+512	ncòbbα̂ mɛnmbʉ̂m nkʉtὰn
+513	ncòbtad mɛnmbʉ̂m nkʉtὰn
+514	ncòbkuὰ mɛnmbʉ̂m nkʉtὰn
+515	ncòbtὰn mɛnmbʉ̂m nkʉtὰn
+516	ncòbntôg mɛnmbʉ̂m nkʉtὰn
+517	ncòbsὰmbα̂ mɛnmbʉ̂m nkʉtὰn
+518	ncòbfôm mɛnmbʉ̂m nkʉtὰn
+519	ncòbbwə̀'ə̂ mɛnmbʉ̂m nkʉtὰn
+520	bonbα̂ ncaꞆtὰn
+521	ncòbncʉ' bonbα̂ nkʉtὰn
+522	ncòbbα̂ bonbα̂ nkʉtὰn
+523	ncòbtad bonbα̂ nkʉtὰn
+524	ncòbkuὰ bonbα̂ nkʉtὰn
+525	ncòbtὰn bonbα̂ nkʉtὰn
+526	ncòbntôg bonbα̂ nkʉtὰn
+527	ncòbsὰmbα̂ bonbα̂ nkʉtὰn
+528	ncòbfôm bonbα̂ nkʉtὰn
+529	ncòbbwə̀'ə̂ bonbα̂ nkʉtὰn
+530	bontad ncaꞆtὰn
+531	ncòbncʉ' bontad nkʉtὰn
+532	ncòbbα̂ bontad nkʉtὰn
+533	ncòbtad bontad nkʉtὰn
+534	ncòbkuὰ bontad nkʉtὰn
+535	ncòbtὰn bontad nkʉtὰn
+536	ncòbntôg bontad nkʉtὰn
+537	ncòbsὰmbα̂ bontad nkʉtὰn
+538	ncòbfôm bontad nkʉtὰn
+539	ncòbbwə̀'ə̂ bontad nkʉtὰn
+540	bonkuὰ ncaꞆtὰn
+541	ncòbncʉ' bonkuὰ nkʉtὰn
+542	ncòbbα̂ bonkuὰ nkʉtὰn
+543	ncòbtad bonkuὰ nkʉtὰn
+544	ncòbkuὰ bonkuὰ nkʉtὰn
+545	ncòbtὰn bonkuὰ nkʉtὰn
+546	ncòbntôg bonkuὰ nkʉtὰn
+547	ncòbsὰmbα̂ bonkuὰ nkʉtὰn
+548	ncòbfôm bonkuὰ nkʉtὰn
+549	ncòbbwə̀'ə̂ bonkuὰ nkʉtὰn
+550	bontὰn ncaꞆtὰn
+551	ncòbncʉ' bontὰn nkʉtὰn
+552	ncòbbα̂ bontὰn nkʉtὰn
+553	ncòbtad bontὰn nkʉtὰn
+554	ncòbkuὰ bontὰn nkʉtὰn
+555	ncòbtὰn bontὰn nkʉtὰn
+556	ncòbntôg bontὰn nkʉtὰn
+557	ncòbsὰmbα̂ bontὰn nkʉtὰn
+558	ncòbfôm bontὰn nkʉtὰn
+559	ncòbbwə̀'ə̂ bontὰn nkʉtὰn
+560	bonntôg nkʉtὰn
+561	ncòbncʉ' bonntôg nkʉtὰn
+562	ncòbbα̂ bonntôg nkʉtὰn
+563	ncòbtad bonntôg nkʉtὰn
+564	ncòbkuὰ bonntôg nkʉtὰn
+565	ncòbtὰn bonntôg nkʉtὰn
+566	ncòbntôg bonntôg nkʉtὰn
+567	ncòbsὰmbα̂ bonntôg nkʉtὰn
+568	ncòbfôm bonntôg nkʉtὰn
+569	ncòbbwə̀'ə̂ bonntôg nkʉtὰn
+570	bonsὰmbα̂ ncaꞆtὰn
+571	ncòbncʉ' bonsὰmbα̂ nkʉtὰn
+572	ncòbbα̂ bonsὰmbα̂ nkʉtὰn
+573	ncòbtad bonsὰmbα̂ nkʉtὰn
+574	ncòbkuὰ bonsὰmbα̂ nkʉtὰn
+575	ncòbtὰn bonsὰmbα̂ nkʉtὰn
+576	ncòbntôg bonsὰmbα̂ nkʉtὰn
+577	ncòbsὰmbα̂ bonsὰmbα̂ nkʉtὰn
+578	ncòbfôm bonsὰmbα̂ nkʉtὰn
+579	ncòbbwə̀'ə̂ bonsὰmbα̂ nkʉtὰn
+580	bonnkʉ nkʉtὰn
+581	ncòbncʉ' bonfôm nkʉtὰn
+582	ncòbbα̂ bonfôm nkʉtὰn
+583	ncòbtad bonfôm nkʉtὰn
+584	ncòbkuὰ bonfôm nkʉtὰn
+585	ncòbtὰn bonfôm nkʉtὰn
+586	ncòbntôg bonfôm nkʉtὰn
+587	ncòbsὰmbα̂ bonfôm nkʉtὰn
+588	ncòbfôm bonfôm nkʉtὰn
+589	ncòbbwə̀'ə̂ bonfôm nkʉtὰn
+590	bonnkʉ nkʉtὰn
+591	ncòbncʉ' bonbwə̀'ə̂ nkʉtὰn
+592	ncòbbα̂ bonbwə̀'ə̂ nkʉtὰn
+593	ncòbtad bonbwə̀'ə̂ nkʉtὰn
+594	ncòbkuὰ bonbwə̀'ə̂ nkʉtὰn
+595	ncòbtὰn bonbwə̀'ə̂ nkʉtὰn
+596	ncòbntôg bonbwə̀'ə̂ nkʉtὰn
+597	ncòbsὰmbα̂ bonbwə̀'ə̂ nkʉtὰn
+598	ncòbfôm bonbwə̀'ə̂ nkʉtὰn
+599	ncòbbwə̀'ə̂ bonbwə̀'ə̂ nkʉtὰn
+600	nkʉntogə
+601	ncʉ'tû nkʉntogə
+602	bα̂tû nkʉntogə
+603	tadtû nkʉntogə
+604	kuὰtû nkʉntogə
+605	tὰntû nkʉntogə
+606	ntôgtû nkʉntogə
+607	sὰmbα̂tû nkʉntogə
+608	fômtû nkʉntogə
+609	bwə̀'ə̂tû nkʉntogə
+610	mɛnmbʉ̂m nkʉntogə
+611	ncòbncʉ' mɛnmbʉ̂m nkʉntogə
+612	ncòbbα̂ mɛnmbʉ̂m nkʉntogə
+613	ncòbtad mɛnmbʉ̂m nkʉntogə
+614	ncòbkuὰ mɛnmbʉ̂m nkʉntogə
+615	ncòbtὰn mɛnmbʉ̂m nkʉntogə
+616	ncòbntôg mɛnmbʉ̂m nkʉntogə
+617	ncòbsὰmbα̂ mɛnmbʉ̂m nkʉntogə
+618	ncòbfôm mɛnmbʉ̂m nkʉntogə
+619	ncòbbwə̀'ə̂ mɛnmbʉ̂m nkʉntogə
+620	bonbα̂ ncaꞆntogə
+621	ncòbncʉ' bonbα̂ nkʉntogə
+622	ncòbbα̂ bonbα̂ nkʉntogə
+623	ncòbtad bonbα̂ nkʉntogə
+624	ncòbkuὰ bonbα̂ nkʉntogə
+625	ncòbtὰn bonbα̂ nkʉntogə
+626	ncòbntôg bonbα̂ nkʉntogə
+627	ncòbsὰmbα̂ bonbα̂ nkʉntogə
+628	ncòbfôm bonbα̂ nkʉntogə
+629	ncòbbwə̀'ə̂ bonbα̂ nkʉntogə
+630	bontad ncaꞆntogə
+631	ncòbncʉ' bontad nkʉntogə
+632	ncòbbα̂ bontad nkʉntogə
+633	ncòbtad bontad nkʉntogə
+634	ncòbkuὰ bontad nkʉntogə
+635	ncòbtὰn bontad nkʉntogə
+636	ncòbntôg bontad nkʉntogə
+637	ncòbsὰmbα̂ bontad nkʉntogə
+638	ncòbfôm bontad nkʉntogə
+639	ncòbbwə̀'ə̂ bontad nkʉntogə
+640	bonkuὰ ncaꞆntogə
+641	ncòbncʉ' bonkuὰ nkʉntogə
+642	ncòbbα̂ bonkuὰ nkʉntogə
+643	ncòbtad bonkuὰ nkʉntogə
+644	ncòbkuὰ bonkuὰ nkʉntogə
+645	ncòbtὰn bonkuὰ nkʉntogə
+646	ncòbntôg bonkuὰ nkʉntogə
+647	ncòbsὰmbα̂ bonkuὰ nkʉntogə
+648	ncòbfôm bonkuὰ nkʉntogə
+649	ncòbbwə̀'ə̂ bonkuὰ nkʉntogə
+650	bontὰn ncaꞆntogə
+651	ncòbncʉ' bontὰn nkʉntogə
+652	ncòbbα̂ bontὰn nkʉntogə
+653	ncòbtad bontὰn nkʉntogə
+654	ncòbkuὰ bontὰn nkʉntogə
+655	ncòbtὰn bontὰn nkʉntogə
+656	ncòbntôg bontὰn nkʉntogə
+657	ncòbsὰmbα̂ bontὰn nkʉntogə
+658	ncòbfôm bontὰn nkʉntogə
+659	ncòbbwə̀'ə̂ bontὰn nkʉntogə
+660	bonntôg nkʉntogə
+661	ncòbncʉ' bonntôg nkʉntogə
+662	ncòbbα̂ bonntôg nkʉntogə
+663	ncòbtad bonntôg nkʉntogə
+664	ncòbkuὰ bonntôg nkʉntogə
+665	ncòbtὰn bonntôg nkʉntogə
+666	ncòbntôg bonntôg nkʉntogə
+667	ncòbsὰmbα̂ bonntôg nkʉntogə
+668	ncòbfôm bonntôg nkʉntogə
+669	ncòbbwə̀'ə̂ bonntôg nkʉntogə
+670	bonsὰmbα̂ ncaꞆntogə
+671	ncòbncʉ' bonsὰmbα̂ nkʉntogə
+672	ncòbbα̂ bonsὰmbα̂ nkʉntogə
+673	ncòbtad bonsὰmbα̂ nkʉntogə
+674	ncòbkuὰ bonsὰmbα̂ nkʉntogə
+675	ncòbtὰn bonsὰmbα̂ nkʉntogə
+676	ncòbntôg bonsὰmbα̂ nkʉntogə
+677	ncòbsὰmbα̂ bonsὰmbα̂ nkʉntogə
+678	ncòbfôm bonsὰmbα̂ nkʉntogə
+679	ncòbbwə̀'ə̂ bonsὰmbα̂ nkʉntogə
+680	bonnkʉ nkʉntogə
+681	ncòbncʉ' bonfôm nkʉntogə
+682	ncòbbα̂ bonfôm nkʉntogə
+683	ncòbtad bonfôm nkʉntogə
+684	ncòbkuὰ bonfôm nkʉntogə
+685	ncòbtὰn bonfôm nkʉntogə
+686	ncòbntôg bonfôm nkʉntogə
+687	ncòbsὰmbα̂ bonfôm nkʉntogə
+688	ncòbfôm bonfôm nkʉntogə
+689	ncòbbwə̀'ə̂ bonfôm nkʉntogə
+690	bonnkʉ nkʉntogə
+691	ncòbncʉ' bonbwə̀'ə̂ nkʉntogə
+692	ncòbbα̂ bonbwə̀'ə̂ nkʉntogə
+693	ncòbtad bonbwə̀'ə̂ nkʉntogə
+694	ncòbkuὰ bonbwə̀'ə̂ nkʉntogə
+695	ncòbtὰn bonbwə̀'ə̂ nkʉntogə
+696	ncòbntôg bonbwə̀'ə̂ nkʉntogə
+697	ncòbsὰmbα̂ bonbwə̀'ə̂ nkʉntogə
+698	ncòbfôm bonbwə̀'ə̂ nkʉntogə
+699	ncòbbwə̀'ə̂ bonbwə̀'ə̂ nkʉntogə
+700	nkʉsὰmbα̂
+701	ncʉ'tû nkʉsὰmbα̂
+702	bα̂tû nkʉsὰmbα̂
+703	tadtû nkʉsὰmbα̂
+704	kuὰtû nkʉsὰmbα̂
+705	tὰntû nkʉsὰmbα̂
+706	ntôgtû nkʉsὰmbα̂
+707	sὰmbα̂tû nkʉsὰmbα̂
+708	fômtû nkʉsὰmbα̂
+709	bwə̀'ə̂tû nkʉsὰmbα̂
+710	mɛnmbʉ̂m nkʉsὰmbα̂
+711	ncòbncʉ' mɛnmbʉ̂m nkʉsὰmbα̂
+712	ncòbbα̂ mɛnmbʉ̂m nkʉsὰmbα̂
+713	ncòbtad mɛnmbʉ̂m nkʉsὰmbα̂
+714	ncòbkuὰ mɛnmbʉ̂m nkʉsὰmbα̂
+715	ncòbtὰn mɛnmbʉ̂m nkʉsὰmbα̂
+716	ncòbntôg mɛnmbʉ̂m nkʉsὰmbα̂
+717	ncòbsὰmbα̂ mɛnmbʉ̂m nkʉsὰmbα̂
+718	ncòbfôm mɛnmbʉ̂m nkʉsὰmbα̂
+719	ncòbbwə̀'ə̂ mɛnmbʉ̂m nkʉsὰmbα̂
+720	bonbα̂ ncaꞆsὰmbα̂
+721	ncòbncʉ' bonbα̂ nkʉsὰmbα̂
+722	ncòbbα̂ bonbα̂ nkʉsὰmbα̂
+723	ncòbtad bonbα̂ nkʉsὰmbα̂
+724	ncòbkuὰ bonbα̂ nkʉsὰmbα̂
+725	ncòbtὰn bonbα̂ nkʉsὰmbα̂
+726	ncòbntôg bonbα̂ nkʉsὰmbα̂
+727	ncòbsὰmbα̂ bonbα̂ nkʉsὰmbα̂
+728	ncòbfôm bonbα̂ nkʉsὰmbα̂
+729	ncòbbwə̀'ə̂ bonbα̂ nkʉsὰmbα̂
+730	bontad ncaꞆsὰmbα̂
+731	ncòbncʉ' bontad nkʉsὰmbα̂
+732	ncòbbα̂ bontad nkʉsὰmbα̂
+733	ncòbtad bontad nkʉsὰmbα̂
+734	ncòbkuὰ bontad nkʉsὰmbα̂
+735	ncòbtὰn bontad nkʉsὰmbα̂
+736	ncòbntôg bontad nkʉsὰmbα̂
+737	ncòbsὰmbα̂ bontad nkʉsὰmbα̂
+738	ncòbfôm bontad nkʉsὰmbα̂
+739	ncòbbwə̀'ə̂ bontad nkʉsὰmbα̂
+740	bonkuὰ ncaꞆsὰmbα̂
+741	ncòbncʉ' bonkuὰ nkʉsὰmbα̂
+742	ncòbbα̂ bonkuὰ nkʉsὰmbα̂
+743	ncòbtad bonkuὰ nkʉsὰmbα̂
+744	ncòbkuὰ bonkuὰ nkʉsὰmbα̂
+745	ncòbtὰn bonkuὰ nkʉsὰmbα̂
+746	ncòbntôg bonkuὰ nkʉsὰmbα̂
+747	ncòbsὰmbα̂ bonkuὰ nkʉsὰmbα̂
+748	ncòbfôm bonkuὰ nkʉsὰmbα̂
+749	ncòbbwə̀'ə̂ bonkuὰ nkʉsὰmbα̂
+750	bontὰn ncaꞆsὰmbα̂
+751	ncòbncʉ' bontὰn nkʉsὰmbα̂
+752	ncòbbα̂ bontὰn nkʉsὰmbα̂
+753	ncòbtad bontὰn nkʉsὰmbα̂
+754	ncòbkuὰ bontὰn nkʉsὰmbα̂
+755	ncòbtὰn bontὰn nkʉsὰmbα̂
+756	ncòbntôg bontὰn nkʉsὰmbα̂
+757	ncòbsὰmbα̂ bontὰn nkʉsὰmbα̂
+758	ncòbfôm bontὰn nkʉsὰmbα̂
+759	ncòbbwə̀'ə̂ bontὰn nkʉsὰmbα̂
+760	bonntôg nkʉsὰmbα̂
+761	ncòbncʉ' bonntôg nkʉsὰmbα̂
+762	ncòbbα̂ bonntôg nkʉsὰmbα̂
+763	ncòbtad bonntôg nkʉsὰmbα̂
+764	ncòbkuὰ bonntôg nkʉsὰmbα̂
+765	ncòbtὰn bonntôg nkʉsὰmbα̂
+766	ncòbntôg bonntôg nkʉsὰmbα̂
+767	ncòbsὰmbα̂ bonntôg nkʉsὰmbα̂
+768	ncòbfôm bonntôg nkʉsὰmbα̂
+769	ncòbbwə̀'ə̂ bonntôg nkʉsὰmbα̂
+770	bonsὰmbα̂ ncaꞆsὰmbα̂
+771	ncòbncʉ' bonsὰmbα̂ nkʉsὰmbα̂
+772	ncòbbα̂ bonsὰmbα̂ nkʉsὰmbα̂
+773	ncòbtad bonsὰmbα̂ nkʉsὰmbα̂
+774	ncòbkuὰ bonsὰmbα̂ nkʉsὰmbα̂
+775	ncòbtὰn bonsὰmbα̂ nkʉsὰmbα̂
+776	ncòbntôg bonsὰmbα̂ nkʉsὰmbα̂
+777	ncòbsὰmbα̂ bonsὰmbα̂ nkʉsὰmbα̂
+778	ncòbfôm bonsὰmbα̂ nkʉsὰmbα̂
+779	ncòbbwə̀'ə̂ bonsὰmbα̂ nkʉsὰmbα̂
+780	bonnkʉ nkʉsὰmbα̂
+781	ncòbncʉ' bonfôm nkʉsὰmbα̂
+782	ncòbbα̂ bonfôm nkʉsὰmbα̂
+783	ncòbtad bonfôm nkʉsὰmbα̂
+784	ncòbkuὰ bonfôm nkʉsὰmbα̂
+785	ncòbtὰn bonfôm nkʉsὰmbα̂
+786	ncòbntôg bonfôm nkʉsὰmbα̂
+787	ncòbsὰmbα̂ bonfôm nkʉsὰmbα̂
+788	ncòbfôm bonfôm nkʉsὰmbα̂
+789	ncòbbwə̀'ə̂ bonfôm nkʉsὰmbα̂
+790	bonnkʉ nkʉsὰmbα̂
+791	ncòbncʉ' bonbwə̀'ə̂ nkʉsὰmbα̂
+792	ncòbbα̂ bonbwə̀'ə̂ nkʉsὰmbα̂
+793	ncòbtad bonbwə̀'ə̂ nkʉsὰmbα̂
+794	ncòbkuὰ bonbwə̀'ə̂ nkʉsὰmbα̂
+795	ncòbtὰn bonbwə̀'ə̂ nkʉsὰmbα̂
+796	ncòbntôg bonbwə̀'ə̂ nkʉsὰmbα̂
+797	ncòbsὰmbα̂ bonbwə̀'ə̂ nkʉsὰmbα̂
+798	ncòbfôm bonbwə̀'ə̂ nkʉsὰmbα̂
+799	ncòbbwə̀'ə̂ bonbwə̀'ə̂ nkʉsὰmbα̂
+800	nkʉfomə
+801	ncʉ'tû nkʉfomə
+802	bα̂tû nkʉfomə
+803	tadtû nkʉfomə
+804	kuὰtû nkʉfomə
+805	tὰntû nkʉfomə
+806	ntôgtû nkʉfomə
+807	sὰmbα̂tû nkʉfomə
+808	fômtû nkʉfomə
+809	bwə̀'ə̂tû nkʉfomə
+810	mɛnmbʉ̂m nkʉfomə
+811	ncòbncʉ' mɛnmbʉ̂m nkʉfomə
+812	ncòbbα̂ mɛnmbʉ̂m nkʉfomə
+813	ncòbtad mɛnmbʉ̂m nkʉfomə
+814	ncòbkuὰ mɛnmbʉ̂m nkʉfomə
+815	ncòbtὰn mɛnmbʉ̂m nkʉfomə
+816	ncòbntôg mɛnmbʉ̂m nkʉfomə
+817	ncòbsὰmbα̂ mɛnmbʉ̂m nkʉfomə
+818	ncòbfôm mɛnmbʉ̂m nkʉfomə
+819	ncòbbwə̀'ə̂ mɛnmbʉ̂m nkʉfomə
+820	bonbα̂ ncaꞆfomə
+821	ncòbncʉ' bonbα̂ nkʉfomə
+822	ncòbbα̂ bonbα̂ nkʉfomə
+823	ncòbtad bonbα̂ nkʉfomə
+824	ncòbkuὰ bonbα̂ nkʉfomə
+825	ncòbtὰn bonbα̂ nkʉfomə
+826	ncòbntôg bonbα̂ nkʉfomə
+827	ncòbsὰmbα̂ bonbα̂ nkʉfomə
+828	ncòbfôm bonbα̂ nkʉfomə
+829	ncòbbwə̀'ə̂ bonbα̂ nkʉfomə
+830	bontad ncaꞆfomə
+831	ncòbncʉ' bontad nkʉfomə
+832	ncòbbα̂ bontad nkʉfomə
+833	ncòbtad bontad nkʉfomə
+834	ncòbkuὰ bontad nkʉfomə
+835	ncòbtὰn bontad nkʉfomə
+836	ncòbntôg bontad nkʉfomə
+837	ncòbsὰmbα̂ bontad nkʉfomə
+838	ncòbfôm bontad nkʉfomə
+839	ncòbbwə̀'ə̂ bontad nkʉfomə
+840	bonkuὰ ncaꞆfomə
+841	ncòbncʉ' bonkuὰ nkʉfomə
+842	ncòbbα̂ bonkuὰ nkʉfomə
+843	ncòbtad bonkuὰ nkʉfomə
+844	ncòbkuὰ bonkuὰ nkʉfomə
+845	ncòbtὰn bonkuὰ nkʉfomə
+846	ncòbntôg bonkuὰ nkʉfomə
+847	ncòbsὰmbα̂ bonkuὰ nkʉfomə
+848	ncòbfôm bonkuὰ nkʉfomə
+849	ncòbbwə̀'ə̂ bonkuὰ nkʉfomə
+850	bontὰn ncaꞆfomə
+851	ncòbncʉ' bontὰn nkʉfomə
+852	ncòbbα̂ bontὰn nkʉfomə
+853	ncòbtad bontὰn nkʉfomə
+854	ncòbkuὰ bontὰn nkʉfomə
+855	ncòbtὰn bontὰn nkʉfomə
+856	ncòbntôg bontὰn nkʉfomə
+857	ncòbsὰmbα̂ bontὰn nkʉfomə
+858	ncòbfôm bontὰn nkʉfomə
+859	ncòbbwə̀'ə̂ bontὰn nkʉfomə
+860	bonntôg nkʉfomə
+861	ncòbncʉ' bonntôg nkʉfomə
+862	ncòbbα̂ bonntôg nkʉfomə
+863	ncòbtad bonntôg nkʉfomə
+864	ncòbkuὰ bonntôg nkʉfomə
+865	ncòbtὰn bonntôg nkʉfomə
+866	ncòbntôg bonntôg nkʉfomə
+867	ncòbsὰmbα̂ bonntôg nkʉfomə
+868	ncòbfôm bonntôg nkʉfomə
+869	ncòbbwə̀'ə̂ bonntôg nkʉfomə
+870	bonsὰmbα̂ ncaꞆfomə
+871	ncòbncʉ' bonsὰmbα̂ nkʉfomə
+872	ncòbbα̂ bonsὰmbα̂ nkʉfomə
+873	ncòbtad bonsὰmbα̂ nkʉfomə
+874	ncòbkuὰ bonsὰmbα̂ nkʉfomə
+875	ncòbtὰn bonsὰmbα̂ nkʉfomə
+876	ncòbntôg bonsὰmbα̂ nkʉfomə
+877	ncòbsὰmbα̂ bonsὰmbα̂ nkʉfomə
+878	ncòbfôm bonsὰmbα̂ nkʉfomə
+879	ncòbbwə̀'ə̂ bonsὰmbα̂ nkʉfomə
+880	bonnkʉ nkʉfomə
+881	ncòbncʉ' bonfôm nkʉfomə
+882	ncòbbα̂ bonfôm nkʉfomə
+883	ncòbtad bonfôm nkʉfomə
+884	ncòbkuὰ bonfôm nkʉfomə
+885	ncòbtὰn bonfôm nkʉfomə
+886	ncòbntôg bonfôm nkʉfomə
+887	ncòbsὰmbα̂ bonfôm nkʉfomə
+888	ncòbfôm bonfôm nkʉfomə
+889	ncòbbwə̀'ə̂ bonfôm nkʉfomə
+890	bonnkʉ nkʉfomə
+891	ncòbncʉ' bonbwə̀'ə̂ nkʉfomə
+892	ncòbbα̂ bonbwə̀'ə̂ nkʉfomə
+893	ncòbtad bonbwə̀'ə̂ nkʉfomə
+894	ncòbkuὰ bonbwə̀'ə̂ nkʉfomə
+895	ncòbtὰn bonbwə̀'ə̂ nkʉfomə
+896	ncòbntôg bonbwə̀'ə̂ nkʉfomə
+897	ncòbsὰmbα̂ bonbwə̀'ə̂ nkʉfomə
+898	ncòbfôm bonbwə̀'ə̂ nkʉfomə
+899	ncòbbwə̀'ə̂ bonbwə̀'ə̂ nkʉfomə
+900	nkʉbwə̀'ə
+901	ncʉ'tû nkʉbwə̀'ə
+902	bα̂tû nkʉbwə̀'ə
+903	tadtû nkʉbwə̀'ə
+904	kuὰtû nkʉbwə̀'ə
+905	tὰntû nkʉbwə̀'ə
+906	ntôgtû nkʉbwə̀'ə
+907	sὰmbα̂tû nkʉbwə̀'ə
+908	fômtû nkʉbwə̀'ə
+909	bwə̀'ə̂tû nkʉbwə̀'ə
+910	mɛnmbʉ̂m nkʉbwə̀'ə
+911	ncòbncʉ' mɛnmbʉ̂m nkʉbwə̀'ə
+912	ncòbbα̂ mɛnmbʉ̂m nkʉbwə̀'ə
+913	ncòbtad mɛnmbʉ̂m nkʉbwə̀'ə
+914	ncòbkuὰ mɛnmbʉ̂m nkʉbwə̀'ə
+915	ncòbtὰn mɛnmbʉ̂m nkʉbwə̀'ə
+916	ncòbntôg mɛnmbʉ̂m nkʉbwə̀'ə
+917	ncòbsὰmbα̂ mɛnmbʉ̂m nkʉbwə̀'ə
+918	ncòbfôm mɛnmbʉ̂m nkʉbwə̀'ə
+919	ncòbbwə̀'ə̂ mɛnmbʉ̂m nkʉbwə̀'ə
+920	bonbα̂ ncaꞆbwə̀'ə
+921	ncòbncʉ' bonbα̂ nkʉbwə̀'ə
+922	ncòbbα̂ bonbα̂ nkʉbwə̀'ə
+923	ncòbtad bonbα̂ nkʉbwə̀'ə
+924	ncòbkuὰ bonbα̂ nkʉbwə̀'ə
+925	ncòbtὰn bonbα̂ nkʉbwə̀'ə
+926	ncòbntôg bonbα̂ nkʉbwə̀'ə
+927	ncòbsὰmbα̂ bonbα̂ nkʉbwə̀'ə
+928	ncòbfôm bonbα̂ nkʉbwə̀'ə
+929	ncòbbwə̀'ə̂ bonbα̂ nkʉbwə̀'ə
+930	bontad ncaꞆbwə̀'ə
+931	ncòbncʉ' bontad nkʉbwə̀'ə
+932	ncòbbα̂ bontad nkʉbwə̀'ə
+933	ncòbtad bontad nkʉbwə̀'ə
+934	ncòbkuὰ bontad nkʉbwə̀'ə
+935	ncòbtὰn bontad nkʉbwə̀'ə
+936	ncòbntôg bontad nkʉbwə̀'ə
+937	ncòbsὰmbα̂ bontad nkʉbwə̀'ə
+938	ncòbfôm bontad nkʉbwə̀'ə
+939	ncòbbwə̀'ə̂ bontad nkʉbwə̀'ə
+940	bonkuὰ ncaꞆbwə̀'ə
+941	ncòbncʉ' bonkuὰ nkʉbwə̀'ə
+942	ncòbbα̂ bonkuὰ nkʉbwə̀'ə
+943	ncòbtad bonkuὰ nkʉbwə̀'ə
+944	ncòbkuὰ bonkuὰ nkʉbwə̀'ə
+945	ncòbtὰn bonkuὰ nkʉbwə̀'ə
+946	ncòbntôg bonkuὰ nkʉbwə̀'ə
+947	ncòbsὰmbα̂ bonkuὰ nkʉbwə̀'ə
+948	ncòbfôm bonkuὰ nkʉbwə̀'ə
+949	ncòbbwə̀'ə̂ bonkuὰ nkʉbwə̀'ə
+950	bontὰn ncaꞆbwə̀'ə
+951	ncòbncʉ' bontὰn nkʉbwə̀'ə
+952	ncòbbα̂ bontὰn nkʉbwə̀'ə
+953	ncòbtad bontὰn nkʉbwə̀'ə
+954	ncòbkuὰ bontὰn nkʉbwə̀'ə
+955	ncòbtὰn bontὰn nkʉbwə̀'ə
+956	ncòbntôg bontὰn nkʉbwə̀'ə
+957	ncòbsὰmbα̂ bontὰn nkʉbwə̀'ə
+958	ncòbfôm bontὰn nkʉbwə̀'ə
+959	ncòbbwə̀'ə̂ bontὰn nkʉbwə̀'ə
+960	bonntôg nkʉbwə̀'ə
+961	ncòbncʉ' bonntôg nkʉbwə̀'ə
+962	ncòbbα̂ bonntôg nkʉbwə̀'ə
+963	ncòbtad bonntôg nkʉbwə̀'ə
+964	ncòbkuὰ bonntôg nkʉbwə̀'ə
+965	ncòbtὰn bonntôg nkʉbwə̀'ə
+966	ncòbntôg bonntôg nkʉbwə̀'ə
+967	ncòbsὰmbα̂ bonntôg nkʉbwə̀'ə
+968	ncòbfôm bonntôg nkʉbwə̀'ə
+969	ncòbbwə̀'ə̂ bonntôg nkʉbwə̀'ə
+970	bonsὰmbα̂ ncaꞆbwə̀'ə
+971	ncòbncʉ' bonsὰmbα̂ nkʉbwə̀'ə
+972	ncòbbα̂ bonsὰmbα̂ nkʉbwə̀'ə
+973	ncòbtad bonsὰmbα̂ nkʉbwə̀'ə
+974	ncòbkuὰ bonsὰmbα̂ nkʉbwə̀'ə
+975	ncòbtὰn bonsὰmbα̂ nkʉbwə̀'ə
+976	ncòbntôg bonsὰmbα̂ nkʉbwə̀'ə
+977	ncòbsὰmbα̂ bonsὰmbα̂ nkʉbwə̀'ə
+978	ncòbfôm bonsὰmbα̂ nkʉbwə̀'ə
+979	ncòbbwə̀'ə̂ bonsὰmbα̂ nkʉbwə̀'ə
+980	bonnkʉ nkʉbwə̀'ə
+981	ncòbncʉ' bonfôm nkʉbwə̀'ə
+982	ncòbbα̂ bonfôm nkʉbwə̀'ə
+983	ncòbtad bonfôm nkʉbwə̀'ə
+984	ncòbkuὰ bonfôm nkʉbwə̀'ə
+985	ncòbtὰn bonfôm nkʉbwə̀'ə
+986	ncòbntôg bonfôm nkʉbwə̀'ə
+987	ncòbsὰmbα̂ bonfôm nkʉbwə̀'ə
+988	ncòbfôm bonfôm nkʉbwə̀'ə
+989	ncòbbwə̀'ə̂ bonfôm nkʉbwə̀'ə
+990	bonnkʉ nkʉbwə̀'ə
+991	ncòbncʉ' bonbwə̀'ə̂ nkʉbwə̀'ə
+992	ncòbbα̂ bonbwə̀'ə̂ nkʉbwə̀'ə
+993	ncòbtad bonbwə̀'ə̂ nkʉbwə̀'ə
+994	ncòbkuὰ bonbwə̀'ə̂ nkʉbwə̀'ə
+995	ncòbtὰn bonbwə̀'ə̂ nkʉbwə̀'ə
+996	ncòbntôg bonbwə̀'ə̂ nkʉbwə̀'ə
+997	ncòbsὰmbα̂ bonbwə̀'ə̂ nkʉbwə̀'ə
+998	ncòbfôm bonbwə̀'ə̂ nkʉbwə̀'ə
+999	ncòbbwə̀'ə̂ bonbwə̀'ə̂ nkʉbwə̀'ə
+1000	  ncaꞌ
